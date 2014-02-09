@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 04-02-2014 08:20:35
+ * Created on 09-02-2014 11:22:58
  * @author Tomasz Gajewski
- * @package PlaningPoker
+ * @package PHPPlanningPoker
  * error prefix PP:101
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 

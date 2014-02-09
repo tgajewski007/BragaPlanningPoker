@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 04-02-2014 08:20:35
+ * Created on 09-02-2014 11:22:58
  * @author Tomasz Gajewski
- * @package PlaningPoker
+ * @package PHPPlanningPoker
  * error prefix PP:105
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -16,9 +16,9 @@ class PlayerDAO
 	protected static $instance = array();
 	// -------------------------------------------------------------------------
 	protected $idPlayer = null;
-	protected $idUser = null;
 	protected $idTable = null;
 	protected $idRole = null;
+	protected $idUser = null;
 	protected $readed = false;
 	// -------------------------------------------------------------------------
 	protected $gamesForPlayer = null;
@@ -115,18 +115,6 @@ class PlayerDAO
 		}
 	}
 	// -------------------------------------------------------------------------
-	public function setIdUser($idUser)
-	{
-		if(empty($idUser))
-		{
-			$this->idUser = null;
-		}
-		else
-		{
-			$this->idUser = mb_substr($idUser,0,32);
-		}
-	}
-	// -------------------------------------------------------------------------
 	public function setIdTable($idTable)
 	{
 		if(empty($idTable))
@@ -151,14 +139,21 @@ class PlayerDAO
 		}
 	}
 	// -------------------------------------------------------------------------
+	public function setIdUser($idUser)
+	{
+		if(empty($idUser))
+		{
+			$this->idUser = null;
+		}
+		else
+		{
+			$this->idUser = mb_substr($idUser,0,32);
+		}
+	}
+	// -------------------------------------------------------------------------
 	public function getIdPlayer()
 	{
 		return $this->idPlayer;
-	}
-	// -------------------------------------------------------------------------
-	public function getIdUser()
-	{
-		return $this->idUser;
 	}
 	// -------------------------------------------------------------------------
 	public function getIdTable()
@@ -169,6 +164,11 @@ class PlayerDAO
 	public function getIdRole()
 	{
 		return $this->idRole;
+	}
+	// -------------------------------------------------------------------------
+	public function getIdUser()
+	{
+		return $this->idUser;
 	}
 	// -------------------------------------------------------------------------
 	public function getKey()
@@ -190,14 +190,6 @@ class PlayerDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return User
-	 */
-	public function getUser()
-	{
-		return User::get($this->getIdUser());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return Table
 	 */
 	public function getTable()
@@ -211,6 +203,14 @@ class PlayerDAO
 	public function getRole()
 	{
 		return Role::get($this->getIdRole());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return User
+	 */
+	public function getUser()
+	{
+		return User::get($this->getIdUser());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -244,11 +244,11 @@ class PlayerDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".player(iduser, idtable, idrole) ";
-		$sql .= "VALUES(:IDUSER, :IDTABLE, :IDROLE) ";
-		$db->setParam("IDUSER",$this->getIdUser());
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".player(idtable, idrole, iduser) ";
+		$sql .= "VALUES(:IDTABLE, :IDROLE, :IDUSER) ";
 		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDROLE",$this->getIdRole());
+		$db->setParam("IDUSER",$this->getIdUser());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -275,14 +275,14 @@ class PlayerDAO
 	{
 		$db = new DB();
 		$sql  = "UPDATE " . DB_SCHEMA . ".player ";
-		$sql .= "SET iduser = :IDUSER ";
-		$sql .= " , idtable = :IDTABLE ";
+		$sql .= "SET idtable = :IDTABLE ";
 		$sql .= " , idrole = :IDROLE ";
+		$sql .= " , iduser = :IDUSER ";
 		$sql .= "WHERE idplayer = :IDPLAYER ";
 		$db->setParam("IDPLAYER",$this->getIdPlayer());
-		$db->setParam("IDUSER",$this->getIdUser());
 		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDROLE",$this->getIdRole());
+		$db->setParam("IDUSER",$this->getIdUser());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -329,25 +329,10 @@ class PlayerDAO
 	protected function setAllFromDB(DataSource $db)
 	{
 		$this->setIdPlayer($db->f("idplayer"));
-		$this->setIdUser($db->f("iduser"));
 		$this->setIdTable($db->f("idtable"));
 		$this->setIdRole($db->f("idrole"));
+		$this->setIdUser($db->f("iduser"));
 		$this->setReaded();
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt; 
-	 */
-	public static function getAllByUser(UserDAO $user)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".player ";
-		$sql .= "WHERE iduser = :IDUSER ";
-		$db->setParam("IDUSER", $user->getIdUser());
-		$db->query($sql);
-		return new Collection($db, Player::get());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -376,6 +361,21 @@ class PlayerDAO
 		$sql .= "FROM " . DB_SCHEMA . ".player ";
 		$sql .= "WHERE idrole = :IDROLE ";
 		$db->setParam("IDROLE", $role->getIdRole());
+		$db->query($sql);
+		return new Collection($db, Player::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Player
+	 * @return Collection &lt;Player&gt; 
+	 */
+	public static function getAllByUser(UserDAO $user)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".player ";
+		$sql .= "WHERE iduser = :IDUSER ";
+		$db->setParam("IDUSER", $user->getIdUser());
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}

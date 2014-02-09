@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 04-02-2014 08:20:35
+ * Created on 09-02-2014 11:22:58
  * @author Tomasz Gajewski
- * @package PlaningPoker
+ * @package PHPPlanningPoker
  * error prefix PP:102
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -16,9 +16,9 @@ class ChatDAO
 	protected static $instance = array();
 	// -------------------------------------------------------------------------
 	protected $idChat = null;
-	protected $message = null;
-	protected $idTable = null;
 	protected $idUser = null;
+	protected $idTable = null;
+	protected $message = null;
 	protected $date = null;
 	protected $readed = false;
 	// -------------------------------------------------------------------------
@@ -114,15 +114,15 @@ class ChatDAO
 		}
 	}
 	// -------------------------------------------------------------------------
-	public function setMessage($message)
+	public function setIdUser($idUser)
 	{
-		if(empty($message))
+		if(empty($idUser))
 		{
-			$this->message = null;
+			$this->idUser = null;
 		}
 		else
 		{
-			$this->message = mb_substr($message,0,255);
+			$this->idUser = mb_substr($idUser,0,32);
 		}
 	}
 	// -------------------------------------------------------------------------
@@ -138,15 +138,15 @@ class ChatDAO
 		}
 	}
 	// -------------------------------------------------------------------------
-	public function setIdUser($idUser)
+	public function setMessage($message)
 	{
-		if(empty($idUser))
+		if(empty($message))
 		{
-			$this->idUser = null;
+			$this->message = null;
 		}
 		else
 		{
-			$this->idUser = mb_substr($idUser,0,32);
+			$this->message = mb_substr($message,0,255);
 		}
 	}
 	// -------------------------------------------------------------------------
@@ -167,9 +167,9 @@ class ChatDAO
 		return $this->idChat;
 	}
 	// -------------------------------------------------------------------------
-	public function getMessage()
+	public function getIdUser()
 	{
-		return $this->message;
+		return $this->idUser;
 	}
 	// -------------------------------------------------------------------------
 	public function getIdTable()
@@ -177,9 +177,9 @@ class ChatDAO
 		return $this->idTable;
 	}
 	// -------------------------------------------------------------------------
-	public function getIdUser()
+	public function getMessage()
 	{
-		return $this->idUser;
+		return $this->message;
 	}
 	// -------------------------------------------------------------------------
 	public function getDate()
@@ -193,19 +193,19 @@ class ChatDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Table
-	 */
-	public function getTable()
-	{
-		return Table::get($this->getIdTable());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return User
 	 */
 	public function getUser()
 	{
 		return User::get($this->getIdUser());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Table
+	 */
+	public function getTable()
+	{
+		return Table::get($this->getIdTable());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -239,11 +239,11 @@ class ChatDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".chat(message, idtable, iduser, date) ";
-		$sql .= "VALUES(:MESSAGE, :IDTABLE, :IDUSER, :DATE) ";
-		$db->setParam("MESSAGE",$this->getMessage());
-		$db->setParam("IDTABLE",$this->getIdTable());
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".chat(iduser, idtable, message, date) ";
+		$sql .= "VALUES(:IDUSER, :IDTABLE, :MESSAGE, :DATE) ";
 		$db->setParam("IDUSER",$this->getIdUser());
+		$db->setParam("IDTABLE",$this->getIdTable());
+		$db->setParam("MESSAGE",$this->getMessage());
 		$db->setParam("DATE",$this->getDate());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
@@ -271,15 +271,15 @@ class ChatDAO
 	{
 		$db = new DB();
 		$sql  = "UPDATE " . DB_SCHEMA . ".chat ";
-		$sql .= "SET message = :MESSAGE ";
+		$sql .= "SET iduser = :IDUSER ";
 		$sql .= " , idtable = :IDTABLE ";
-		$sql .= " , iduser = :IDUSER ";
+		$sql .= " , message = :MESSAGE ";
 		$sql .= " , date = :DATE ";
 		$sql .= "WHERE idchat = :IDCHAT ";
 		$db->setParam("IDCHAT",$this->getIdChat());
-		$db->setParam("MESSAGE",$this->getMessage());
-		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDUSER",$this->getIdUser());
+		$db->setParam("IDTABLE",$this->getIdTable());
+		$db->setParam("MESSAGE",$this->getMessage());
 		$db->setParam("DATE",$this->getDate());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
@@ -327,26 +327,11 @@ class ChatDAO
 	protected function setAllFromDB(DataSource $db)
 	{
 		$this->setIdChat($db->f("idchat"));
-		$this->setMessage($db->f("message"));
-		$this->setIdTable($db->f("idtable"));
 		$this->setIdUser($db->f("iduser"));
+		$this->setIdTable($db->f("idtable"));
+		$this->setMessage($db->f("message"));
 		$this->setDate($db->f("date"));
 		$this->setReaded();
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Chat
-	 * @return Collection &lt;Chat&gt; 
-	 */
-	public static function getAllByTable(TableDAO $table)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".chat ";
-		$sql .= "WHERE idtable = :IDTABLE ";
-		$db->setParam("IDTABLE", $table->getIdTable());
-		$db->query($sql);
-		return new Collection($db, Chat::get());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -360,6 +345,21 @@ class ChatDAO
 		$sql .= "FROM " . DB_SCHEMA . ".chat ";
 		$sql .= "WHERE iduser = :IDUSER ";
 		$db->setParam("IDUSER", $user->getIdUser());
+		$db->query($sql);
+		return new Collection($db, Chat::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Chat
+	 * @return Collection &lt;Chat&gt; 
+	 */
+	public static function getAllByTable(TableDAO $table)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".chat ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->query($sql);
 		return new Collection($db, Chat::get());
 	}
