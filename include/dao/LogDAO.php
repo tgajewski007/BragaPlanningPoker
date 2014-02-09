@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 04-02-2014 08:20:35
+ * Created on 09-02-2014 11:22:58
  * @author Tomasz Gajewski
- * @package PlaningPoker
+ * @package PHPPlanningPoker
  * error prefix PP:104
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -16,11 +16,11 @@ class LogDAO
 	protected static $instance = array();
 	// -------------------------------------------------------------------------
 	protected $idLog = null;
+	protected $idUser = null;
 	protected $date = null;
 	protected $action = null;
 	protected $variable = null;
 	protected $ip = null;
-	protected $idUser = null;
 	protected $readed = false;
 	// -------------------------------------------------------------------------
 	/**
@@ -115,6 +115,18 @@ class LogDAO
 		}
 	}
 	// -------------------------------------------------------------------------
+	public function setIdUser($idUser)
+	{
+		if(empty($idUser))
+		{
+			$this->idUser = null;
+		}
+		else
+		{
+			$this->idUser = mb_substr($idUser,0,32);
+		}
+	}
+	// -------------------------------------------------------------------------
 	public function setDate($date)
 	{
 		if(empty($date))
@@ -156,21 +168,14 @@ class LogDAO
 		}
 	}
 	// -------------------------------------------------------------------------
-	public function setIdUser($idUser)
-	{
-		if(empty($idUser))
-		{
-			$this->idUser = null;
-		}
-		else
-		{
-			$this->idUser = mb_substr($idUser,0,32);
-		}
-	}
-	// -------------------------------------------------------------------------
 	public function getIdLog()
 	{
 		return $this->idLog;
+	}
+	// -------------------------------------------------------------------------
+	public function getIdUser()
+	{
+		return $this->idUser;
 	}
 	// -------------------------------------------------------------------------
 	public function getDate()
@@ -191,11 +196,6 @@ class LogDAO
 	public function getIp()
 	{
 		return $this->ip;
-	}
-	// -------------------------------------------------------------------------
-	public function getIdUser()
-	{
-		return $this->idUser;
 	}
 	// -------------------------------------------------------------------------
 	public function getKey()
@@ -242,13 +242,13 @@ class LogDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".log(date, action, variable, ip, iduser) ";
-		$sql .= "VALUES(:DATE, :ACTION, :VARIABLE, :IP, :IDUSER) ";
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".log(iduser, date, action, variable, ip) ";
+		$sql .= "VALUES(:IDUSER, :DATE, :ACTION, :VARIABLE, :IP) ";
+		$db->setParam("IDUSER",$this->getIdUser());
 		$db->setParam("DATE",$this->getDate());
 		$db->setParam("ACTION",$this->getAction());
 		$db->setParam("VARIABLE",$this->getVariable());
 		$db->setParam("IP",$this->getIp());
-		$db->setParam("IDUSER",$this->getIdUser());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -275,18 +275,18 @@ class LogDAO
 	{
 		$db = new DB();
 		$sql  = "UPDATE " . DB_SCHEMA . ".log ";
-		$sql .= "SET date = :DATE ";
+		$sql .= "SET iduser = :IDUSER ";
+		$sql .= " , date = :DATE ";
 		$sql .= " , action = :ACTION ";
 		$sql .= " , variable = :VARIABLE ";
 		$sql .= " , ip = :IP ";
-		$sql .= " , iduser = :IDUSER ";
 		$sql .= "WHERE idlog = :IDLOG ";
 		$db->setParam("IDLOG",$this->getIdLog());
+		$db->setParam("IDUSER",$this->getIdUser());
 		$db->setParam("DATE",$this->getDate());
 		$db->setParam("ACTION",$this->getAction());
 		$db->setParam("VARIABLE",$this->getVariable());
 		$db->setParam("IP",$this->getIp());
-		$db->setParam("IDUSER",$this->getIdUser());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -333,11 +333,11 @@ class LogDAO
 	protected function setAllFromDB(DataSource $db)
 	{
 		$this->setIdLog($db->f("idlog"));
+		$this->setIdUser($db->f("iduser"));
 		$this->setDate($db->f("date"));
 		$this->setAction($db->f("action"));
 		$this->setVariable($db->f("variable"));
 		$this->setIp($db->f("ip"));
-		$this->setIdUser($db->f("iduser"));
 		$this->setReaded();
 	}
 	// -------------------------------------------------------------------------

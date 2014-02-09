@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 04-02-2014 08:20:35
+ * Created on 09-02-2014 11:22:58
  * @author Tomasz Gajewski
- * @package PlaningPoker
+ * @package PHPPlanningPoker
  * error prefix PP:103
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -16,8 +16,8 @@ class GameDAO
 	protected static $instance = array();
 	// -------------------------------------------------------------------------
 	protected $idGame = null;
-	protected $idTable = null;
 	protected $idPlayer = null;
+	protected $idTable = null;
 	protected $idCard = null;
 	protected $idTask = null;
 	protected $date = null;
@@ -115,18 +115,6 @@ class GameDAO
 		}
 	}
 	// -------------------------------------------------------------------------
-	public function setIdTable($idTable)
-	{
-		if(empty($idTable))
-		{
-			$this->idTable = null;
-		}
-		else
-		{
-			$this->idTable = mb_substr($idTable,0,32);
-		}
-	}
-	// -------------------------------------------------------------------------
 	public function setIdPlayer($idPlayer)
 	{
 		if(is_numeric($idPlayer))
@@ -136,6 +124,18 @@ class GameDAO
 		else
 		{
 			$this->idPlayer = null;
+		}
+	}
+	// -------------------------------------------------------------------------
+	public function setIdTable($idTable)
+	{
+		if(empty($idTable))
+		{
+			$this->idTable = null;
+		}
+		else
+		{
+			$this->idTable = mb_substr($idTable,0,32);
 		}
 	}
 	// -------------------------------------------------------------------------
@@ -180,14 +180,14 @@ class GameDAO
 		return $this->idGame;
 	}
 	// -------------------------------------------------------------------------
-	public function getIdTable()
-	{
-		return $this->idTable;
-	}
-	// -------------------------------------------------------------------------
 	public function getIdPlayer()
 	{
 		return $this->idPlayer;
+	}
+	// -------------------------------------------------------------------------
+	public function getIdTable()
+	{
+		return $this->idTable;
 	}
 	// -------------------------------------------------------------------------
 	public function getIdCard()
@@ -211,22 +211,6 @@ class GameDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Task
-	 */
-	public function getTask()
-	{
-		return Task::get($this->getIdTask());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * @return Table
-	 */
-	public function getTable()
-	{
-		return Table::get($this->getIdTable());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return Player
 	 */
 	public function getPlayer()
@@ -240,6 +224,22 @@ class GameDAO
 	public function getCard()
 	{
 		return Card::get($this->getIdCard());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Task
+	 */
+	public function getTask()
+	{
+		return Task::get($this->getIdTask());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Table
+	 */
+	public function getTable()
+	{
+		return Table::get($this->getIdTable());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -273,10 +273,10 @@ class GameDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".game(idtable, idplayer, idcard, idtask, date) ";
-		$sql .= "VALUES(:IDTABLE, :IDPLAYER, :IDCARD, :IDTASK, :DATE) ";
-		$db->setParam("IDTABLE",$this->getIdTable());
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".game(idplayer, idtable, idcard, idtask, date) ";
+		$sql .= "VALUES(:IDPLAYER, :IDTABLE, :IDCARD, :IDTASK, :DATE) ";
 		$db->setParam("IDPLAYER",$this->getIdPlayer());
+		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDCARD",$this->getIdCard());
 		$db->setParam("IDTASK",$this->getIdTask());
 		$db->setParam("DATE",$this->getDate());
@@ -306,15 +306,15 @@ class GameDAO
 	{
 		$db = new DB();
 		$sql  = "UPDATE " . DB_SCHEMA . ".game ";
-		$sql .= "SET idtable = :IDTABLE ";
-		$sql .= " , idplayer = :IDPLAYER ";
+		$sql .= "SET idplayer = :IDPLAYER ";
+		$sql .= " , idtable = :IDTABLE ";
 		$sql .= " , idcard = :IDCARD ";
 		$sql .= " , idtask = :IDTASK ";
 		$sql .= " , date = :DATE ";
 		$sql .= "WHERE idgame = :IDGAME ";
 		$db->setParam("IDGAME",$this->getIdGame());
-		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDPLAYER",$this->getIdPlayer());
+		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDCARD",$this->getIdCard());
 		$db->setParam("IDTASK",$this->getIdTask());
 		$db->setParam("DATE",$this->getDate());
@@ -364,42 +364,12 @@ class GameDAO
 	protected function setAllFromDB(DataSource $db)
 	{
 		$this->setIdGame($db->f("idgame"));
-		$this->setIdTable($db->f("idtable"));
 		$this->setIdPlayer($db->f("idplayer"));
+		$this->setIdTable($db->f("idtable"));
 		$this->setIdCard($db->f("idcard"));
 		$this->setIdTask($db->f("idtask"));
 		$this->setDate($db->f("date"));
 		$this->setReaded();
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Game
-	 * @return Collection &lt;Game&gt; 
-	 */
-	public static function getAllByTask(TaskDAO $task)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".game ";
-		$sql .= "WHERE idtask = :IDTASK ";
-		$db->setParam("IDTASK", $task->getIdTask());
-		$db->query($sql);
-		return new Collection($db, Game::get());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Game
-	 * @return Collection &lt;Game&gt; 
-	 */
-	public static function getAllByTable(TableDAO $table)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".game ";
-		$sql .= "WHERE idtable = :IDTABLE ";
-		$db->setParam("IDTABLE", $table->getIdTable());
-		$db->query($sql);
-		return new Collection($db, Game::get());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -428,6 +398,36 @@ class GameDAO
 		$sql .= "FROM " . DB_SCHEMA . ".game ";
 		$sql .= "WHERE idcard = :IDCARD ";
 		$db->setParam("IDCARD", $card->getIdCard());
+		$db->query($sql);
+		return new Collection($db, Game::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Game
+	 * @return Collection &lt;Game&gt; 
+	 */
+	public static function getAllByTask(TaskDAO $task)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
+		$sql .= "WHERE idtask = :IDTASK ";
+		$db->setParam("IDTASK", $task->getIdTask());
+		$db->query($sql);
+		return new Collection($db, Game::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Game
+	 * @return Collection &lt;Game&gt; 
+	 */
+	public static function getAllByTable(TableDAO $table)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->query($sql);
 		return new Collection($db, Game::get());
 	}
