@@ -20,9 +20,9 @@ class StartLayout extends PublicLayout
 	{
 		$retval = Tags::span("welcome: " . User::getCurrent()->getName());
 		$retval .= Tags::span(" | ");
-		$retval .= Tags::a("settings", "href='/?action=GetSettings'");
+		$retval .= Tags::ajaxLink("?action=GetSettings","settings");
 		$retval .= Tags::span(" | ");
-		$retval .= Tags::a("logout", "href='/?action=LogOut'");
+		$retval .= Tags::ajaxLink("?action=LogOut","logout");
 		return $retval;
 	}
 	// -------------------------------------------------------------------------

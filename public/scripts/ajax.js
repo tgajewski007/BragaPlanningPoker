@@ -221,7 +221,7 @@ function Ajax()
 		var idSnow = "#snow_" + idMarker;
 		if (!$(idSnow).length)
 		{
-			$("body:first").append("<div id='snow_" + idMarker + "' class='a' style='background-color:white;' />");
+			$("body:first").append("<div id='snow_" + idMarker + "' class='a snow' />");
 			$(idSnow).width($("body:first").outerWidth(true));
 			$(idSnow).height($(document).height());
 			$(idSnow).css("left", "0px");

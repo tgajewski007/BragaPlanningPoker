@@ -17,7 +17,7 @@ class PublicControler extends Action
 				$this->makeWorArea();
 				break;
 			default:
-				addAlert("PP:20101 " . PostChecker::get("action") . " nie jest obsługiwane");
+				addAlert("PP:20101 " . PostChecker::get("action") . " not supported");
 				break;
 		}
 		$this->setLayOut(new PublicLayout());
