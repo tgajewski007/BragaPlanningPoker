@@ -69,5 +69,6 @@ require "layout/PublicLayout.php";
 require "layout/StartLayout.php";
 // -----------------------------------------------------------------------------
 require "form/LoginForm.php";
+require "form/TableForm.php";
 // -----------------------------------------------------------------------------
 ?>
