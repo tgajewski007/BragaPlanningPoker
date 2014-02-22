@@ -1,9 +1,9 @@
 <?php
 /**
- * Created on 09-02-2014 11:22:58
+ * Created on 22-02-2014 17:49:27
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
- * error prefix PP:110
+ * error prefix PP:111
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
  * Designed by schama CRUD http://wikipedia.org/wiki/CRUD
@@ -16,6 +16,7 @@ class UserDAO
 	protected static $instance = array();
 	// -------------------------------------------------------------------------
 	protected $idUser = null;
+	protected $name = null;
 	protected $userName = null;
 	protected $userNameHash = null;
 	protected $password = null;
@@ -29,6 +30,7 @@ class UserDAO
 	protected $chatsForUser = null;
 	protected $logsForUser = null;
 	protected $playersForUser = null;
+	protected $newssForUser = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param string $idUser
@@ -39,7 +41,7 @@ class UserDAO
 		{
 			if(!$this->retrieve($idUser))
 			{
-				throw new Exception("PP:11001 " . DB_SCHEMA . ".user(" . $idUser . ")  does not exists");
+				throw new Exception("PP:11101 " . DB_SCHEMA . ".user(" . $idUser . ")  does not exists");
 			}
 		}
 	}
@@ -119,6 +121,18 @@ class UserDAO
 		else
 		{
 			$this->idUser = mb_substr($idUser,0,32);
+		}
+	}
+	// -------------------------------------------------------------------------
+	public function setName($name)
+	{
+		if(empty($name))
+		{
+			$this->name = null;
+		}
+		else
+		{
+			$this->name = mb_substr($name,0,255);
 		}
 	}
 	// -------------------------------------------------------------------------
@@ -223,6 +237,11 @@ class UserDAO
 		return $this->idUser;
 	}
 	// -------------------------------------------------------------------------
+	public function getName()
+	{
+		return $this->name;
+	}
+	// -------------------------------------------------------------------------
 	public function getUserName()
 	{
 		return $this->userName;
@@ -308,6 +327,19 @@ class UserDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
+	 * Methods returns colection of objects News
+	 * @return Collection &lt;News&gt; 
+	 */
+	public function getNewssForUser()
+	{
+		if(is_null($this->newssForUser))
+		{
+			$this->newssForUser = News::getAllByUser($this);
+		}
+		return $this->newssForUser;
+	}
+	// -------------------------------------------------------------------------
+	/**
 	 * Method read object of class User you can read all of atrib by get...() function
 	 * select record from table user
 	 * @return boolean
@@ -338,9 +370,10 @@ class UserDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".user(iduser, user_name, user_name_hash, password, email, last_login, pass_true_phase, avatar_url, god) ";
-		$sql .= "VALUES(:IDUSER, :USERNAME, :USERNAMEHASH, :PASSWORD, :EMAIL, :LASTLOGIN, :PASSTRUEPHASE, :AVATARURL, :GOD) ";
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".user(iduser, name, user_name, user_name_hash, password, email, last_login, pass_true_phase, avatar_url, god) ";
+		$sql .= "VALUES(:IDUSER, :NAME, :USERNAME, :USERNAMEHASH, :PASSWORD, :EMAIL, :LASTLOGIN, :PASSTRUEPHASE, :AVATARURL, :GOD) ";
 		$db->setParam("IDUSER",$this->getIdUser());
+		$db->setParam("NAME",$this->getName());
 		$db->setParam("USERNAME",$this->getUserName());
 		$db->setParam("USERNAMEHASH",$this->getUserNameHash());
 		$db->setParam("PASSWORD",$this->getPassword());
@@ -360,7 +393,7 @@ class UserDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11002 Dodanie rekordu do tablicy user nie powiodło się");
+			AddAlert("PP:11102 Dodanie rekordu do tablicy user nie powiodło się");
 			return false;
 		}
 	}
@@ -374,7 +407,8 @@ class UserDAO
 	{
 		$db = new DB();
 		$sql  = "UPDATE " . DB_SCHEMA . ".user ";
-		$sql .= "SET user_name = :USERNAME ";
+		$sql .= "SET name = :NAME ";
+		$sql .= " , user_name = :USERNAME ";
 		$sql .= " , user_name_hash = :USERNAMEHASH ";
 		$sql .= " , password = :PASSWORD ";
 		$sql .= " , email = :EMAIL ";
@@ -384,6 +418,7 @@ class UserDAO
 		$sql .= " , god = :GOD ";
 		$sql .= "WHERE iduser = :IDUSER ";
 		$db->setParam("IDUSER",$this->getIdUser());
+		$db->setParam("NAME",$this->getName());
 		$db->setParam("USERNAME",$this->getUserName());
 		$db->setParam("USERNAMEHASH",$this->getUserNameHash());
 		$db->setParam("PASSWORD",$this->getPassword());
@@ -401,7 +436,7 @@ class UserDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11003 Zmiana rekordu w tablicy user nie powiodło się");
+			AddAlert("PP:11103 Zmiana rekordu w tablicy user nie powiodło się");
 			return false;
 		}
 	}
@@ -426,7 +461,7 @@ class UserDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11004 Delete record from table user fail");
+			AddAlert("PP:11104 Delete record from table user fail");
 			return false;
 		}
 	}
@@ -438,6 +473,7 @@ class UserDAO
 	protected function setAllFromDB(DataSource $db)
 	{
 		$this->setIdUser($db->f("iduser"));
+		$this->setName($db->f("name"));
 		$this->setUserName($db->f("user_name"));
 		$this->setUserNameHash($db->f("user_name_hash"));
 		$this->setPassword($db->f("password"));

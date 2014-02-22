@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 09-02-2014 11:22:58
+ * Created on 22-02-2014 17:49:27
  * list of files to include
  * OVERWRITTEN WITHOUT WARNING
  */
@@ -14,6 +14,8 @@ include 'dao/RoleDAO.php';
 include 'dao/TableDAO.php';
 include 'dao/TaskDAO.php';
 include 'dao/UserDAO.php';
+include 'dao/NewsDAO.php';
+include 'dao/WikiDAO.php';
 include 'obj/Card.php';
 include 'obj/Chat.php';
 include 'obj/Game.php';
@@ -24,4 +26,6 @@ include 'obj/Role.php';
 include 'obj/Table.php';
 include 'obj/Task.php';
 include 'obj/User.php';
+include 'obj/News.php';
+include 'obj/Wiki.php';
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 09-02-2014 11:22:58
+ * Created on 22-02-2014 17:49:27
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
  * error prefix PP:103
@@ -211,6 +211,14 @@ class GameDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
+	 * @return Table
+	 */
+	public function getTable()
+	{
+		return Table::get($this->getIdTable());
+	}
+	// -------------------------------------------------------------------------
+	/**
 	 * @return Player
 	 */
 	public function getPlayer()
@@ -232,14 +240,6 @@ class GameDAO
 	public function getTask()
 	{
 		return Task::get($this->getIdTask());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * @return Table
-	 */
-	public function getTable()
-	{
-		return Table::get($this->getIdTable());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -376,6 +376,21 @@ class GameDAO
 	 * Methods return colection of  Game
 	 * @return Collection &lt;Game&gt; 
 	 */
+	public static function getAllByTable(TableDAO $table)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
+		$db->query($sql);
+		return new Collection($db, Game::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Game
+	 * @return Collection &lt;Game&gt; 
+	 */
 	public static function getAllByPlayer(PlayerDAO $player)
 	{
 		$db = new DB();
@@ -413,21 +428,6 @@ class GameDAO
 		$sql .= "FROM " . DB_SCHEMA . ".game ";
 		$sql .= "WHERE idtask = :IDTASK ";
 		$db->setParam("IDTASK", $task->getIdTask());
-		$db->query($sql);
-		return new Collection($db, Game::get());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Game
-	 * @return Collection &lt;Game&gt; 
-	 */
-	public static function getAllByTable(TableDAO $table)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".game ";
-		$sql .= "WHERE idtable = :IDTABLE ";
-		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->query($sql);
 		return new Collection($db, Game::get());
 	}

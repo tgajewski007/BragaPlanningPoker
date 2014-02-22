@@ -1,9 +1,9 @@
 <?php
 /**
- * Created on 09-02-2014 11:22:58
+ * Created on 22-02-2014 17:49:27
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
- * error prefix PP:106
+ * error prefix PP:107
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
  * Designed by schama CRUD http://wikipedia.org/wiki/CRUD
@@ -30,7 +30,7 @@ class PrivacyStatusDAO
 		{
 			if(!$this->retrieve($idPrivacyStatus))
 			{
-				throw new Exception("PP:10601 " . DB_SCHEMA . ".privacy_status(" . $idPrivacyStatus . ")  does not exists");
+				throw new Exception("PP:10701 " . DB_SCHEMA . ".privacy_status(" . $idPrivacyStatus . ")  does not exists");
 			}
 		}
 	}
@@ -199,7 +199,7 @@ class PrivacyStatusDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10602 Dodanie rekordu do tablicy privacy_status nie powiodło się");
+			AddAlert("PP:10702 Dodanie rekordu do tablicy privacy_status nie powiodło się");
 			return false;
 		}
 	}
@@ -226,7 +226,7 @@ class PrivacyStatusDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10603 Zmiana rekordu w tablicy privacy_status nie powiodło się");
+			AddAlert("PP:10703 Zmiana rekordu w tablicy privacy_status nie powiodło się");
 			return false;
 		}
 	}
@@ -251,7 +251,7 @@ class PrivacyStatusDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10604 Delete record from table privacy_status fail");
+			AddAlert("PP:10704 Delete record from table privacy_status fail");
 			return false;
 		}
 	}

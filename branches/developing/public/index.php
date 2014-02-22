@@ -6,6 +6,8 @@
  * error prefix
  *
  */
+include "../include/common.php";
+
 Perms::openPage();
 $d = new WebControler();
 $d->doAction();

@@ -6,93 +6,94 @@
  * @package enmarket
  * error prefix
  */
-class Perms extends BaseAction
+class Perms
 {
-	// -------------------------------------------------------------------------
-	public $uzytkownik;
-	public $modul;
 	// -------------------------------------------------------------------------
 	/**
 	 *
-	 * @var Perm
+	 * @var User
 	 */
-	static $instance =null;
+	private $user = null;
 	// -------------------------------------------------------------------------
-	function __construct()
+	/**
+	 *
+	 * @var Perms
+	 */
+	private static $instance = null;
+	// -------------------------------------------------------------------------
+	private function __construct()
 	{
-		if(isset($_SESSION["logedUserId"]))
+	}
+	// -------------------------------------------------------------------------
+	private function __clone()
+	{
+	}
+	// -------------------------------------------------------------------------
+	public function getCurrentUser()
+	{
+		return $this->user;
+	}
+	// -------------------------------------------------------------------------
+	protected function setCurrentUser(User $u)
+	{
+		$this->user = $u;
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Perms
+	 */
+	public static function getInstance()
+	{
+		if(empty(self::$instance))
+		{
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Metoda sprawdza uprawnienia dostępu do żądanego zasobu
+	 */
+	public function check()
+	{
+		if(empty($_SESSION[SessionName::IDUZYTKOWNIK]))
+		{
+			$u = $this->login();
+			if(is_null($u))
+			{
+				$this->goPublicSite();
+			}
+			else
+			{
+				$_SESSION[SessionName::IDUZYTKOWNIK] = $u->getIdUser();
+				$this->setCurrentUser($u);
+			}
+		}
+		else
 		{
 			try
 			{
-				$this->uzytkownik = Uzytkownik::get($_SESSION["logedUserId"]);
-				return;
+				$this->setCurrentUser(User::get($_SESSION[SessionName::IDUZYTKOWNIK]));
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				$this->uzytkownik = null;
-				self::logout();
-			}
-		}
-		elseif(isset($_COOKIE[CookieName::UZYTKOWNIKID]))
-		{
-			try
-			{
-				$this->uzytkownik = Uzytkownik::get($_COOKIE[CookieName::UZYTKOWNIKID]);
-				$this->uzytkownik->updateLastSuccessLogin();
-				self::setLoggedIn($this->uzytkownik);
-				return;
-			}
-			catch(Exception $e)
-			{
-				$this->uzytkownik = null;
-				self::logout();
-			}
-		}
-
-		$tmp = $this->login();
-		if(!is_null($tmp))
-		{
-			session_regenerate_id();
-			$_SESSION["logedUserId"] = $tmp->getIdUzytkownik();
-			$this->uzytkownik = $tmp;
-			if(Promocja::isSaNieuruchomione($this->uzytkownik))
-			{
-				addMsg("Są nie nieuruchomione promocję. Sprawdź zakładkę Moje aktywności");
-			}
-			if(count($this->uzytkownik->getSklepsForUzytkownik()) > 0)
-			{
-				header("Location: /" . WebAction::PANEL . "/");
-				exit();
+				$this->goPublicSite();
 			}
 		}
 	}
 	// -------------------------------------------------------------------------
-	public function doAction()
+	protected function goPublicSite()
 	{
-		return false;
-	}
-	// -------------------------------------------------------------------------
-	static function setLoggedIn(Uzytkownik $u)
-	{
-		global $perm;
-		$perm->uzytkownik = $u;
-		$_SESSION["logedUserId"] = $u->getIdUzytkownik();
+		$d = new PublicControler();
+		$d->doAction();
+		exit();
 	}
 	// -------------------------------------------------------------------------
 	protected function login()
 	{
-		if(isset($_POST["u"]))
+		if(!is_null(PostChecker::get("u")) && !is_null(PostChecker::get("p")))
 		{
-			$c = new PostChecker(new GLog());
-			$c->checkPost($this);
-			if(isset($this->post["u"]) and $this->post["p"])
-			{
-				return Uzytkownik::login($this->post["u"], $this->post["p"]);
-			}
-			else
-			{
-				return null;
-			}
+			return User::login(PostChecker::get("u"), PostChecker::get("p"));
 		}
 		else
 		{
@@ -103,29 +104,16 @@ class Perms extends BaseAction
 	static function logout()
 	{
 		session_destroy();
-		setcookie(CookieName::UZYTKOWNIKID, null, 0, "/");
+		setcookie(CookieName::IDUZYTKOWNIK, null, 0, "/");
 		header("Location: /");
 		die();
 	}
 	// -------------------------------------------------------------------------
-}
-// =============================================================================
-function startSession()
-{
-	session_start();
-	global $perm;
-	$perm = new Perms();
-}
-// =============================================================================
-function checkAccess()
-{
-	if(Uzytkownik::getCurrent()->getIdUzytkownik() == Uzytkownik::NOBODY)
+	static function openPage()
 	{
-		$l = new DefaultLayout();
-		$f = new LoginForm();
-		$l->out($f->out());
-		die();
+		session_start();
+		self::getInstance()->check();
 	}
+	// -------------------------------------------------------------------------
 }
-// =============================================================================
 ?>
