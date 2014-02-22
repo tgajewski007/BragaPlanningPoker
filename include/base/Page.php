@@ -9,11 +9,11 @@
 class Page
 {
 	// -------------------------------------------------------------------------
-	const VERSION = "g";
+	const VERSION = "a";
 	// -------------------------------------------------------------------------
-	static function getHead()
+	protected static function getHead()
 	{
-		$title = "EnMarket";
+		$title = "Planning Poker Online";
 		$retval = Tags::meta("http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"");
 		$retval .= "<!--[if IE]>".Tags::meta("http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"")."<![endif]-->";
 		$retval .= Tags::title($title);
@@ -30,7 +30,7 @@ class Page
 		return Tags::head($retval);
 	}
 	// -------------------------------------------------------------------------
-	static function getScripts()
+	protected static function getScripts()
 	{
 		$loadScript = "jsl.add('/scripts/ui/i18n/jquery.ui.datepicker-pl.min.js?" . self::VERSION . "');";
 		$loadScript .= "jsl.add('/scripts/system.js?" . self::VERSION . "');";
@@ -39,8 +39,8 @@ class Page
 		$loadScript .= "jsl.add('/scripts/widgets.js?" . self::VERSION . "');";
 		$loadScript .= "jsl.load();";
 
-		$retval = Tags::script("", "type='text/javascript' src='http://code.jquery.com/jquery-1.10.2.min.js'");
-		$retval .= Tags::script("", "type='text/javascript' src='http://code.jquery.com/ui/1.10.3/jquery-ui.min.js'");
+		$retval = Tags::script("", "type='text/javascript' src='https://code.jquery.com/jquery-1.10.2.min.js'");
+		$retval .= Tags::script("", "type='text/javascript' src='https://code.jquery.com/ui/1.10.4/jquery-ui.min.js'");
 		$retval .= Tags::script("", "type='text/javascript' src='/scripts/ajax.js?" . self::VERSION . "'");
 		$retval .= Tags::script("", "type='text/javascript' src='/scripts/jquery.tablesorter.min.js?" . self::VERSION . "'");
 		$retval .= Tags::script("", "type='text/javascript' src='/scripts/jquery.watermark.min.js?" . self::VERSION . "'");
@@ -49,14 +49,14 @@ class Page
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
-	static function getDocType()
+	protected static function getDocType()
 	{
 		$retval = "<!DOCTYPE html>\n";
 		$retval .= "<!-- generated: " . date("D, d M Y H:i:s") . " -->\n";
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
-	static function sendHttpHeaders()
+	protected static function sendHttpHeaders()
 	{
 		header("Expires:" . date("D, d M Y H:i:s") . "");
 		header("Cache-Control: no-transform; max-age=0; proxy-revalidate ");

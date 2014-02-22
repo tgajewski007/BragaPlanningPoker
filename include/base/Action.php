@@ -1,9 +1,9 @@
 <?php
 /**
+ *
  * @package common
  * @author Tomasz.Gajewski
- * @abstract
- * Created on 2009-04-06 10:40:13
+ * @abstract Created on 2009-04-06 10:40:13
  * klasa odpowiedzialna za pętle komunikatów oraz wstępne sprawdzenie
  * przychodzących danych
  */
@@ -15,13 +15,6 @@ abstract class Action extends BaseAction
 	 * @var GLayout
 	 */
 	protected $layOut;
-	// -------------------------------------------------------------------------
-	public function __construct(GLog $l)
-	{
-		$this->r = new Retval();
-		$c = new PostChecker($l);
-		$c->checkPost($this);
-	}
 	// -------------------------------------------------------------------------
 	public function __destruct()
 	{
@@ -49,7 +42,7 @@ abstract class Action extends BaseAction
 	final protected function page()
 	{
 		$this->prePage();
-		if($this->js)
+		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
 		{
 			if(!headers_sent())
 			{

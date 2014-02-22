@@ -19,6 +19,24 @@ require "interfaces/DataSourceMetaData.php";
 // -----------------------------------------------------------------------------
 require "objdao.php";
 require "obj/CookieName.php";
+require "obj/SessionName.php";
+// -----------------------------------------------------------------------------
+
+include "base_widgets/Field.php";
+include "base_widgets/DateField.php";
+include "base_widgets/CheckBoxField.php";
+include "base_widgets/FloatField.php";
+include "base_widgets/IntegerField.php";
+include "base_widgets/MemoField.php";
+include "base_widgets/TextField.php";
+include "base_widgets/DropDownListField.php";
+include "base_widgets/WidgetItem.php";
+include "base_widgets/DBGridReplacer.php";
+include "base_widgets/DBGridColumn.php";
+include "base_widgets/DBGrid.php";
+include "base_widgets/TabBox.php";
+include "base_widgets/TimeField.php";
+include "base_widgets/CheckBoxListField.php";
 // -----------------------------------------------------------------------------
 
 require "base/BaseAction.php";
@@ -44,6 +62,12 @@ require "base/Perms.php";
 require "base/Page.php";
 require "base/Tags.php";
 // -----------------------------------------------------------------------------
-require "controler/WebControler.php";
+require "controler/PublicControler.php";							// PP:201
+require "controler/WebControler.php";								// PP:202
+// -----------------------------------------------------------------------------
+require "layout/PublicLayout.php";
+require "layout/StartLayout.php";
+// -----------------------------------------------------------------------------
+require "form/LoginForm.php";
 // -----------------------------------------------------------------------------
 ?>

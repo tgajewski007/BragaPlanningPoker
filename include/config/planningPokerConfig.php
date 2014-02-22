@@ -9,20 +9,22 @@
 define("PRODUCTION", false);
 
 define("DB_HOST", "localhost");
-define("DB_SCHEMA", "plannnigpoker");
+define("DB_SCHEMA", "plannigpoker");
 define("DB_USER", "root");
 define("DB_PASS", "");
 
 define("BAD_LOGIN_COUNT_LIMIT", 6);
 define("HASH_ALGORYTM", "sha1");
 define("VERSION", "0.0.1");
-define("INSTALL_DIRECTORY", "o:/wwwroot/PlannigPoker/");
+define("INSTALL_DIRECTORY", "o:/wwwroot/PHPPlaningPoker/");
+define("LOG_DIRECTORY", INSTALL_DIRECTORY . "log/");
 define("DEBUG", true);
 define("FORMAT_XML", true);
 define("PHP_DATE_FORMAT", "Y-m-d");
 define("PHP_DATETIME_FORMAT", "Y-m-d H:i:s");
 
 define("PAGELIMIT", 40);
+define("STATIC_URL", "/");
 
 mb_internal_encoding("utf8");
 // ini_set("max_execution_time", "0");
@@ -92,7 +94,7 @@ function errorHandler($errno, $errstr, $errfile, $errline)
 	$retval .= ";" . $errline;
 	$retval .= "\n";
 
-	$file = INSTALL_DIRECTORY . "log/" . $file;
+	$file = LOG_DIRECTORY. $file;
 	$h = fopen($file, "a");
 	fwrite($h, $retval, mb_strlen($retval));
 	fclose($h);
@@ -108,10 +110,10 @@ function exceptionHandler(Exception $exception)
 	$retval .= ";" . $exception->getFile();
 	$retval .= ";" . $exception->getLine();
 	$retval .= "\n";
-	$file = INSTALL_DIRECTORY . "log/" . $file;
-	$h = @fopen($file, "a");
-	@fwrite($h, $retval, strlen($retval));
-	@fclose($h);
+	$file = LOG_DIRECTORY. $file;
+	$h = fopen($file, "a");
+	fwrite($h, $retval, strlen($retval));
+	fclose($h);
 	return false;
 }
 // -----------------------------------------------------------------------------

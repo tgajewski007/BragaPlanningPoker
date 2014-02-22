@@ -1,9 +1,9 @@
 <?php
 /**
- * Created on 09-02-2014 11:22:58
+ * Created on 22-02-2014 17:49:27
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
- * error prefix PP:109
+ * error prefix PP:110
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
  * Designed by schama CRUD http://wikipedia.org/wiki/CRUD
@@ -33,7 +33,7 @@ class TaskDAO
 		{
 			if(!$this->retrieve($idTask))
 			{
-				throw new Exception("PP:10901 " . DB_SCHEMA . ".task(" . $idTask . ")  does not exists");
+				throw new Exception("PP:11001 " . DB_SCHEMA . ".task(" . $idTask . ")  does not exists");
 			}
 		}
 	}
@@ -259,7 +259,7 @@ class TaskDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10902 Dodanie rekordu do tablicy task nie powiodło się");
+			AddAlert("PP:11002 Dodanie rekordu do tablicy task nie powiodło się");
 			return false;
 		}
 	}
@@ -290,7 +290,7 @@ class TaskDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10903 Zmiana rekordu w tablicy task nie powiodło się");
+			AddAlert("PP:11003 Zmiana rekordu w tablicy task nie powiodło się");
 			return false;
 		}
 	}
@@ -315,7 +315,7 @@ class TaskDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10904 Delete record from table task fail");
+			AddAlert("PP:11004 Delete record from table task fail");
 			return false;
 		}
 	}

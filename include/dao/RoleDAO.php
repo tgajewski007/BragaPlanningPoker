@@ -1,9 +1,9 @@
 <?php
 /**
- * Created on 09-02-2014 11:22:58
+ * Created on 22-02-2014 17:49:27
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
- * error prefix PP:107
+ * error prefix PP:108
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
  * Designed by schama CRUD http://wikipedia.org/wiki/CRUD
@@ -30,7 +30,7 @@ class RoleDAO
 		{
 			if(!$this->retrieve($idRole))
 			{
-				throw new Exception("PP:10701 " . DB_SCHEMA . ".role(" . $idRole . ")  does not exists");
+				throw new Exception("PP:10801 " . DB_SCHEMA . ".role(" . $idRole . ")  does not exists");
 			}
 		}
 	}
@@ -199,7 +199,7 @@ class RoleDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10702 Dodanie rekordu do tablicy role nie powiodło się");
+			AddAlert("PP:10802 Dodanie rekordu do tablicy role nie powiodło się");
 			return false;
 		}
 	}
@@ -226,7 +226,7 @@ class RoleDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10703 Zmiana rekordu w tablicy role nie powiodło się");
+			AddAlert("PP:10803 Zmiana rekordu w tablicy role nie powiodło się");
 			return false;
 		}
 	}
@@ -251,7 +251,7 @@ class RoleDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10704 Delete record from table role fail");
+			AddAlert("PP:10804 Delete record from table role fail");
 			return false;
 		}
 	}

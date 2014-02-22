@@ -1,9 +1,9 @@
 <?php
 /**
- * Created on 09-02-2014 11:22:58
+ * Created on 22-02-2014 17:49:27
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
- * error prefix PP:108
+ * error prefix PP:109
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
  * Designed by schama CRUD http://wikipedia.org/wiki/CRUD
@@ -36,7 +36,7 @@ class TableDAO
 		{
 			if(!$this->retrieve($idTable))
 			{
-				throw new Exception("PP:10801 " . DB_SCHEMA . ".table(" . $idTable . ")  does not exists");
+				throw new Exception("PP:10901 " . DB_SCHEMA . ".table(" . $idTable . ")  does not exists");
 			}
 		}
 	}
@@ -254,19 +254,19 @@ class TableDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return PrivacyStatus
-	 */
-	public function getPrivacyStatus()
-	{
-		return PrivacyStatus::get($this->getIdPrivacyStatus());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return Task
 	 */
 	public function getSessionTask()
 	{
 		return Task::get($this->getIdTask());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return PrivacyStatus
+	 */
+	public function getPrivacyStatus()
+	{
+		return PrivacyStatus::get($this->getIdPrivacyStatus());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -319,7 +319,7 @@ class TableDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10802 Dodanie rekordu do tablicy table nie powiodło się");
+			AddAlert("PP:10902 Dodanie rekordu do tablicy table nie powiodło się");
 			return false;
 		}
 	}
@@ -354,7 +354,7 @@ class TableDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10803 Zmiana rekordu w tablicy table nie powiodło się");
+			AddAlert("PP:10903 Zmiana rekordu w tablicy table nie powiodło się");
 			return false;
 		}
 	}
@@ -379,7 +379,7 @@ class TableDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10804 Delete record from table table fail");
+			AddAlert("PP:10904 Delete record from table table fail");
 			return false;
 		}
 	}
@@ -403,13 +403,13 @@ class TableDAO
 	 * Methods return colection of  Table
 	 * @return Collection &lt;Table&gt; 
 	 */
-	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
+	public static function getAllBySessionTask(TaskDAO $task)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".table ";
-		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
-		$db->setParam("IDPRIVACY_STATUS", $privacyStatus->getIdPrivacyStatus());
+		$sql .= "WHERE idtask = :IDTASK ";
+		$db->setParam("IDTASK", $task->getIdTask());
 		$db->query($sql);
 		return new Collection($db, Table::get());
 	}
@@ -418,13 +418,13 @@ class TableDAO
 	 * Methods return colection of  Table
 	 * @return Collection &lt;Table&gt; 
 	 */
-	public static function getAllBySessionTask(TaskDAO $task)
+	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".table ";
-		$sql .= "WHERE idtask = :IDTASK ";
-		$db->setParam("IDTASK", $task->getIdTask());
+		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
+		$db->setParam("IDPRIVACY_STATUS", $privacyStatus->getIdPrivacyStatus());
 		$db->query($sql);
 		return new Collection($db, Table::get());
 	}

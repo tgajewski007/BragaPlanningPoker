@@ -1,9 +1,9 @@
 <?php
 /**
- * Created on 09-02-2014 11:22:58
+ * Created on 22-02-2014 17:49:27
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
- * error prefix PP:105
+ * error prefix PP:106
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
  * Designed by schama CRUD http://wikipedia.org/wiki/CRUD
@@ -32,7 +32,7 @@ class PlayerDAO
 		{
 			if(!$this->retrieve($idPlayer))
 			{
-				throw new Exception("PP:10501 " . DB_SCHEMA . ".player(" . $idPlayer . ")  does not exists");
+				throw new Exception("PP:10601 " . DB_SCHEMA . ".player(" . $idPlayer . ")  does not exists");
 			}
 		}
 	}
@@ -190,6 +190,14 @@ class PlayerDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
+	 * @return User
+	 */
+	public function getUser()
+	{
+		return User::get($this->getIdUser());
+	}
+	// -------------------------------------------------------------------------
+	/**
 	 * @return Table
 	 */
 	public function getTable()
@@ -203,14 +211,6 @@ class PlayerDAO
 	public function getRole()
 	{
 		return Role::get($this->getIdRole());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * @return User
-	 */
-	public function getUser()
-	{
-		return User::get($this->getIdUser());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -261,7 +261,7 @@ class PlayerDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10502 Dodanie rekordu do tablicy player nie powiodło się");
+			AddAlert("PP:10602 Dodanie rekordu do tablicy player nie powiodło się");
 			return false;
 		}
 	}
@@ -292,7 +292,7 @@ class PlayerDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10503 Zmiana rekordu w tablicy player nie powiodło się");
+			AddAlert("PP:10603 Zmiana rekordu w tablicy player nie powiodło się");
 			return false;
 		}
 	}
@@ -317,7 +317,7 @@ class PlayerDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10504 Delete record from table player fail");
+			AddAlert("PP:10604 Delete record from table player fail");
 			return false;
 		}
 	}
@@ -333,6 +333,21 @@ class PlayerDAO
 		$this->setIdRole($db->f("idrole"));
 		$this->setIdUser($db->f("iduser"));
 		$this->setReaded();
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Player
+	 * @return Collection &lt;Player&gt; 
+	 */
+	public static function getAllByUser(UserDAO $user)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".player ";
+		$sql .= "WHERE iduser = :IDUSER ";
+		$db->setParam("IDUSER", $user->getIdUser());
+		$db->query($sql);
+		return new Collection($db, Player::get());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -361,21 +376,6 @@ class PlayerDAO
 		$sql .= "FROM " . DB_SCHEMA . ".player ";
 		$sql .= "WHERE idrole = :IDROLE ";
 		$db->setParam("IDROLE", $role->getIdRole());
-		$db->query($sql);
-		return new Collection($db, Player::get());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt; 
-	 */
-	public static function getAllByUser(UserDAO $user)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".player ";
-		$sql .= "WHERE iduser = :IDUSER ";
-		$db->setParam("IDUSER", $user->getIdUser());
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}

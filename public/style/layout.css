@@ -1,0 +1,103 @@
+@CHARSET "UTF-8";
+
+body {
+	background-color: #671e0c;
+	background-image: url("/img/background.jpg");
+	background-position: top center;
+	background-repeat: no-repeat;
+	font-family: 'Cinzel', cursive;
+	font-weight: 700;
+	text-shadow: 3px 3px 3px #606060;
+	font-size: 15px;
+}
+
+#Header {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	background: rgba(255, 255, 255, .7);
+	width: 1000px;
+	height: 70px;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	margin-bottom: 0px;
+}
+
+#Header p {
+	color: black;
+	line-height: 70px;
+	padding-left: 40px;
+	text-align: left;
+	font-size: 50px;
+	font-weight: 900;
+}
+
+#PublicMainBox {
+	margin-left: auto;
+	margin-right: auto;
+	background: rgba(255, 255, 255, .7);
+	width: 920px;
+	margin-top: 550px;
+	padding: 40px;
+}
+
+#Footer {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: rgba(255, 255, 255, .7);
+	height: 50px;
+	width: 1000px;
+	margin-bottom: 40px;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+}
+
+#Footer p {
+	line-height: 50px;
+	font-size: 15px;
+	text-align: center;
+	font-weight: 700;
+}
+
+#LoginBox {
+	width: 920px;
+	text-align: right;
+	padding: 5px;
+	background-color: white;
+}
+
+#LoginBox span {
+	display: inline-block;
+	padding-left: 5px;
+}
+
+#MsgBox {
+	top: 0px;
+	z-index: 2000;
+	min-width: 400px;
+	max-width: 1300px;
+	position: fixed;
+	right: 0px;
+}
+
+#MenuBox {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: rgba(255, 255, 255, .7);
+	width: 920px;
+	margin-bottom: 10px;
+	padding: 10px 40px;
+	text-align: right;
+}
+
+#MainBox {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: rgba(255, 255, 255, .7);
+	width: 920px;
+	min-height: 600px;
+	padding: 10px 40px;
+}
