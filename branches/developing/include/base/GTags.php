@@ -225,6 +225,11 @@ class GTags
 		return self::custom("body", $innerHTML, $attributes);
 	}
 	// -------------------------------------------------------------------------
+	static function label($innerHTML, $attributes = "")
+	{
+		return self::custom("label", $innerHTML, $attributes);
+	}
+	// -------------------------------------------------------------------------
 	static function meta($attributes)
 	{
 		return self::customShort("meta", $attributes);

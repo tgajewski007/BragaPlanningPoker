@@ -5,10 +5,15 @@ body {
 	background-image: url("/img/background.jpg");
 	background-position: top center;
 	background-repeat: no-repeat;
-	font-family: 'Cinzel', cursive;
-	font-weight: 700;
+	font-family: 'Alegreya Sans SC', cursive;
+	font-size: 14px;
+}
+
+.Cinzel {
+	font-family: 'Cinzel', cursive !important;
+	font-weight: 700 !important;
 	text-shadow: 3px 3px 3px #606060;
-	font-size: 15px;
+	font-size: 15px !important;
 }
 
 #Header {
@@ -30,6 +35,10 @@ body {
 	text-align: left;
 	font-size: 50px;
 	font-weight: 900;
+}
+
+#Header p a:hover {
+	text-decoration: none !important;
 }
 
 #PublicMainBox {
@@ -101,10 +110,25 @@ body {
 	min-height: 600px;
 	padding: 10px 40px;
 }
-.snow
-{
-	background-color: black;
+
+.snow {
+	background-color: gray;
 	background-image: url("/img/ajax-loader.gif");
 	background-position: center;
 	background-repeat: no-repeat;
+}
+
+span.FormCellDesc {
+	text-align: left;
+	font-size: 85%;
+	color: #606060;
+	display: block;
+	font-weight: 700;
+}
+
+span.FormCellReal {
+	text-align: left;
+	padding-left: 20px;
+	min-height: 10px;
+	display: block;
 }

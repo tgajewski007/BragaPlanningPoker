@@ -37,8 +37,8 @@ class TextField extends Field
 		}
 		else
 		{
-			$this->onFocus .= "\$(this).addClass(\"widgetHighLight a ui-state-highlight\");";
-			$this->onBlur .= "\$(this).removeClass(\"widgetHighLight a ui-state-highlight\");";
+			$this->onFocus .= "\$(this).addClass(\"widgetHighLight ui-state-highlight\");";
+			$this->onBlur .= "\$(this).removeClass(\"widgetHighLight ui-state-highlight\");";
 		}
 		if($this->required)
 		{

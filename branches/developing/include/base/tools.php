@@ -7,6 +7,18 @@
  * error prefix EM:102
  */
 // =============================================================================
+function getFormRow($desc = "", $real = "")
+{
+	$retval = Tags::span($desc, "class='FormCellDesc'");
+	$retval .= Tags::span($real, "class='FormCellReal'");
+	return $retval;
+}
+// =============================================================================
+function getFormSubmitRow($real = "")
+{
+	return Tags::span($real, "class='FormCellReal c '");
+}
+// =============================================================================
 function getToolTip($komunikat)
 {
 	$komunikat = str_replace("\n", Tags::br(), $komunikat);

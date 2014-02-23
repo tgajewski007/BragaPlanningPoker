@@ -13,7 +13,7 @@ class Page
 	// -------------------------------------------------------------------------
 	protected static function getHead()
 	{
-		$title = "Planning Poker Online";
+		$title = "Planning Poker Online (v. ".VERSION.")";
 		$retval = Tags::meta("http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"");
 		$retval .= "<!--[if IE]>".Tags::meta("http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"")."<![endif]-->";
 		$retval .= Tags::title($title);

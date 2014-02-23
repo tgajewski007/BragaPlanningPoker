@@ -37,6 +37,7 @@ include "base_widgets/DBGrid.php";
 include "base_widgets/TabBox.php";
 include "base_widgets/TimeField.php";
 include "base_widgets/CheckBoxListField.php";
+include "base_widgets/RadioBoxListField.php";
 // -----------------------------------------------------------------------------
 
 require "base/BaseAction.php";
@@ -70,5 +71,8 @@ require "layout/StartLayout.php";
 // -----------------------------------------------------------------------------
 require "form/LoginForm.php";
 require "form/TableForm.php";
+// -----------------------------------------------------------------------------
+require "widget/PrivacyStatusSelect.php";
+
 // -----------------------------------------------------------------------------
 ?>

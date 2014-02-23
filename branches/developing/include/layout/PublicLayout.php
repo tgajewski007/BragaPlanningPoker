@@ -19,7 +19,7 @@ class PublicLayout implements GLayout
 	// -------------------------------------------------------------------------
 	protected function getHeader()
 	{
-		return Tags::div(Tags::p(Tags::a("Planning Poker Online","href='/'")),"id='Header'");
+		return Tags::div(Tags::p(Tags::a("Planning Poker Online","href='/'")),"id='Header' class='Cinzel'");
 	}
 	// -------------------------------------------------------------------------
 	protected function getContent($content)
@@ -35,7 +35,7 @@ class PublicLayout implements GLayout
 		$retval .= Tags::span(" | ");
 		$retval .= Tags::a("Copyright &amp; Licence","href='/wiki/licence.html'");
 		$retval = Tags::p($retval);
-		$retval = Tags::div($retval,"id='Footer'");
+		$retval = Tags::div($retval,"id='Footer'  class='Cinzel'");
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
