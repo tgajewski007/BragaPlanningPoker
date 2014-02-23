@@ -21,7 +21,7 @@ function OgraniczTextArea(sender, limit)
 function CzyReal(Sender, minValue, maxValue, precision)
 {
 	var napis = Sender.value;
-	var errorClass = new String("widgetError");
+	var errorClass = new String("ui-state-error");
 	napis = ComaToPoint(napis);
 
 	if (minValue == null)
@@ -73,13 +73,13 @@ function CzyNull(sender)
 {
 	if ($(sender).val() == "")
 	{
-		$(sender).addClass("widgetError");
+		$(sender).addClass("ui-state-error");
 		addAlert("To pole nie może być puste");
 		return false;
 	}
 	else
 	{
-		$(sender).removeClass("widgetError");
+		$(sender).removeClass("ui-state-error");
 		ClearAlerts();
 		return true;
 	}
@@ -124,7 +124,7 @@ function CheckDate(sender, wymagany, minDate, maxDate)
 	monthShortName[11] = "12";
 
 	var selected = $(sender).val();
-	var styleAlert = "widgetError";
+	var styleAlert = "ui-state-error";
 	ClearAlerts();
 	$(sender).removeClass(styleAlert);
 
@@ -181,7 +181,7 @@ function CheckDate(sender, wymagany, minDate, maxDate)
 	{
 		if (selected < minDate)
 		{
-			$(sender).addClass("widgetError");
+			$(sender).addClass("ui-state-error");
 			addAlert("Minimalna data: " + minDate);
 		}
 	}
@@ -189,7 +189,7 @@ function CheckDate(sender, wymagany, minDate, maxDate)
 	{
 		if (selected > maxDate)
 		{
-			$(sender).addClass("widgetError");
+			$(sender).addClass("ui-state-error");
 			addAlert("Maksymalna data: " + minDate);
 		}
 	}
@@ -197,7 +197,7 @@ function CheckDate(sender, wymagany, minDate, maxDate)
 // -----------------------------------------------------------------------------
 function SprawdzCombo(Sender)
 {
-	var styleAlert = "widgetError";
+	var styleAlert = "ui-state-error";
 	if ($(Sender).children().filter(":selected").hasClass(styleAlert))
 	{
 		$(Sender).addClass(styleAlert);
@@ -215,7 +215,7 @@ function BeforeSubmit(FormObject)
 	for (var i = 0; i < a; i++)
 	{
 		var tmp = FormObject.elements[i];
-		if ($(tmp).hasClass("widgetError"))
+		if ($(tmp).hasClass("ui-state-error"))
 		{
 			alert('Nie wszystkie wymagane pola (wyróżnione) zostały wypełnione');
 			return false;
@@ -263,7 +263,7 @@ function var_dump(data, addwhitespace, safety, level)
 			dt = dt.replace(/\"/g, '\"');
 			dt = '"' + dt + '"';
 		}// end if typeof == string
-		if (typeof (data) == 'function' && addwhitespace)
+		if ((typeof (data) == 'function') && addwhitespace)
 		{
 			dt = new String(dt).replace(/\n/g, "\n" + spaces);
 			if (addwhitespace == 'html')
@@ -332,7 +332,7 @@ function setValueAfterAutoCompleate(event, ui, idField, nameField)
 	{
 		$("#" + idField).val(ui.item.id);
 		$("#" + idField).attr("alt", ui.item.label);
-		$("#" + nameField).removeClass("widgetError");
+		$("#" + nameField).removeClass("ui-state-error");
 	}
 }
 // -----------------------------------------------------------------------------
@@ -345,7 +345,7 @@ function checkAutoCompleateSelected(idField, nameField)
 		{
 			if (t != $("#" + nameField).val())
 			{
-				$("#" + nameField).addClass("widgetError");
+				$("#" + nameField).addClass("ui-state-error");
 				$("#" + idField).attr("alt", "");
 				$("#" + idField).val(null);
 			}
@@ -419,22 +419,22 @@ function showToolTip(Msg, Zdarzenie, Obj)
 function CheckEmail(sender, req)
 {
 	var val = new String($(sender).val());
-	if (val.length > 0 || req == true)
+	if ((val.length > 0) || (req == true))
 	{
-		$(sender).addClass("widgetError");
+		$(sender).addClass("ui-state-error");
 		var regexEmail = new RegExp("[a-zA-Z0-9_.\-]+@[a-zA-Z0-9_.\-]+[.]{1}[a-zA-Z0-9_.\-]{2,}", "g");
 		if (regexEmail.test(val))
 		{
-			$(sender).removeClass("widgetError");
+			$(sender).removeClass("ui-state-error");
 		}
 	}
 	else if (req)
 	{
-		$(sender).addClass("widgetError");
+		$(sender).addClass("ui-state-error");
 	}
 	else
 	{
-		$(sender).removeClass("widgetError");
+		$(sender).removeClass("ui-state-error");
 	}
 }
 // -----------------------------------------------------------------------------

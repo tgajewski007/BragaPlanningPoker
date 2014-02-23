@@ -14,6 +14,9 @@ class WebControler extends Action
 		switch(PostChecker::get("action"))
 		{
 			// ----------------------------
+			case "InsTable":
+				$this->insertTable();
+				break;
 			case "NewTable":
 				$this->getNewTableForm();
 				break;
@@ -29,21 +32,42 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
+	private function insertTable()
+	{
+		$t = Table::get();
+		$t->setName(PostChecker::get("name"));
+		$t->setPasswordNonHashed(PostChecker::get("password"));
+		$t->setIdPrivacyStatus(PostChecker::get("idprivacy_status"));
+		if($t->save())
+		{
+			$this->refreshTableList();
+		}
+
+	}
+	// -------------------------------------------------------------------------
 	private function getNewTableForm()
 	{
 		$t = Table::get();
 		$f = new TableForm($t);
-		$this->r->popUpWin("New table", $f->out());
+		$retval = $f->out();
+		$retval .= getFormSubmitRow(submitButton("Create").hiddenField("action","InsTable"));
+		$retval = Tags::formularz($retval);
+		$this->r->popUpWin("New table", $retval);
 	}
 	// -------------------------------------------------------------------------
 	private function getAviableTableList()
 	{
-		$retval = Tags::p(Tags::ajaxLink("?action=NewTable", icon("ui-icon-bullet") . "Create new table"));
+		$retval = Tags::p(Tags::ajaxLink("?action=NewTable", icon("ui-icon-bullet") . "Create new table"),"class='Cinzel'");
 		foreach(Table::getAllByPrivacyStatus(PrivacyStatus::get(PrivacyStatus::STATUS_PUBLIC)) as $t) /* @var $t Table */
 		{
-			$retval .= Tags::p(Tags::ajaxLink("?action=GetTable", icon("ui-icon-bullet") . $t->getName()));
+			$retval .= Tags::p(Tags::ajaxLink("?action=GetTable&amp;arg1=".$t->getIdTable(), icon("ui-icon-bullet") . $t->getName()),"class='Cinzel'");
 		}
 		return $retval;
+	}
+	// -------------------------------------------------------------------------
+	private function refreshTableList()
+	{
+		$this->r->addChange($this->getAviableTableList());
 	}
 	// -------------------------------------------------------------------------
 	private function makeWorArea()

@@ -11,7 +11,7 @@ class StartLayout extends PublicLayout
 	// -------------------------------------------------------------------------
 	protected function getContent($content)
 	{
-		$retval = Tags::div($this->getMenu(), "id='MenuBox'");
+		$retval = Tags::div($this->getMenu(), "id='MenuBox' class='Cinzel'");
 		$retval .= Tags::div($content, "id='MainBox'");
 		return $retval;
 	}
