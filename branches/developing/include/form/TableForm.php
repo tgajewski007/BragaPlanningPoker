@@ -22,9 +22,16 @@ class TableForm extends Field
 	// -------------------------------------------------------------------------
 	public function out()
 	{
-		$retval = getFormRow("Table name", textField("name", $this->table->getName(),true));
+		$retval = getFormRow("Table name", textField("name", $this->table->getName(), true));
 		$retval .= getFormRow("Password", passwordField("password"));
-		$w = new PrivacyStatusSelect($this->table->getIdPrivacyStatus());
+		if(is_null($this->table->getIdPrivacyStatus()))
+		{
+			$w = new PrivacyStatusSelect(PrivacyStatus::STATUS_PROTECTED);
+		}
+		else
+		{
+			$w = new PrivacyStatusSelect($this->table->getIdPrivacyStatus());
+		}
 		$retval .= getFormRow("Privacy status", $w->out());
 
 		return $retval;
