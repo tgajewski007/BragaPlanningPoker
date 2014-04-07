@@ -17,7 +17,7 @@ class RadioBoxListField extends DropDownListField
 		{
 			if($value->getVal() == $this->selected)
 			{
-				$selected = " selected='selected' ";
+				$selected = " checked='checked' ";
 			}
 			else
 			{
