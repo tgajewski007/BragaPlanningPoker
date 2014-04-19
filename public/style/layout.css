@@ -132,3 +132,34 @@ span.FormCellReal {
 	min-height: 10px;
 	display: block;
 }
+
+span.card {
+	width: 63px;
+	height: 89px;
+	display: inline-block;
+	box-shadow: 2px 2px 4px 1px #000000;
+	border-radius: 4px;
+	margin: 3px;
+}
+
+#PlayingTable {
+	height: 500px;
+	width: 950px;
+	background-color: yellow;
+	border-radius: 240px;
+}
+
+#PlayerTable {
+	text-align: center;
+	overflow: hidden;
+	height: 95px;
+}
+
+span.cardInHand {
+	display: inline-block;
+	padding-top: 75px;
+}
+
+span.cardFocus {
+	padding-top: 0px !important;
+}
