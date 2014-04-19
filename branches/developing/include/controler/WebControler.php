@@ -14,6 +14,9 @@ class WebControler extends Action
 		switch(PostChecker::get("action"))
 		{
 			// ----------------------------
+			case "GetTable":
+				$this->getTable();
+				break;
 			case "InsTable":
 				$this->insertTable();
 				break;
@@ -32,6 +35,39 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
+	private function getTable()
+	{
+		try
+		{
+			$t = Table::get(PostChecker::get("arg1"));
+			if($t->isCanSee())
+			{
+				$retval = $this->getTableForm();
+				$retval .= $this->getPlayerTable();
+				$this->r->addChange($retval);
+			}
+		}
+		catch(Exception $e)
+		{
+			addAlert($e->getMessage());
+		}
+	}
+	// -------------------------------------------------------------------------
+	private function getPlayerTable()
+	{
+		$retval = "";
+		foreach (Card::getAll() as $c)/* @var $c Card */
+		{
+			$retval .= Tags::span($c->getTag(),"class='cardInHand' onmouseover='\$(this).addClass(\"cardFocus\")' onmouseout='\$(this).removeClass(\"cardFocus\")'");
+		}
+		return Tags::div($retval,"id='PlayerTable'");
+	}
+	// -------------------------------------------------------------------------
+	private function getTableForm()
+	{
+		return Tags::div("","id='PlayingTable'");
+	}
+	// -------------------------------------------------------------------------
 	private function insertTable()
 	{
 		$t = Table::get();
@@ -42,7 +78,6 @@ class WebControler extends Action
 		{
 			$this->refreshTableList();
 		}
-
 	}
 	// -------------------------------------------------------------------------
 	private function getNewTableForm()
@@ -50,17 +85,17 @@ class WebControler extends Action
 		$t = Table::get();
 		$f = new TableForm($t);
 		$retval = $f->out();
-		$retval .= getFormSubmitRow(submitButton("Create").hiddenField("action","InsTable"));
+		$retval .= getFormSubmitRow(submitButton("Create") . hiddenField("action", "InsTable"));
 		$retval = Tags::formularz($retval);
 		$this->r->popUpWin("New table", $retval);
 	}
 	// -------------------------------------------------------------------------
 	private function getAviableTableList()
 	{
-		$retval = Tags::p(Tags::ajaxLink("?action=NewTable", icon("ui-icon-bullet") . "Create new table"),"class='Cinzel'");
+		$retval = Tags::p(Tags::ajaxLink("?action=NewTable", icon("ui-icon-bullet") . "Create new table"), "class='Cinzel'");
 		foreach(Table::getAllByPrivacyStatus(PrivacyStatus::get(PrivacyStatus::STATUS_PUBLIC)) as $t) /* @var $t Table */
 		{
-			$retval .= Tags::p(Tags::ajaxLink("?action=GetTable&amp;arg1=".$t->getIdTable(), icon("ui-icon-bullet") . $t->getName()),"class='Cinzel'");
+			$retval .= Tags::p(Tags::ajaxLink("?action=GetTable&amp;arg1=" . $t->getIdTable(), icon("ui-icon-bullet") . $t->getName()), "class='Cinzel'");
 		}
 		return $retval;
 	}

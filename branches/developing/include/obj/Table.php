@@ -14,6 +14,12 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	protected $passwordNonHashed = null;
 	// -------------------------------------------------------------------------
+	public function isCanSee()
+	{
+		// TODO: dorobić zarządzanie prawami
+		return true;
+	}
+	// -------------------------------------------------------------------------
 	public function setPasswordNonHashed($pass)
 	{
 		if($pass == "")
