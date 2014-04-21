@@ -18,7 +18,8 @@ class StartLayout extends PublicLayout
 	// -------------------------------------------------------------------------
 	protected function getMenu()
 	{
-		$retval = Tags::span("welcome: " . User::getCurrent()->getName());
+		$retval = Tags::div("","id='TaskBox'");
+		$retval .= Tags::span("welcome: " . User::getCurrent()->getName());
 		$retval .= Tags::span(" | ");
 		$retval .= Tags::ajaxLink("?action=GetSettings","settings");
 		$retval .= Tags::span(" | ");

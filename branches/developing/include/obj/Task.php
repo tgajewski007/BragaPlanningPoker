@@ -30,7 +30,8 @@ class Task extends TaskDAO implements DAO
 	 */
 	public function save()
 	{
-		// TODO: please set atrib independens of clients ex lastupdate
+		$this->setIdPlayer(Player::getCurrent()->getIdPlayer());
+		$this->setLastUpdate(PHP_DATETIME_FORMAT);
 		if($this->check())
 		{
 			if($this->isReaded())
@@ -75,25 +76,13 @@ class Task extends TaskDAO implements DAO
 		return new Collection($db, self::get());
 	}
 	// -------------------------------------------------------------------------
-	public static function setCurrent(Task $t)
-	{
-		$_SESSION[SessionName::CURRENT_TASK] = $t->getIdTask();
-	}
-	// -------------------------------------------------------------------------
 	/**
 	 *
 	 * @return Task
 	 */
 	public static function getCurrent()
 	{
-		if(isset($_SESSION[SessionName::CURRENT_TASK]))
-		{
-			return self::get($_SESSION[SessionName::CURRENT_TASK]);
-		}
-		else
-		{
-			throw new TaskException("PP:10910 Default task does not exists");
-		}
+		return Player::getCurrent()->getTable()->getTask();
 	}
 	// -------------------------------------------------------------------------
 }

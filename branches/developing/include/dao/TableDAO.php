@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 21-04-2014 20:27:42
+ * Created on 21-04-2014 22:24:23
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
  * error prefix PP:109
@@ -21,11 +21,13 @@ class TableDAO
 	protected $password = null;
 	protected $idTask = null;
 	protected $idPrivacyStatus = null;
+	protected $closeDate = null;
 	protected $readed = false;
 	// -------------------------------------------------------------------------
 	protected $chatsForTable = null;
 	protected $gamesForTable = null;
 	protected $playersForTable = null;
+	protected $tasksForTable = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param string $idTable
@@ -179,6 +181,18 @@ class TableDAO
 		}
 	}
 	// -------------------------------------------------------------------------
+	public function setCloseDate($closeDate)
+	{
+		if(empty($closeDate))
+		{
+			$this->closeDate = null;
+		}
+		else
+		{
+			$this->closeDate = date(PHP_DATETIME_FORMAT,strtotime($closeDate));
+		}
+	}
+	// -------------------------------------------------------------------------
 	public function getIdTable()
 	{
 		return $this->idTable;
@@ -207,6 +221,11 @@ class TableDAO
 	public function getIdPrivacyStatus()
 	{
 		return $this->idPrivacyStatus;
+	}
+	// -------------------------------------------------------------------------
+	public function getCloseDate()
+	{
+		return $this->closeDate;
 	}
 	// -------------------------------------------------------------------------
 	public function getKey()
@@ -254,9 +273,22 @@ class TableDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
+	 * Methods returns colection of objects Task
+	 * @return Collection &lt;Task&gt; 
+	 */
+	public function getTasksForTable()
+	{
+		if(is_null($this->tasksForTable))
+		{
+			$this->tasksForTable = Task::getAllByTable($this);
+		}
+		return $this->tasksForTable;
+	}
+	// -------------------------------------------------------------------------
+	/**
 	 * @return Task
 	 */
-	public function getSessionTask()
+	public function getTask()
 	{
 		return Task::get($this->getIdTask());
 	}
@@ -300,14 +332,15 @@ class TableDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".table(idtable, name, start_date, password, idtask, idprivacy_status) ";
-		$sql .= "VALUES(:IDTABLE, :NAME, :STARTDATE, :PASSWORD, :IDTASK, :IDPRIVACYSTATUS) ";
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".table(idtable, name, start_date, password, idtask, idprivacy_status, close_date) ";
+		$sql .= "VALUES(:IDTABLE, :NAME, :STARTDATE, :PASSWORD, :IDTASK, :IDPRIVACYSTATUS, :CLOSEDATE) ";
 		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("NAME",$this->getName());
 		$db->setParam("STARTDATE",$this->getStartDate());
 		$db->setParam("PASSWORD",$this->getPassword());
 		$db->setParam("IDTASK",$this->getIdTask());
 		$db->setParam("IDPRIVACYSTATUS",$this->getIdPrivacyStatus());
+		$db->setParam("CLOSEDATE",$this->getCloseDate());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -338,6 +371,7 @@ class TableDAO
 		$sql .= " , password = :PASSWORD ";
 		$sql .= " , idtask = :IDTASK ";
 		$sql .= " , idprivacy_status = :IDPRIVACYSTATUS ";
+		$sql .= " , close_date = :CLOSEDATE ";
 		$sql .= "WHERE idtable = :IDTABLE ";
 		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("NAME",$this->getName());
@@ -345,6 +379,7 @@ class TableDAO
 		$db->setParam("PASSWORD",$this->getPassword());
 		$db->setParam("IDTASK",$this->getIdTask());
 		$db->setParam("IDPRIVACYSTATUS",$this->getIdPrivacyStatus());
+		$db->setParam("CLOSEDATE",$this->getCloseDate());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -396,6 +431,7 @@ class TableDAO
 		$this->setPassword($db->f("password"));
 		$this->setIdTask($db->f("idtask"));
 		$this->setIdPrivacyStatus($db->f("idprivacy_status"));
+		$this->setCloseDate($db->f("close_date"));
 		$this->setReaded();
 	}
 	// -------------------------------------------------------------------------
@@ -403,7 +439,7 @@ class TableDAO
 	 * Methods return colection of  Table
 	 * @return Collection &lt;Table&gt; 
 	 */
-	public static function getAllBySessionTask(TaskDAO $task)
+	public static function getAllByTask(TaskDAO $task)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";

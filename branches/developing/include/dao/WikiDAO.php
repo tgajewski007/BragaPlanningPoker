@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 21-04-2014 20:27:42
+ * Created on 21-04-2014 22:24:23
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
  * error prefix PP:112

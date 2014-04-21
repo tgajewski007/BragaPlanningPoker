@@ -78,16 +78,19 @@ class Game extends GameDAO implements DAO
 		return new Collection($db, self::get());
 	}
 	// -------------------------------------------------------------------------
-	public static function getGameForCurrentPlayer()
+	public static function getCurrent()
 	{
 		$game = new self();
 		$db = new DB();
-		$sql = "SELECT * FROM " . DB_SCHEMA . ".game ";
+		$sql = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
 		$sql .= "WHERE idplayer = :IDPLAYER ";
 		$sql .= "AND idtable = :IDTABLE ";
+		$sql .= "AND idtask = :IDTASK ";
 		$sql .= "ORDER BY idgame DESC ";
 		$db->setParam("IDPLAYER", Player::getCurrent()->getIdPlayer());
 		$db->setParam("IDTABLE", Player::getCurrent()->getIdTable());
+		$db->setParam("IDTASK", Player::getCurrent()->getTable()->getIdTask());
 		$db->setLimit(0, 1);
 		$db->query($sql);
 		if($db->nextRecord())
@@ -98,8 +101,9 @@ class Game extends GameDAO implements DAO
 		{
 			$game = self::get();
 			$game->setIdTable(Player::getCurrent()->getIdTable());
-			$game->setIdTask(Task::getCurrent()->getIdTask());
+			$game->setIdTask(Player::getCurrent()->getTable()->getIdTask());
 			$game->setIdPlayer(Player::getCurrent()->getIdPlayer());
+			$game->setStatus(self::OPEN);
 			if($game->save())
 			{
 				return $game;

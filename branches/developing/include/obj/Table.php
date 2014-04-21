@@ -98,9 +98,8 @@ class Table extends TableDAO implements DAO
 	 */
 	public function kill()
 	{
-		// TODO: this method may be changed when record can not be deleted from
-		// table
-		return $this->destroy();
+		$this->setCloseDate(PHP_DATETIME_FORMAT);
+		return $this->save();
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -119,12 +118,28 @@ class Table extends TableDAO implements DAO
 	}
 	// -------------------------------------------------------------------------
 	/**
+	 * Methods return colection of  Table
+	 * @return Collection &lt;Table&gt;
+	 */
+	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".table ";
+		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
+		$sql .= "AND close_date IS NULL ";
+		$db->setParam("IDPRIVACY_STATUS", $privacyStatus->getIdPrivacyStatus());
+		$db->query($sql);
+		return new Collection($db, Table::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
 	 *
 	 * @return Game
 	 */
 	public function getCurrentGame()
 	{
-		return Game::getGameForCurrentPlayer();
+		return Game::getCurrent();
 	}
 	// -------------------------------------------------------------------------
 	public static function setCurrent(Table $t)

@@ -24,6 +24,7 @@ require "obj/SessionName.php";
 require "exceptions/PlayerException.php";
 require "exceptions/TaskException.php";
 require "exceptions/TableException.php";
+require "exceptions/GameException.php";
 // -----------------------------------------------------------------------------
 
 require "base_widgets/Field.php";
@@ -75,6 +76,7 @@ require "layout/StartLayout.php";
 // -----------------------------------------------------------------------------
 require "form/LoginForm.php";
 require "form/TableForm.php";
+require "form/TaskForm.php";
 // -----------------------------------------------------------------------------
 require "widget/PrivacyStatusSelect.php";
 

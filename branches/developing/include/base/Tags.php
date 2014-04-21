@@ -38,7 +38,7 @@ class Tags extends GTags
 	{
 		if(null != $tooltip)
 		{
-			return self::a($content, "onclick='return ajax.go(this)' href='/" . $href . "' " . ToolTip($tooltip));
+			return self::a($content, "onclick='return ajax.go(this)' href='/" . $href . "' " . getToolTip($tooltip));
 		}
 		else
 		{

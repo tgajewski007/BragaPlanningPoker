@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 21-04-2014 20:27:42
+ * Created on 21-04-2014 22:24:22
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
  * error prefix PP:103
@@ -21,6 +21,7 @@ class GameDAO
 	protected $idCard = null;
 	protected $idTask = null;
 	protected $date = null;
+	protected $status = null;
 	protected $readed = false;
 	// -------------------------------------------------------------------------
 	/**
@@ -175,6 +176,11 @@ class GameDAO
 		}
 	}
 	// -------------------------------------------------------------------------
+	public function setStatus($status)
+	{
+		$this->status = $status;
+	}
+	// -------------------------------------------------------------------------
 	public function getIdGame()
 	{
 		return $this->idGame;
@@ -203,6 +209,11 @@ class GameDAO
 	public function getDate()
 	{
 		return $this->date;
+	}
+	// -------------------------------------------------------------------------
+	public function getStatus()
+	{
+		return $this->status;
 	}
 	// -------------------------------------------------------------------------
 	public function getKey()
@@ -273,13 +284,14 @@ class GameDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".game(idplayer, idtable, idcard, idtask, date) ";
-		$sql .= "VALUES(:IDPLAYER, :IDTABLE, :IDCARD, :IDTASK, :DATE) ";
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".game(idplayer, idtable, idcard, idtask, date, status) ";
+		$sql .= "VALUES(:IDPLAYER, :IDTABLE, :IDCARD, :IDTASK, :DATE, :STATUS) ";
 		$db->setParam("IDPLAYER",$this->getIdPlayer());
 		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDCARD",$this->getIdCard());
 		$db->setParam("IDTASK",$this->getIdTask());
 		$db->setParam("DATE",$this->getDate());
+		$db->setParam("STATUS",$this->getStatus());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -311,6 +323,7 @@ class GameDAO
 		$sql .= " , idcard = :IDCARD ";
 		$sql .= " , idtask = :IDTASK ";
 		$sql .= " , date = :DATE ";
+		$sql .= " , status = :STATUS ";
 		$sql .= "WHERE idgame = :IDGAME ";
 		$db->setParam("IDGAME",$this->getIdGame());
 		$db->setParam("IDPLAYER",$this->getIdPlayer());
@@ -318,6 +331,7 @@ class GameDAO
 		$db->setParam("IDCARD",$this->getIdCard());
 		$db->setParam("IDTASK",$this->getIdTask());
 		$db->setParam("DATE",$this->getDate());
+		$db->setParam("STATUS",$this->getStatus());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -369,6 +383,7 @@ class GameDAO
 		$this->setIdCard($db->f("idcard"));
 		$this->setIdTask($db->f("idtask"));
 		$this->setDate($db->f("date"));
+		$this->setStatus($db->f("status"));
 		$this->setReaded();
 	}
 	// -------------------------------------------------------------------------
