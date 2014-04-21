@@ -14,6 +14,10 @@ class WebControler extends Action
 		switch(PostChecker::get("action"))
 		{
 			// ----------------------------
+			case "SetCard":
+				$this->setCard();
+				break;
+			// ----------------------------
 			case "GetTable":
 				$this->getTable();
 				break;
@@ -35,6 +39,24 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
+	private function setCard()
+	{
+		try
+		{
+			$c = Card::get(PostChecker::get("arg1"));
+			$g = Table::getCurrent()->getCurrentGame();
+			$g->setIdCard($c->getIdCard());
+			if($g->save())
+			{
+				addMsg("Card played ok");
+			}
+		}
+		catch(Exception $e)
+		{
+			addAlert($e->getMessage());
+		}
+	}
+	// -------------------------------------------------------------------------
 	private function getTable()
 	{
 		try
@@ -42,6 +64,7 @@ class WebControler extends Action
 			$t = Table::get(PostChecker::get("arg1"));
 			if($t->isCanSee())
 			{
+				Player::sitDownToTable($t);
 				$retval = $this->getTableForm();
 				$retval .= $this->getPlayerTable();
 				$this->r->addChange($retval);
@@ -56,16 +79,16 @@ class WebControler extends Action
 	private function getPlayerTable()
 	{
 		$retval = "";
-		foreach (Card::getAll() as $c)/* @var $c Card */
+		foreach(Card::getAll() as $c)/* @var $c Card */
 		{
-			$retval .= Tags::span($c->getTag(),"class='cardInHand' onmouseover='\$(this).addClass(\"cardFocus\")' onmouseout='\$(this).removeClass(\"cardFocus\")'");
+			$retval .= Tags::a($c->getTag(), "class='cardInHand' onclick='selectCard(this);' onmouseout='inHandCard(this);' onmouseover='focusCard(this);'");
 		}
-		return Tags::div($retval,"id='PlayerTable'");
+		return Tags::div($retval, "id='PlayerTable'");
 	}
 	// -------------------------------------------------------------------------
 	private function getTableForm()
 	{
-		return Tags::div("","id='PlayingTable'");
+		return Tags::div("", "id='PlayingTable'");
 	}
 	// -------------------------------------------------------------------------
 	private function insertTable()

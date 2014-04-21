@@ -155,11 +155,9 @@ span.card {
 	height: 95px;
 }
 
-span.cardInHand {
+a.cardInHand {
 	display: inline-block;
-	padding-top: 75px;
-}
-
-span.cardFocus {
-	padding-top: 0px !important;
+	position: relative;
+	top: 75px;
+	cursor: pointer;
 }
