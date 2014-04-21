@@ -14,6 +14,13 @@ class WebControler extends Action
 		switch(PostChecker::get("action"))
 		{
 			// ----------------------------
+			case "InsTask":
+				$this->insertTask();
+				break;
+			case "NewTask":
+				$this->newTaskForm();
+				break;
+			// ----------------------------
 			case "SetCard":
 				$this->setCard();
 				break;
@@ -39,6 +46,53 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
+	private function superEclipsa()
+	{
+		// float2 superEllipse(float n, float a, float b, float theta)
+		// {
+		// float ct = cos(theta);
+		// float st = sin(theta);
+		// float x = a * sign(ct) * pow(abs(ct), 2.0f / n);
+		// float y = b * sign(st) * pow(abs(st), 2.0f / n);
+		// return float2(x, y);
+		// }
+	}
+	// -------------------------------------------------------------------------
+	private function insertTask()
+	{
+		$t = Task::get();
+		$t->setSubject(PostChecker::get("subject"));
+		$t->setUrl(PostChecker::get("url"));
+		$t->setIdTable(Table::getCurrent()->getIdTable());
+		if($t->save())
+		{
+			addMsg("Task saved");
+			Table::getCurrent()->setIdTask($t->getIdTask());
+			if(Table::getCurrent()->save())
+			{
+				addMsg("Table task actualized");
+				$this->refreshTaskInfo();
+			}
+		}
+	}
+	// -------------------------------------------------------------------------
+	private function refreshTaskInfo()
+	{
+		$retval = Tags::ajaxLink("?action=GetTask", icon("ui-icon-wrench"), "Change task");
+		$retval .= Tags::a(Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank'");
+		$this->r->addChange($retval, "#TaskBox");
+	}
+	// -------------------------------------------------------------------------
+	private function newTaskForm()
+	{
+		$t = Task::get();
+		$f = new TaskForm($t);
+		$retval = $f->out();
+		$retval .= getFormSubmitRow(submitButton("Create") . hiddenField("action", "InsTask"));
+		$retval = Tags::formularz($retval);
+		$this->r->popUpWin("New task", $retval);
+	}
+	// -------------------------------------------------------------------------
 	private function setCard()
 	{
 		try
@@ -48,7 +102,7 @@ class WebControler extends Action
 			$g->setIdCard($c->getIdCard());
 			if($g->save())
 			{
-				addMsg("Card played ok");
+				addMsg("Card " . $c->getName() . " played ok");
 			}
 		}
 		catch(Exception $e)
@@ -66,7 +120,16 @@ class WebControler extends Action
 			{
 				Player::sitDownToTable($t);
 				$retval = $this->getTableForm();
-				$retval .= $this->getPlayerTable();
+				if(is_null(Task::getCurrent()->getIdTask()))
+				{
+					$tmp = Tags::ajaxLink("?action=NewTask", "New task...");
+					$this->r->addChange($tmp, "#TaskBox");
+				}
+				else
+				{
+					$this->refreshTaskInfo();
+					$retval .= $this->getPlayerTable();
+				}
 				$this->r->addChange($retval);
 			}
 		}

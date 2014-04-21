@@ -8,7 +8,6 @@
 class SessionName
 {
 	// -------------------------------------------------------------------------
-	const CURRENT_TASK = "A";
 	const CURRENT_PLAYER = "P";
 	const CURRENT_TABLE = "T";
 	const IDUZYTKOWNIK = "U";

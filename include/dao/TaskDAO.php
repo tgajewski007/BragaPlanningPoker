@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 21-04-2014 20:27:42
+ * Created on 21-04-2014 22:24:23
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
  * error prefix PP:110
@@ -17,12 +17,15 @@ class TaskDAO
 	// -------------------------------------------------------------------------
 	protected $idTask = null;
 	protected $subject = null;
-	protected $href = null;
+	protected $url = null;
 	protected $idCard = null;
+	protected $idTable = null;
+	protected $lastUpdate = null;
+	protected $idPlayer = null;
 	protected $readed = false;
 	// -------------------------------------------------------------------------
 	protected $gamesForTask = null;
-	protected $tablesForSessionTask = null;
+	protected $tablesForTask = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param int $idTask
@@ -128,15 +131,15 @@ class TaskDAO
 		}
 	}
 	// -------------------------------------------------------------------------
-	public function setHref($href)
+	public function setUrl($url)
 	{
-		if(empty($href))
+		if(empty($url))
 		{
-			$this->href = null;
+			$this->url = null;
 		}
 		else
 		{
-			$this->href = mb_substr($href,0,255);
+			$this->url = mb_substr($url,0,255);
 		}
 	}
 	// -------------------------------------------------------------------------
@@ -152,6 +155,42 @@ class TaskDAO
 		}
 	}
 	// -------------------------------------------------------------------------
+	public function setIdTable($idTable)
+	{
+		if(empty($idTable))
+		{
+			$this->idTable = null;
+		}
+		else
+		{
+			$this->idTable = mb_substr($idTable,0,32);
+		}
+	}
+	// -------------------------------------------------------------------------
+	public function setLastUpdate($lastUpdate)
+	{
+		if(empty($lastUpdate))
+		{
+			$this->lastUpdate = null;
+		}
+		else
+		{
+			$this->lastUpdate = date(PHP_DATETIME_FORMAT,strtotime($lastUpdate));
+		}
+	}
+	// -------------------------------------------------------------------------
+	public function setIdPlayer($idPlayer)
+	{
+		if(is_numeric($idPlayer))
+		{
+			$this->idPlayer = round($idPlayer,0);
+		}
+		else
+		{
+			$this->idPlayer = null;
+		}
+	}
+	// -------------------------------------------------------------------------
 	public function getIdTask()
 	{
 		return $this->idTask;
@@ -162,14 +201,29 @@ class TaskDAO
 		return $this->subject;
 	}
 	// -------------------------------------------------------------------------
-	public function getHref()
+	public function getUrl()
 	{
-		return $this->href;
+		return $this->url;
 	}
 	// -------------------------------------------------------------------------
 	public function getIdCard()
 	{
 		return $this->idCard;
+	}
+	// -------------------------------------------------------------------------
+	public function getIdTable()
+	{
+		return $this->idTable;
+	}
+	// -------------------------------------------------------------------------
+	public function getLastUpdate()
+	{
+		return $this->lastUpdate;
+	}
+	// -------------------------------------------------------------------------
+	public function getIdPlayer()
+	{
+		return $this->idPlayer;
 	}
 	// -------------------------------------------------------------------------
 	public function getKey()
@@ -194,13 +248,29 @@ class TaskDAO
 	 * Methods returns colection of objects Table
 	 * @return Collection &lt;Table&gt; 
 	 */
-	public function getTablesForSessionTask()
+	public function getTablesForTask()
 	{
-		if(is_null($this->tablesForSessionTask))
+		if(is_null($this->tablesForTask))
 		{
-			$this->tablesForSessionTask = Table::getAllBySessionTask($this);
+			$this->tablesForTask = Table::getAllByTask($this);
 		}
-		return $this->tablesForSessionTask;
+		return $this->tablesForTask;
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Table
+	 */
+	public function getTable()
+	{
+		return Table::get($this->getIdTable());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Player
+	 */
+	public function getPlayer()
+	{
+		return Player::get($this->getIdPlayer());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -242,11 +312,14 @@ class TaskDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".task(subject, href, idcard) ";
-		$sql .= "VALUES(:SUBJECT, :HREF, :IDCARD) ";
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".task(subject, url, idcard, idtable, last_update, idplayer) ";
+		$sql .= "VALUES(:SUBJECT, :URL, :IDCARD, :IDTABLE, :LASTUPDATE, :IDPLAYER) ";
 		$db->setParam("SUBJECT",$this->getSubject());
-		$db->setParam("HREF",$this->getHref());
+		$db->setParam("URL",$this->getUrl());
 		$db->setParam("IDCARD",$this->getIdCard());
+		$db->setParam("IDTABLE",$this->getIdTable());
+		$db->setParam("LASTUPDATE",$this->getLastUpdate());
+		$db->setParam("IDPLAYER",$this->getIdPlayer());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -274,13 +347,19 @@ class TaskDAO
 		$db = new DB();
 		$sql  = "UPDATE " . DB_SCHEMA . ".task ";
 		$sql .= "SET subject = :SUBJECT ";
-		$sql .= " , href = :HREF ";
+		$sql .= " , url = :URL ";
 		$sql .= " , idcard = :IDCARD ";
+		$sql .= " , idtable = :IDTABLE ";
+		$sql .= " , last_update = :LASTUPDATE ";
+		$sql .= " , idplayer = :IDPLAYER ";
 		$sql .= "WHERE idtask = :IDTASK ";
 		$db->setParam("IDTASK",$this->getIdTask());
 		$db->setParam("SUBJECT",$this->getSubject());
-		$db->setParam("HREF",$this->getHref());
+		$db->setParam("URL",$this->getUrl());
 		$db->setParam("IDCARD",$this->getIdCard());
+		$db->setParam("IDTABLE",$this->getIdTable());
+		$db->setParam("LASTUPDATE",$this->getLastUpdate());
+		$db->setParam("IDPLAYER",$this->getIdPlayer());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -328,9 +407,42 @@ class TaskDAO
 	{
 		$this->setIdTask($db->f("idtask"));
 		$this->setSubject($db->f("subject"));
-		$this->setHref($db->f("href"));
+		$this->setUrl($db->f("url"));
 		$this->setIdCard($db->f("idcard"));
+		$this->setIdTable($db->f("idtable"));
+		$this->setLastUpdate($db->f("last_update"));
+		$this->setIdPlayer($db->f("idplayer"));
 		$this->setReaded();
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Task
+	 * @return Collection &lt;Task&gt; 
+	 */
+	public static function getAllByTable(TableDAO $table)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".task ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
+		$db->query($sql);
+		return new Collection($db, Task::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Task
+	 * @return Collection &lt;Task&gt; 
+	 */
+	public static function getAllByPlayer(PlayerDAO $player)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".task ";
+		$sql .= "WHERE idplayer = :IDPLAYER ";
+		$db->setParam("IDPLAYER", $player->getIdPlayer());
+		$db->query($sql);
+		return new Collection($db, Task::get());
 	}
 	// -------------------------------------------------------------------------
 	/**
