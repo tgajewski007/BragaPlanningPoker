@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 22-02-2014 17:49:27
+ * Created on 21-04-2014 20:27:42
  * @author Tomasz Gajewski
  * @package PHPPlanningPoker
  * error prefix PP:106
@@ -190,11 +190,11 @@ class PlayerDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return User
+	 * @return Role
 	 */
-	public function getUser()
+	public function getRole()
 	{
-		return User::get($this->getIdUser());
+		return Role::get($this->getIdRole());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -206,11 +206,11 @@ class PlayerDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Role
+	 * @return User
 	 */
-	public function getRole()
+	public function getUser()
 	{
-		return Role::get($this->getIdRole());
+		return User::get($this->getIdUser());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -339,13 +339,13 @@ class PlayerDAO
 	 * Methods return colection of  Player
 	 * @return Collection &lt;Player&gt; 
 	 */
-	public static function getAllByUser(UserDAO $user)
+	public static function getAllByRole(RoleDAO $role)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".player ";
-		$sql .= "WHERE iduser = :IDUSER ";
-		$db->setParam("IDUSER", $user->getIdUser());
+		$sql .= "WHERE idrole = :IDROLE ";
+		$db->setParam("IDROLE", $role->getIdRole());
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}
@@ -369,13 +369,13 @@ class PlayerDAO
 	 * Methods return colection of  Player
 	 * @return Collection &lt;Player&gt; 
 	 */
-	public static function getAllByRole(RoleDAO $role)
+	public static function getAllByUser(UserDAO $user)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".player ";
-		$sql .= "WHERE idrole = :IDROLE ";
-		$db->setParam("IDROLE", $role->getIdRole());
+		$sql .= "WHERE iduser = :IDUSER ";
+		$db->setParam("IDUSER", $user->getIdUser());
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}

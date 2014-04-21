@@ -86,7 +86,7 @@ class Card extends CardDAO implements DAO
 			$cardStyle[self::I_DONT_KNOW] = "cardIDontKnow";
 			$cardStyle[self::COFFY_BREAK] = "cardCoffyBreak";
 		}
-		return Tags::span("", "class='card sprite " . $cardStyle[$this->getIdCard()] . "' " . getToolTip($this->getName()));
+		return Tags::span("", "data-idcard='" . $this->getIdCard() . "' class='card sprite " . $cardStyle[$this->getIdCard()] . "' " . getToolTip($this->getName()));
 	}
 	// -------------------------------------------------------------------------
 	/**
