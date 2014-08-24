@@ -25,6 +25,9 @@ class WebControler extends Action
 				$this->setCard();
 				break;
 			// ----------------------------
+			case "GetTableContent":
+				$this->getTableRefresh();
+				break;
 			case "GetTable":
 				$this->getTable();
 				break;
@@ -46,16 +49,102 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
-	private function superEclipsa()
+	private function getTableRefresh()
 	{
-		// float2 superEllipse(float n, float a, float b, float theta)
-		// {
-		// float ct = cos(theta);
-		// float st = sin(theta);
-		// float x = a * sign(ct) * pow(abs(ct), 2.0f / n);
-		// float y = b * sign(st) * pow(abs(st), 2.0f / n);
-		// return float2(x, y);
-		// }
+		$retval = "";
+		$t = Table::getCurrent();
+		$numer = 0;
+		if(Game::isAllPlayersSetCard($t))
+		{
+			foreach($t->getPlayersForTable() as $p)/* @var $p Player */
+			{
+				$g = Game::getForPlayerInTable($p, $t);
+				$retval .= $this->getPlayerItem($p, $g->getCard(), true, $numer);
+				$numer++;
+			}
+		}
+		else
+		{
+			foreach($t->getPlayersForTable() as $p)/* @var $p Player */
+			{
+				$c = Game::getForPlayerInTable($p, $t)->getCard();
+				if($p->getIdUser() == User::getCurrent()->getIdUser())
+				{
+					if($c->getIdCard() > 0)
+					{
+						$retval .= $this->getPlayerItem($p, $c, true, $numer);
+					}
+					else
+					{
+						$retval .= $this->getPlayerItem($p, Card::get(), false, $numer);
+					}
+				}
+				else
+				{
+					if($c->getIdCard() > 0)
+					{
+						$retval .= $this->getPlayerItem($p, Card::get(), true, $numer);
+					}
+					else
+					{
+						$retval .= $this->getPlayerItem($p, Card::get(), false, $numer);
+					}
+				}
+				$numer++;
+			}
+		}
+
+		$this->r->addChange($retval, "#PlayingTable");
+	}
+	// -------------------------------------------------------------------------
+	private function getPlayerItem(Player $p, Card $c, $enabled, $numer)
+	{
+		$retval = Tags::p($p->getUser()->getName(), "class='b c PlayerPlaceName'");
+		$retval .= Tags::p($p->getUser()->getEmail(), "class='r i PlayerPlaceEmail'");
+		$retval .= Tags::span("", "style='background-image: url(\"" . $p->getUser()->getAvatarUrl() . "\");' class='r i PlayerPlaceAvatar zLewej'");
+		if($enabled)
+		{
+			$retval .= Tags::span($c->getTag(), "class='PlayerPlaceCard'");
+		}
+		else
+		{
+			$retval .= Tags::span(Tags::span($c->getTag(), "class='ui-state-disabled'"), "class='PlayerPlaceCard'");
+		}
+
+		$point = $this->getPointOfSuperEclipsa($numer);
+		$left = $point->x;
+		$top = $point->y;
+		return Tags::div($retval, "class='PlayerPlace' style='top:" . $top . "px;left:" . $left . "px;'");
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 *
+	 * @return Point
+	 */
+	private function getPointOfSuperEclipsa($numer)
+	{
+		$retval = new Point();
+		static $countOfPlayers = null;
+		if(empty($countOfPlayers))
+		{
+			$countOfPlayers = Table::getCurrent()->getPlayersForTable()->count();
+		}
+		$xAmplituda = 800 / 2;
+		$yAmplituda = 350 / 2;
+		$nMarker = 3;
+
+		$degree = deg2rad((360 / $countOfPlayers * $numer) + 90);
+
+		$cos = cos($degree);
+		$sin = sin($degree);
+
+		$cosSign = $cos >= 0 ? 1 : -1;
+		$sinSign = $sin >= 0 ? 1 : -1;
+
+		$retval->x = (0.9 * $xAmplituda * $cosSign * (pow(abs($cos), (2 / $nMarker)))) + $xAmplituda;
+		$retval->y = (0.9 * $yAmplituda * $sinSign * (pow(abs($sin), (2 / $nMarker)))) + $yAmplituda;
+
+		return $retval;
 	}
 	// -------------------------------------------------------------------------
 	private function insertTask()
@@ -99,10 +188,19 @@ class WebControler extends Action
 		{
 			$c = Card::get(PostChecker::get("arg1"));
 			$g = Table::getCurrent()->getCurrentGame();
-			$g->setIdCard($c->getIdCard());
-			if($g->save())
+			if(Game::isAllPlayersSetCard(Table::getCurrent()))
 			{
-				addMsg("Card " . $c->getName() . " played ok");
+				addAlert("PP:20202 Change card is unaviable. All card played");
+			}
+			else
+			{
+
+				$g->setIdCard($c->getIdCard());
+				if($g->save())
+				{
+					addMsg("Card " . $c->getName() . " played ok");
+					$this->getTableRefresh();
+				}
 			}
 		}
 		catch(Exception $e)
@@ -131,6 +229,7 @@ class WebControler extends Action
 					$retval .= $this->getPlayerTable();
 				}
 				$this->r->addChange($retval);
+				$this->getTableRefresh();
 			}
 		}
 		catch(Exception $e)
@@ -151,7 +250,7 @@ class WebControler extends Action
 	// -------------------------------------------------------------------------
 	private function getTableForm()
 	{
-		return Tags::div("", "id='PlayingTable'");
+		return Tags::div("", "id='PlayingTable'") . Tags::script("startRefreshTable();");
 	}
 	// -------------------------------------------------------------------------
 	private function insertTable()

@@ -78,6 +78,76 @@ class Game extends GameDAO implements DAO
 		return new Collection($db, self::get());
 	}
 	// -------------------------------------------------------------------------
+	/**
+	 *
+	 * @param Table $t
+	 * @return boolean
+	 */
+	public static function isAllPlayersSetCard(Table $t)
+	{
+		$db = new DB();
+		$sql = "SELECT ";
+		$sql .= "(SELECT Count(*) ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$sql .= "AND idtask = :IDTASK) ";
+		$sql .= " - (SELECT Count(*) ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$sql .= "AND idtask = :IDTASK ";
+		$sql .= "AND idcard IS NOT NULL) ";
+		$sql .= "FROM dual ";
+
+		$db->setParam("IDTABLE", $t->getIdTable());
+		$db->setParam("IDTASK", Player::getCurrent()->getTable()->getIdTask());
+		$db->query($sql);
+		if($db->nextRecord())
+		{
+			return $db->f(0) == 0;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	// -------------------------------------------------------------------------
+	public static function getForPlayerInTable(Player $p, Table $t)
+	{
+		$game = new self();
+		$db = new DB();
+		$sql = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
+		$sql .= "WHERE idplayer = :IDPLAYER ";
+		$sql .= "AND idtable = :IDTABLE ";
+		$sql .= "AND idtask = :IDTASK ";
+		$sql .= "ORDER BY idgame DESC ";
+		$db->setParam("IDPLAYER", $p->getIdPlayer());
+		$db->setParam("IDTABLE", $t->getIdTable());
+		$db->setParam("IDTASK", Player::getCurrent()->getTable()->getIdTask());
+		$db->setLimit(0, 1);
+		$db->query($sql);
+		if($db->nextRecord())
+		{
+			return self::getByDataSource($db);
+		}
+		else
+		{
+			$game = self::get();
+			$game->setIdTable($t->getIdTable());
+			$game->setIdTask(Player::getCurrent()->getTable()->getIdTask());
+			$game->setIdPlayer($p->getIdPlayer());
+			$game->setStatus(self::OPEN);
+			if($game->save())
+			{
+				return $game;
+			}
+			else
+			{
+				throw new GameException("PP:10310 Can't save game");
+			}
+		}
+	}
+	// -------------------------------------------------------------------------
 	public static function getCurrent()
 	{
 		$game = new self();
