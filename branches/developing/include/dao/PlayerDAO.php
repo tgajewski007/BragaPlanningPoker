@@ -5,10 +5,10 @@
  * @package PHPPlanningPoker
  * error prefix PP:106
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
- * https://sourceforge.net/projects/simplephpdaogen/ 
+ * https://sourceforge.net/projects/simplephpdaogen/
  * Designed by schama CRUD http://wikipedia.org/wiki/CRUD
- * class generated automatically, please do not modify under pain of 
- * OVERWRITTEN WITHOUT WARNING 
+ * class generated automatically, please do not modify under pain of
+ * OVERWRITTEN WITHOUT WARNING
  */
 class PlayerDAO
 {
@@ -179,7 +179,7 @@ class PlayerDAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods returns colection of objects Game
-	 * @return Collection &lt;Game&gt; 
+	 * @return Collection &lt;Game&gt;
 	 */
 	public function getGamesForPlayer()
 	{
@@ -192,7 +192,7 @@ class PlayerDAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods returns colection of objects Task
-	 * @return Collection &lt;Task&gt; 
+	 * @return Collection &lt;Task&gt;
 	 */
 	public function getTasksForPlayer()
 	{
@@ -351,7 +351,7 @@ class PlayerDAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt; 
+	 * @return Collection &lt;Player&gt;
 	 */
 	public static function getAllByTable(TableDAO $table)
 	{
@@ -359,14 +359,16 @@ class PlayerDAO
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".player ";
 		$sql .= "WHERE idtable = :IDTABLE ";
+		$sql .= "ORDER BY CASE  WHEN  iduser = :IDUZYTKOWNIK THEN 0 ELSE idplayer END  ";
 		$db->setParam("IDTABLE", $table->getIdTable());
+		$db->setParam("IDUZYTKOWNIK", User::getCurrent()->getIdUser());
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt; 
+	 * @return Collection &lt;Player&gt;
 	 */
 	public static function getAllByUser(UserDAO $user)
 	{
@@ -381,7 +383,7 @@ class PlayerDAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt; 
+	 * @return Collection &lt;Player&gt;
 	 */
 	public static function getAllByRole(RoleDAO $role)
 	{

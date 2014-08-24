@@ -17,6 +17,8 @@ require "interfaces/DAO.php";
 require "interfaces/DataSource.php";
 require "interfaces/DataSourceMetaData.php";
 // -----------------------------------------------------------------------------
+require "type/Point.php";
+// -----------------------------------------------------------------------------
 require "objdao.php";
 require "obj/CookieName.php";
 require "obj/SessionName.php";

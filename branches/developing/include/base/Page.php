@@ -15,7 +15,7 @@ class Page
 	{
 		$title = "Planning Poker Online (v. ".VERSION.")";
 		$retval = Tags::meta("http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"");
-		$retval .= "<!--[if IE]>".Tags::meta("http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"")."<![endif]-->";
+		$retval .= Tags::meta("http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"");
 		$retval .= Tags::title($title);
 		$retval .= Tags::link("rel='shortcut icon' href='/img/favicon.ico'");
 		if(PRODUCTION)
