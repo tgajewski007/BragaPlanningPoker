@@ -15,7 +15,7 @@ define("DB_PASS", "");
 
 define("BAD_LOGIN_COUNT_LIMIT", 6);
 define("HASH_ALGORYTM", "sha1");
-define("VERSION", "0.0.14");
+define("VERSION", "0.0.15");
 define("INSTALL_DIRECTORY", "o:/wwwroot/PHPPlaningPoker/");
 define("LOG_DIRECTORY", INSTALL_DIRECTORY . "log/");
 define("DEBUG", true);
