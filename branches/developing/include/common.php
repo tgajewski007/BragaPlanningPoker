@@ -22,6 +22,7 @@ require "type/Point.php";
 require "objdao.php";
 require "obj/CookieName.php";
 require "obj/SessionName.php";
+require "obj/Angle.php";
 // -----------------------------------------------------------------------------
 require "exceptions/PlayerException.php";
 require "exceptions/TaskException.php";
