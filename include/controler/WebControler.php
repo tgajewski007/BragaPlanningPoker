@@ -54,12 +54,13 @@ class WebControler extends Action
 		$retval = "";
 		$t = Table::getCurrent();
 		$numer = 0;
+		$angle = Angle::getAngles(Table::getCurrent()->getPlayersForTable()->count());
 		if(Game::isAllPlayersSetCard($t))
 		{
 			foreach($t->getPlayersForTable() as $p)/* @var $p Player */
 			{
 				$g = Game::getForPlayerInTable($p, $t);
-				$retval .= $this->getPlayerItem($p, $g->getCard(), true, $numer);
+				$retval .= $this->getPlayerItem($p, $g->getCard(), true, $angle[$numer]);
 				$numer++;
 			}
 		}
@@ -72,22 +73,22 @@ class WebControler extends Action
 				{
 					if($c->getIdCard() > 0)
 					{
-						$retval .= $this->getPlayerItem($p, $c, true, $numer);
+						$retval .= $this->getPlayerItem($p, $c, true, $angle[$numer]);
 					}
 					else
 					{
-						$retval .= $this->getPlayerItem($p, Card::get(), false, $numer);
+						$retval .= $this->getPlayerItem($p, Card::get(), false, $angle[$numer]);
 					}
 				}
 				else
 				{
 					if($c->getIdCard() > 0)
 					{
-						$retval .= $this->getPlayerItem($p, Card::get(), true, $numer);
+						$retval .= $this->getPlayerItem($p, Card::get(), true, $angle[$numer]);
 					}
 					else
 					{
-						$retval .= $this->getPlayerItem($p, Card::get(), false, $numer);
+						$retval .= $this->getPlayerItem($p, Card::get(), false, $angle[$numer]);
 					}
 				}
 				$numer++;
@@ -97,7 +98,7 @@ class WebControler extends Action
 		$this->r->addChange($retval, "#PlayingTable");
 	}
 	// -------------------------------------------------------------------------
-	private function getPlayerItem(Player $p, Card $c, $enabled, $numer)
+	private function getPlayerItem(Player $p, Card $c, $enabled, $angle)
 	{
 		$retval = Tags::p($p->getUser()->getName(), "class='b c PlayerPlaceName'");
 		$retval .= Tags::p($p->getUser()->getEmail(), "class='r i PlayerPlaceEmail'");
@@ -111,7 +112,7 @@ class WebControler extends Action
 			$retval .= Tags::span(Tags::span($c->getTag(), "class='ui-state-disabled'"), "class='PlayerPlaceCard'");
 		}
 
-		$point = $this->getPointOfSuperEclipsa($numer);
+		$point = $this->getPointOfSuperEclipsa($angle);
 		$left = $point->x;
 		$top = $point->y;
 		return Tags::div($retval, "class='PlayerPlace' style='top:" . $top . "px;left:" . $left . "px;'");
@@ -121,19 +122,14 @@ class WebControler extends Action
 	 *
 	 * @return Point
 	 */
-	private function getPointOfSuperEclipsa($numer)
+	private function getPointOfSuperEclipsa($angle)
 	{
 		$retval = new Point();
-		static $countOfPlayers = null;
-		if(empty($countOfPlayers))
-		{
-			$countOfPlayers = Table::getCurrent()->getPlayersForTable()->count();
-		}
 		$xAmplituda = 800 / 2;
 		$yAmplituda = 350 / 2;
 		$nMarker = 3;
 
-		$degree = deg2rad((360 / $countOfPlayers * $numer) + 90);
+		$degree = deg2rad($angle + 90);
 
 		$cos = cos($degree);
 		$sin = sin($degree);
