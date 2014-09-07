@@ -100,8 +100,8 @@ body {
 	padding: 10px 40px;
 	text-align: right;
 }
-#TaskBox
-{
+
+#TaskBox {
 	display: inline-block;
 	float: left;
 	max-width: 500px;
@@ -109,6 +109,7 @@ body {
 	padding-right: 10px;
 	max-height: 20px;
 }
+
 #MainBox {
 	margin-left: auto;
 	margin-right: auto;
@@ -153,9 +154,11 @@ span.card {
 #PlayingTable {
 	height: 500px;
 	width: 950px;
-	background-color: yellow;
+	background-color: #194D1E;
 	border-radius: 240px;
 	position: relative;
+	left:-20px;
+	border: 7px brown solid;
 }
 
 #PlayerTable {
@@ -170,45 +173,77 @@ a.cardInHand {
 	top: 75px;
 	cursor: pointer;
 }
-div.PlayerPlace
-{
+
+div.PlayerPlace {
 	width: 138px;
 	height: 138px;
-	border: 2px #af8f45 solid;
+	border: 2px brown solid;
 	border-radius: 4px;
 	position: absolute;
 	padding: 4px;
 	overflow: hidden;
 	display: inline-block;
 }
-p.PlayerPlaceEmail
-{
+
+p.PlayerPlaceEmail {
 	display: inline-block;
 	line-height: 15px;
 	overflow: hidden;
 	height: 15px;
 	width: 142px;
 }
-p.PlayerPlaceName
-{
+
+p.PlayerPlaceName {
 	display: inline-block;
 	line-height: 15px;
 	overflow: hidden;
 	height: 15px;
 	width: 142px;
 }
-span.PlayerPlaceAvatar
-{
+
+span.PlayerPlaceAvatar {
 	background-position: center top;
 	background-repeat: no-repeat;
-	background-size: contain;
+	background-size: cover;
+	border-radius: 4px;
 	width: 80px;
 	height: 80px;
 	display: inline-block;
 }
-span.PlayerPlaceCard
-{
-	float: right;    
+
+span.PlayerPlaceCard {
+	float: right;
 	position: relative;
-    top: -73px;
+	top: -73px;
+}
+
+#TableSummary {
+	border: 2px solid brown;
+	border-radius: 4px;
+	display: inline-block;
+	height: 124px;
+	left: 250px;
+	overflow: hidden;
+	position: relative;
+	top: 183px;
+	width: 420px;
+	padding: 4px 10px;
+}
+
+#TableSummary .CardBox {
+	float: left;
+	height: 100px;
+	width: 80px;
+}
+
+#TableSummary .ActionBox {
+	float: right;
+	height: 100px;
+	width: 250px;
+}
+
+#TableSummary .TaskBox {
+	float: right;
+	height: 100px;
+	width: 80px;
 }

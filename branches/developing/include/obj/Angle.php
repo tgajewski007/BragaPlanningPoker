@@ -12,14 +12,11 @@ class Angle
 	{
 		switch($iloscGraczy)
 		{
-			case 1:
-				return array(
-						0);
+			case 7:
+				return self::getAngleFor7Players();
 				break;
-			case 2:
-				return array(
-						0,
-						90);
+			case 8:
+				return self::getAngleFor8Players();
 				break;
 			case 9:
 				return self::getAngleFor9Players();
@@ -33,17 +30,42 @@ class Angle
 		}
 	}
 	// -------------------------------------------------------------------------
+	private static function getAngleFor7Players()
+	{
+		$retval[0] = 0;
+		$retval[1] = 51;
+		$retval[2] = 103;
+		$retval[3] = 164;
+		$retval[4] = 196;
+		$retval[5] = 257;
+		$retval[6] = 309;
+		return $retval;
+	}
+	// -------------------------------------------------------------------------
+	private static function getAngleFor8Players()
+	{
+		$retval[0] = 0;
+		$retval[1] = 25;
+		$retval[2] = 90;
+		$retval[3] = 155;
+		$retval[4] = 180;
+		$retval[5] = 205;
+		$retval[6] = 270;
+		$retval[7] = 335;
+		return $retval;
+	}
+	// -------------------------------------------------------------------------
 	private static function getAngleFor9Players()
 	{
 		$retval[0] = 0;
-		$retval[1] = 40;
+		$retval[1] = 20;
 		$retval[2] = 80;
-		$retval[3] = 120;
-		$retval[4] = 160;
-		$retval[5] = 200;
-		$retval[6] = 240;
+		$retval[3] = 135;
+		$retval[4] = 172;
+		$retval[5] = 188;
+		$retval[6] = 225;
 		$retval[7] = 280;
-		$retval[8] = 320;
+		$retval[8] = 340;
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
