@@ -163,5 +163,14 @@ class Table extends TableDAO implements DAO
 		}
 	}
 	// -------------------------------------------------------------------------
+	public function cleanCurrentGame()
+	{
+		foreach (Game::getAllByTask(Task::getCurrent()) as $g) /* @var $g Game */
+		{
+			$g->setIdCard(null);
+			$g->save();
+		}
+	}
+	// -------------------------------------------------------------------------
 }
 ?>

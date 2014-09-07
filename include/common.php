@@ -82,6 +82,7 @@ require "form/TableForm.php";
 require "form/TaskForm.php";
 // -----------------------------------------------------------------------------
 require "widget/PrivacyStatusSelect.php";
+require "widget/SelectCard.php";
 
 // -----------------------------------------------------------------------------
 ?>

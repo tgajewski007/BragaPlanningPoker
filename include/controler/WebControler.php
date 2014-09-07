@@ -14,6 +14,19 @@ class WebControler extends Action
 		switch(PostChecker::get("action"))
 		{
 			// ----------------------------
+			case "CloseTaskStep2":
+				$this->closeTask();
+				break;
+			case "CloseTask":
+				$this->closeTaskForm();
+				break;
+			case "CleanTable":
+				$this->cleanTable();
+				break;
+			case "PlayAgain":
+				$this->getPlayAgainForm();
+				break;
+			// ----------------------------
 			case "InsTask":
 				$this->insertTask();
 				break;
@@ -49,8 +62,41 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
+	private function closeTask()
+	{
+		Task::getCurrent()->setIdCard(PostChecker::get("idcard"));
+		Task::getCurrent()->save();
+		$this->newTaskForm();
+	}
+	// -------------------------------------------------------------------------
+	private function closeTaskForm()
+	{
+		$retval = getFormSubmitRow(Task::getCurrent()->getSubject());
+		$w = new SelectCard(Task::getCurrent()->getMedianCard());
+		$retval .= getFormRow("Estimated time", $w->out());
+		$retval .= getFormSubmitRow(submitButton("Zapisz") . hiddenField("action", "CloseTaskStep2"));
+		$retval = Tags::formularz($retval);
+		$this->r->popUpWin("Save esitmate time for task?", $retval);
+	}
+	// -------------------------------------------------------------------------
+	private function cleanTable()
+	{
+		$this->r->closePopUp();
+		Table::getCurrent()->cleanCurrentGame();
+		$this->getTableRefresh();
+	}
+	// -------------------------------------------------------------------------
+	private function getPlayAgainForm()
+	{
+		$retval = getFormSubmitRow("Do U realy wan't clean table?");
+		$retval .= getFormSubmitRow(submitButton("Clean") . hiddenField("action", "CleanTable"));
+		$retval = Tags::formularz($retval);
+		$this->r->popUpWin("Question", $retval);
+	}
+	// -------------------------------------------------------------------------
 	private function getTableRefresh()
 	{
+		$this->refreshTaskInfo();
 		$retval = "";
 		$t = Table::getCurrent();
 		$numer = 0;
@@ -63,6 +109,8 @@ class WebControler extends Action
 				$retval .= $this->getPlayerItem($p, $g->getCard(), true, $angle[$numer]);
 				$numer++;
 			}
+			$retval .= $this->getTableSummary();
+			;
 		}
 		else
 		{
@@ -96,6 +144,27 @@ class WebControler extends Action
 		}
 
 		$this->r->addChange($retval, "#PlayingTable");
+	}
+	// -------------------------------------------------------------------------
+	private function getTableSummary()
+	{
+		$retval = Tags::p("Table summary", "class='c b Cinzel''");
+
+		$cardBox = Task::getCurrent()->getMedianCard()->getTag();
+		$cardTaskBox = Task::getCurrent()->getCard()->getTag();
+		$actions = "";
+		if(Player::getCurrent()->getRole()->getIdRole() == Role::SCRUM_MASTER)
+		{
+			$actions .= Tags::p(Tags::ajaxLink("?action=PlayAgain", "Clean table and play again?"), "class='b Cinzel'");
+			$actions .= Tags::p(Tags::ajaxLink("?action=CloseTask", "Close / Next task"), "class='b Cinzel'");
+		}
+		$actions .= Tags::p("Medium time: " . Task::getCurrent()->getMediumCardValue() . " h", "class='b Cinzel'");
+		$actions .= Tags::p("Median card: " . Task::getCurrent()->getMedianCard()->getName(), "class='b Cinzel'");
+		$retval .= Tags::div($cardTaskBox, "class='TaskBox'");
+		$retval .= Tags::div($actions, "class='ActionBox'");
+		$retval .= Tags::div($cardBox, "class='CardBox'");
+		$retval = Tags::div($retval, "id='TableSummary'");
+		return $retval;
 	}
 	// -------------------------------------------------------------------------
 	private function getPlayerItem(Player $p, Card $c, $enabled, $angle)
@@ -156,15 +225,24 @@ class WebControler extends Action
 			if(Table::getCurrent()->save())
 			{
 				addMsg("Table task actualized");
-				$this->refreshTaskInfo();
+				$this->getTableRefresh();
+				$this->r->closePopUp();
 			}
 		}
 	}
 	// -------------------------------------------------------------------------
 	private function refreshTaskInfo()
 	{
-		$retval = Tags::ajaxLink("?action=GetTask", icon("ui-icon-wrench"), "Change task");
-		$retval .= Tags::a(Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank'");
+		$retval = Tags::ajaxLink("?action=GetTableContent", icon("ui-icon-refresh"));
+		$retval .= Tags::ajaxLink("?action=GetTask", icon("ui-icon-wrench"), "Change task");
+		if(is_null(Task::getCurrent()->getIdCard()))
+		{
+			$retval .= Tags::a(Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank'");
+		}
+		else
+		{
+			$retval .= Tags::a(Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank' class='s'");
+		}
 		$this->r->addChange($retval, "#TaskBox");
 	}
 	// -------------------------------------------------------------------------

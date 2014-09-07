@@ -76,6 +76,30 @@ class Task extends TaskDAO implements DAO
 		return new Collection($db, self::get());
 	}
 	// -------------------------------------------------------------------------
+	public function getMediumCardValue()
+	{
+		$db = new DB();
+		$sql = "SELECT Avg(c.value) ";
+		$sql .= "FROM " . DB_SCHEMA . ".game g ";
+		$sql .= "INNER JOIN " . DB_SCHEMA . ".card c ON c.idcard = g.idcard ";
+		$sql .= "WHERE idtask = :IDTASK ";
+		$db->setParam("IDTASK", $this->getIdTask());
+		$db->query($sql);
+		if($db->nextRecord())
+		{
+			return round($db->f(0),1);
+		}
+		else
+		{
+			return "0.0";
+		}
+	}
+	// -------------------------------------------------------------------------
+	public  function getMedianCard()
+	{
+		return Card::getMedianCardForTask($this);
+	}
+	// -------------------------------------------------------------------------
 	/**
 	 *
 	 * @return Task

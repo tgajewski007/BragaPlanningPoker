@@ -117,5 +117,43 @@ class Card extends CardDAO implements DAO
 		return new Collection($db, self::get());
 	}
 	// -------------------------------------------------------------------------
+	/**
+	 *
+	 * @param Task $t
+	 * @return Card
+	 */
+	public static function getMedianCardForTask(Task $t)
+	{
+		$db = new DB();
+		$sql = "SELECT Ceil(Count(*)/2) ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
+		$sql .= "WHERE idtask = :IDTASK ";
+		$db->setParam("IDTASK", $t->getIdTask());
+		$db->query($sql);
+		if($db->nextRecord())
+		{
+			$sql = "SELECT c.* ";
+			$sql .= "FROM " . DB_SCHEMA . ".card c ";
+			$sql .= "INNER JOIN " . DB_SCHEMA . ".game g ON c.idcard = g.idcard ";
+			$sql .= "WHERE g.idtask = :IDTASK ";
+			$sql .= "ORDER BY g.idcard ";
+			$sql .= "LIMIT " . $db->f(0) . ", 1";
+			$db->setParam("IDTASK", $t->getIdTask());
+			$db->query($sql);
+			if($db->nextRecord())
+			{
+				return self::getByDataSource($db);
+			}
+			else
+			{
+				return self::get(Card::I_DONT_KNOW);
+			}
+		}
+		else
+		{
+			return self::get(Card::I_DONT_KNOW);
+		}
+	}
+	// -------------------------------------------------------------------------
 }
 ?>
