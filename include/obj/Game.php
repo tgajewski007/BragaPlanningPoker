@@ -27,6 +27,39 @@ class Game extends GameDAO implements DAO
 	}
 	// -------------------------------------------------------------------------
 	/**
+	 * Methods add object of class Game
+	 * insert record into table game
+	 * @return boolean
+	 */
+	protected function create()
+	{
+		$db = new DB();
+		$sql  = "INSERT IGNORE INTO " . DB_SCHEMA . ".game(idplayer, idtable, idcard, idtask, date, status) ";
+		$sql .= "VALUES(:IDPLAYER, :IDTABLE, :IDCARD, :IDTASK, :DATE, :STATUS) ";
+		$db->setParam("IDPLAYER",$this->getIdPlayer());
+		$db->setParam("IDTABLE",$this->getIdTable());
+		$db->setParam("IDCARD",$this->getIdCard());
+		$db->setParam("IDTASK",$this->getIdTask());
+		$db->setParam("DATE",$this->getDate());
+		$db->setParam("STATUS",$this->getStatus());
+		$db->query($sql);
+		if(1 == $db->getRowAffected())
+		{
+			$this->setIdGame($db->getLastInsertID());
+			$db->commit();
+			self::updateFactoryIndex($this);
+			$this->setReaded();
+			return true;
+		}
+		else
+		{
+			$db->rollback();
+			AddAlert("PP:10302 Dodanie rekordu do tablicy game nie powiodło się");
+			return false;
+		}
+	}
+	// -------------------------------------------------------------------------
+	/**
 	 * Method saves the object of the classGame
 	 *
 	 * @return boolean
