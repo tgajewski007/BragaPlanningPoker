@@ -11,7 +11,7 @@ define("PRODUCTION", false);
 define("DB_HOST", "localhost");
 define("DB_SCHEMA", "plannigpoker");
 define("DB_USER", "root");
-define("DB_PASS", "");
+define("DB_PASS", "1");
 
 define("BAD_LOGIN_COUNT_LIMIT", 6);
 define("HASH_ALGORYTM", "sha1");
