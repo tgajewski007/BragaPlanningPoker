@@ -14,7 +14,6 @@ class Player extends PlayerDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
-	 *
 	 * @return boolean
 	 */
 	protected function check()
@@ -46,7 +45,6 @@ class Player extends PlayerDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method saves the object of the classPlayer
-	 *
 	 * @return boolean
 	 */
 	public function save()
@@ -71,7 +69,6 @@ class Player extends PlayerDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method removes an object of class Player
-	 *
 	 * @return boolean
 	 */
 	public function kill()
@@ -83,7 +80,6 @@ class Player extends PlayerDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * This method returns a collection of objects
-	 *
 	 * @return Collection &lt;Player&gt;
 	 */
 	public static function getAll()
@@ -119,7 +115,7 @@ class Player extends PlayerDAO implements DAO
 			$p->setIdRole(Role::getCurrent()->getIdRole());
 			if(!$p->save())
 			{
-				throw new PlayerException("PP:10511 Cant create Player");
+				throw new PlayerException("PP:10511 Can't create Player");
 			}
 		}
 		Table::setCurrent($t);

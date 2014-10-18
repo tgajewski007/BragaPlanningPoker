@@ -58,7 +58,7 @@ class WebControler extends Action
 			case "":
 				$this->makeWorArea();
 				break;
-			default:
+			default :
 				addAlert("PP:20201 " . PostChecker::get("action") . " not supported");
 				break;
 		}
@@ -121,7 +121,6 @@ class WebControler extends Action
 				$numer++;
 			}
 			$retval .= $this->getTableSummary();
-			;
 		}
 		else
 		{
@@ -302,19 +301,26 @@ class WebControler extends Action
 			if($t->isCanSee())
 			{
 				Player::sitDownToTable($t);
-				$retval = $this->getTableForm();
-				if(is_null(Task::getCurrent()->getIdTask()))
+				if(is_null($t->getCurrentGame()->getIdTask()))
 				{
-					$tmp = Tags::ajaxLink("?action=NewTask", "New task...");
-					$this->r->addChange($tmp, "#TaskBox");
+					$this->newTaskForm();
 				}
 				else
 				{
-					$this->refreshTaskInfo();
-					$retval .= $this->getPlayerTable();
+					$retval = $this->getTableForm();
+					if(is_null(Task::getCurrent()->getIdTask()))
+					{
+						$tmp = Tags::ajaxLink("?action=NewTask", "New task...");
+						$this->r->addChange($tmp, "#TaskBox");
+					}
+					else
+					{
+						$this->refreshTaskInfo();
+						$retval .= $this->getPlayerTable();
+					}
+					$this->r->addChange($retval);
+					$this->getTableRefresh();
 				}
-				$this->r->addChange($retval);
-				$this->getTableRefresh();
 			}
 		}
 		catch(Exception $e)
@@ -346,6 +352,9 @@ class WebControler extends Action
 		$t->setIdPrivacyStatus(PostChecker::get("idprivacy_status"));
 		if($t->save())
 		{
+			Player::sitDownToTable($t);
+			Player::getCurrent()->setIdRole(Role::SCRUM_MASTER);
+			Player::getCurrent()->save();
 			$this->refreshTableList();
 		}
 	}
