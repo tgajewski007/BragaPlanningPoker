@@ -191,7 +191,7 @@ function floatField($name = "no_name", $value = "", $required = true)
 	return $f->out();
 }
 // =============================================================================
-function emailField($name = "no_name", $value = "", $eequired = false, $tabOrder = null)
+function emailField($name = "no_name", $value = "", $required = false, $tabOrder = null)
 {
 	$txt = new TextField();
 	$txt->setName($name);
@@ -204,7 +204,7 @@ function emailField($name = "no_name", $value = "", $eequired = false, $tabOrder
 	return $retval;
 }
 // =============================================================================
-function textField($name = "no_name", $value = "", $eequired = false, $multiline = false, $maxLenght = 255, $tabOrder = 0)
+function textField($name = "no_name", $value = "", $required = false, $multiline = false, $maxLenght = 255, $tabOrder = 0)
 {
 	if($multiline)
 	{
@@ -212,7 +212,7 @@ function textField($name = "no_name", $value = "", $eequired = false, $multiline
 		$txt->setName($name);
 		$txt->setTabOrder($tabOrder);
 		$txt->setMaxLength($maxLenght);
-		$txt->setRequired($eequired);
+		$txt->setRequired($required);
 		$txt->setClassString(Field::CLASS_SIZE_FULL);
 		$txt->setSelected($value);
 		$retval = $txt->out();
@@ -223,7 +223,7 @@ function textField($name = "no_name", $value = "", $eequired = false, $multiline
 		$txt->setName($name);
 		$txt->setTabOrder($tabOrder);
 		$txt->setMaxLength($maxLenght);
-		$txt->setRequired($eequired);
+		$txt->setRequired($required);
 		$txt->setClassString(Field::CLASS_SIZE_FULL);
 		$txt->setSelected($value);
 		$retval = $txt->out();
@@ -282,7 +282,7 @@ function addErrorLog($text)
 		$text = var_export($text, true);
 	}
 	$retval = date("Y-m-d H:i:s") . "," . $text;
-	$h = fopen(INSTALL_DIRECTORY . "log/Error(".date(PHP_DATE_FORMAT).").log", "a");
+	$h = fopen(INSTALL_DIRECTORY . "log/Error(" . date(PHP_DATE_FORMAT) . ").log", "a");
 	fwrite($h, $retval, mb_strlen($retval));
 	fwrite($h, "\r\n", 2);
 	fclose($h);
@@ -306,7 +306,7 @@ function getRandomStringLetterOnly($dlugosc)
 	$keychars = "abcdefghijklmnopqrstuvwxyz";
 	$randkey = "";
 	$max = strlen($keychars) - 1;
-	for($i = 0;$i < $dlugosc;$i++)
+	for($i = 0; $i < $dlugosc; $i++)
 	{
 		$randkey .= substr($keychars, rand(0, $max), 1);
 	}
@@ -318,7 +318,7 @@ function getRandomString($dlugosc)
 	$keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	$randkey = "";
 	$max = strlen($keychars) - 1;
-	for($i = 0;$i < $dlugosc;$i++)
+	for($i = 0; $i < $dlugosc; $i++)
 	{
 		$randkey .= substr($keychars, rand(0, $max), 1);
 	}
@@ -373,7 +373,8 @@ function plCharset($string)
 			'„',
 			'…',
 			'\\',
-			">");
+			">"
+	);
 	$miedzyn = array(
 			'-',
 			'-',
@@ -417,7 +418,8 @@ function plCharset($string)
 			'',
 			'',
 			'-',
-			'-');
+			'-'
+	);
 	$string = str_replace($polskie, $miedzyn, $string);
 
 	// usuń wszytko co jest niedozwolonym znakiem
@@ -504,7 +506,8 @@ function groupCollection(Collection $collection, $groupFunctionName)
 	{
 		$groupKey = call_user_func(array(
 				$value,
-				$groupFunctionName));
+				$groupFunctionName
+		));
 		$retval[$groupKey][$key] = $value;
 	}
 	return $retval;
@@ -522,15 +525,20 @@ function getCleanCDATAXml($text)
 	$text = strip_tags($text, "<br><br/>");
 	$text = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i", '<$1$2>', $text);
 	$text = preg_replace("/(<br\s*\/?>\s*)+/i", "\n", $text);
-	$text = html_entity_decode($text, ENT_QUOTES,'UTF-8');
-	$text = html_entity_decode($text, ENT_QUOTES,'UTF-8');
-	$text = htmlspecialchars($text, ENT_QUOTES,'UTF-8');
+	$text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+	$text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+	$text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 	return $text;
 }
 // =============================================================================
 function getProperUrl($url)
 {
-	return htmlspecialchars(html_entity_decode(trim($url), ENT_QUOTES,'UTF-8'), ENT_QUOTES,'UTF-8');
+	return htmlspecialchars(html_entity_decode(trim($url), ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+}
+// =============================================================================
+function isEmail($email)
+{
+	return (bool)(preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i", $email));
 }
 // =============================================================================
 ?>

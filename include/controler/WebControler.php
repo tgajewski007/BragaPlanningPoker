@@ -51,6 +51,10 @@ class WebControler extends Action
 				$this->getNewTableForm();
 				break;
 			// ----------------------------
+			case "LogOut":
+				$this->logout();
+				break;
+			// ----------------------------
 			case "":
 				$this->makeWorArea();
 				break;
@@ -60,6 +64,13 @@ class WebControler extends Action
 		}
 		$this->setLayOut(new StartLayout());
 		$this->page();
+	}
+	// -------------------------------------------------------------------------
+	private function logout()
+	{
+		Perms::logout();
+		header("Location: /");
+		exit();
 	}
 	// -------------------------------------------------------------------------
 	private function closeTask()

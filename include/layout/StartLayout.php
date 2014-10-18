@@ -23,7 +23,7 @@ class StartLayout extends PublicLayout
 		$retval .= Tags::span(" | ");
 		$retval .= Tags::ajaxLink("?action=GetSettings","settings");
 		$retval .= Tags::span(" | ");
-		$retval .= Tags::ajaxLink("?action=LogOut","logout");
+		$retval .= Tags::a("logout","href='?action=LogOut'");
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
