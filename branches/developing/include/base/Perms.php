@@ -9,6 +9,8 @@
 class Perms
 {
 	// -------------------------------------------------------------------------
+	const PASSWORD_MINIMAL_LENGTH = 6;
+	// -------------------------------------------------------------------------
 	/**
 	 *
 	 * @var User
@@ -80,6 +82,12 @@ class Perms
 				$this->goPublicSite();
 			}
 		}
+	}
+	// -------------------------------------------------------------------------
+	public static function setLoggedIn(User $u)
+	{
+		Perms::getInstance()->setCurrentUser($u);
+		$_SESSION[SessionName::IDUZYTKOWNIK] = $u->getIdUser();
 	}
 	// -------------------------------------------------------------------------
 	protected function goPublicSite()

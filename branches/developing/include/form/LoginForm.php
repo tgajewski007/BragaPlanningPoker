@@ -10,12 +10,13 @@ class LoginForm extends Field
 	// -------------------------------------------------------------------------
 	public function out()
 	{
-		$retval = Tags::span("Username:").Tags::span(textField("u"));
-		$retval .= Tags::span("Password:").Tags::span(passwordField("p"));
+		$retval = Tags::div(Tags::ajaxLink("?action=GetRegisterForm", "create accout"), "class='zLewej Cinzel'");
+		$retval .= Tags::span("Email:") . Tags::span(textField("u"));
+		$retval .= Tags::span("Password:") . Tags::span(passwordField("p"));
 		$retval .= submitButton("login");
 		$retval = Tags::formularzNonAjax($retval);
 
-		$retval = Tags::div($retval,"id='LoginBox'");
+		$retval = Tags::div($retval, "id='LoginBox'");
 		return $retval;
 	}
 	// -------------------------------------------------------------------------

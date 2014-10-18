@@ -14,23 +14,47 @@ class User extends UserDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
-	 *
 	 * @return boolean
 	 */
 	protected function check()
 	{
-		// TODO: add special validate
-		return true;
+		$retval = true;
+		if(mb_strlen($this->getUserName()) == 0)
+		{
+			addAlert("PP:11001 Username is requered");
+			$retval = false;
+		}
+		if(strlen($this->getEmail()) > 0)
+		{
+			if(isEmail($this->getEmail()))
+			{
+				addAlert("PP:11002 Email appears to be invalid");
+				$retval = false;
+			}
+		}
+		try
+		{
+			$tmpUser = self::retrieveByUserName($this->getUserName());
+			if($tmpUser->getIdUser() != $this->getIdUser())
+			{
+				addAlert("PP:11003 Username is already registered");
+				$retval = false;
+			}
+		}
+		catch(Exception $e)
+		{
+			// its OK
+		}
+
+		return $retval;
 	}
 	// -------------------------------------------------------------------------
 	/**
 	 * Method saves the object of the classUser
-	 *
 	 * @return boolean
 	 */
 	public function save()
 	{
-		// TODO: please set atrib independens of clients ex lastupdate
 		if($this->check())
 		{
 			if($this->isReaded())
@@ -39,6 +63,10 @@ class User extends UserDAO implements DAO
 			}
 			else
 			{
+				$this->setIdUser(Guid::get());
+				$this->setPassTruePhase(getRandomString(32));
+				$this->setPassword(getHashPass($this->getPassword(), $this->getIdUser()));
+				$this->setUserNameHash(sha1($this->getUserName()));
 				return $this->create();
 			}
 		}
@@ -74,7 +102,6 @@ class User extends UserDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method removes an object of class User
-	 *
 	 * @return boolean
 	 */
 	public function kill()
@@ -86,7 +113,6 @@ class User extends UserDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * This method returns a collection of objects
-	 *
 	 * @return Collection &lt;User&gt;
 	 */
 	public static function getAll()
@@ -112,6 +138,7 @@ class User extends UserDAO implements DAO
 			$u = self::retrieveByUserName($userName);
 			if($u->getPassword() == getHashPass($password, $u->getIdUser()))
 			{
+				$u->setLastLogin(date(PHP_DATETIME_FORMAT));
 				return $u;
 			}
 			else
