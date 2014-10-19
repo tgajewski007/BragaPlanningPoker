@@ -12,9 +12,6 @@
 class Player extends PlayerDAO implements DAO
 {
 	// -------------------------------------------------------------------------
-	const PLAY = "PLAY";
-	const OBSERVE = "OBSERVE";
-	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
 	 * @return boolean
@@ -25,6 +22,11 @@ class Player extends PlayerDAO implements DAO
 		return true;
 	}
 	// -------------------------------------------------------------------------
+	public function isPlaying()
+	{
+		return $this->getIdRole() != Role::OBSERVER;
+	}
+	// -------------------------------------------------------------------------
 	/**
 	 * Methods return colection of Player
 	 * @return Collection &lt;Player&gt;
@@ -32,14 +34,12 @@ class Player extends PlayerDAO implements DAO
 	public static function getAllByTable(TableDAO $table)
 	{
 		$db = new DB();
-		$sql = "SELECT p.* ";
-		$sql .= "FROM " . DB_SCHEMA . ".player p ";
-		$sql .= "WHERE p.idtable = :IDTABLE ";
-		$sql .= "AND p.status = :PLAY ";
-		$sql .= "ORDER BY CASE  WHEN p.iduser = :IDUZYTKOWNIK THEN 0 ELSE p.idplayer END  ";
+		$sql = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".player ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$sql .= "ORDER BY CASE  WHEN iduser = :IDUZYTKOWNIK THEN 0 ELSE idplayer END  ";
 		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->setParam("IDUZYTKOWNIK", User::getCurrent()->getIdUser());
-		$db->setParam("PLAY", Player::PLAY);
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}
@@ -50,7 +50,6 @@ class Player extends PlayerDAO implements DAO
 	 */
 	public function save()
 	{
-		// TODO: please set atrib independens of clients ex lastupdate
 		if($this->check())
 		{
 			if($this->isReaded())
@@ -65,6 +64,33 @@ class Player extends PlayerDAO implements DAO
 		else
 		{
 			return false;
+		}
+	}
+	// -------------------------------------------------------------------------
+	protected static function findCurrent()
+	{
+		$db = new DB();
+		$sql = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".player ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$sql .= "AND iduser = :IDUSER ";
+		$sql .= "ORDER BY idplayer ";
+		$db->setParam("IDTABLE", Table::getCurrent()->getIdTable());
+		$db->setParam("IDUSER", User::getCurrent()->getIdUser());
+		$db->setLimit(0, 1);
+		$db->query($sql);
+		if($db->nextRecord())
+		{
+			return self::getByDataSource($db);
+		}
+		else
+		{
+			$p = self::get();
+			$p->setIdRole(Role::DEVELOPER);
+			$p->setIdUser(User::getCurrent()->getIdUser());
+			$p->setIdTable(Table::getCurrent()->getIdTable());
+			$p->save();
+			return $p;
 		}
 	}
 	// -------------------------------------------------------------------------
@@ -100,17 +126,15 @@ class Player extends PlayerDAO implements DAO
 	 */
 	public static function getCurrent()
 	{
-		if(isset($_SESSION[SessionName::CURRENT_PLAYER]))
+		if(!isset($_SESSION[SessionName::CURRENT_PLAYER]))
 		{
-			return self::get($_SESSION[SessionName::CURRENT_PLAYER]);
+			self::setCurrent(Player::findCurrent());
 		}
-		else
+		if(self::get($_SESSION[SessionName::CURRENT_PLAYER])->getIdTable() != Table::getCurrent()->getIdTable())
 		{
-			$p = self::get();
-			$p->setIdRole(Role::DEVELOPER);
-			$p->setIdUser(User::getCurrent()->getIdUser());
-			return $p;
+			self::setCurrent(Player::findCurrent());
 		}
+		return self::get($_SESSION[SessionName::CURRENT_PLAYER]);
 	}
 	// -------------------------------------------------------------------------
 	protected static function setCurrent(Player $p)
@@ -130,16 +154,21 @@ class Player extends PlayerDAO implements DAO
 	 */
 	public function sitDownToTable(Table $t)
 	{
-		//TODO: być może sprawdzić czy nie jest pierwszy... i zrobić z niego ScrumMastera
+		foreach(Player::getAllByUser(User::getCurrent()) as $p)/* @var $p Player */
+		{
+			$p->setIdRole(Role::OBSERVER);
+			$p->save();
+		}
+		// TODO: być może sprawdzić czy nie jest pierwszy... i zrobić z niego ScrumMastera
 		$this->setIdTable($t->getIdTable());
-		$this->setStatus(self::PLAY);
+		$this->setIdRole(Role::DEVELOPER);
 		$this->save();
 		self::setCurrent($this);
 	}
 	// -------------------------------------------------------------------------
 	public function getUpFromTable()
 	{
-		$this->setStatus(self::OBSERVE);
+		$this->setIdRole(Role::OBSERVER);
 		return $this->save();
 	}
 	// -------------------------------------------------------------------------

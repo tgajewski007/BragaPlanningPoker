@@ -14,6 +14,10 @@ class WebControler extends Action
 		switch(PostChecker::get("action"))
 		{
 			// ----------------------------
+			case "MakeMeSM":
+				$this->makeMyScrumMaster();
+				break;
+			// ----------------------------
 			case "GetUpFromTable":
 				$this->getUpFromTable();
 				break;
@@ -46,7 +50,7 @@ class WebControler extends Action
 				break;
 			// ----------------------------
 			case "GetTableContent":
-				$this->getTableRefresh();
+				$this->refreshTable();
 				break;
 			case "GetTable":
 				$this->getTable();
@@ -73,10 +77,25 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
+	private function makeMyScrumMaster()
+	{
+		foreach (Player::getAllByTable(Table::getCurrent()) as $p)/* @var $p Player */
+		{
+			if($p->getIdRole() == Role::SCRUM_MASTER)
+			{
+				$p->setIdRole(Role::DEVELOPER);
+				$p->save();
+			}
+		}
+		Player::getCurrent()->setIdRole(Role::SCRUM_MASTER);
+		Player::getCurrent()->save();
+		$this->refreshTable();
+	}
+	// -------------------------------------------------------------------------
 	private function getUpFromTable()
 	{
 		Player::getCurrent()->getUpFromTable();
-		$this->getTableRefresh();
+		$this->refreshTable();
 	}
 	// -------------------------------------------------------------------------
 	private function sitDownToTable()
@@ -85,7 +104,7 @@ class WebControler extends Action
 		{
 			$t = Table::get(PostChecker::get("arg1"));
 			Player::getCurrent()->sitDownToTable($t);
-			$this->getTableRefresh();
+			$this->refreshTable();
 		}
 		catch(Exception $e)
 		{
@@ -121,7 +140,7 @@ class WebControler extends Action
 	{
 		$this->r->closePopUp();
 		Player::getCurrent()->getTable()->cleanCurrentGame();
-		$this->getTableRefresh();
+		$this->refreshTable();
 	}
 	// -------------------------------------------------------------------------
 	private function getPlayAgainForm()
@@ -132,51 +151,57 @@ class WebControler extends Action
 		$this->r->popUpWin("Question", $retval);
 	}
 	// -------------------------------------------------------------------------
-	private function getTableRefresh()
+	private function refreshTable()
 	{
 		$this->refreshTaskInfo();
 		$retval = "";
-		$t = Player::getCurrent()->getTable();
+		$table = Player::getCurrent()->getTable();
 		$numer = 0;
-		$angle = Angle::getAngles($t->getPlayersForTable()->count());
-		if(Game::isAllPlayersSetCard($t))
+		$angle = Angle::getAngles($table->getPlayersForTable()->count());
+		if(Game::isAllPlayersSetCard($table))
 		{
-			foreach($t->getPlayersForTable() as $p)/* @var $p Player */
+			foreach($table->getPlayersForTable() as $p)/* @var $p Player */
 			{
-				$g = $p->getCurrentGame();
-				$retval .= $this->getPlayerItem($p, $g->getCard(), true, $angle[$numer]);
-				$numer++;
+				if($p->getIdRole() != Role::OBSERVER)
+				{
+					$g = $p->getCurrentGame();
+					$retval .= $this->getPlayerItem($p, $g->getCard(), true, $angle[$numer]);
+					$numer++;
+				}
 			}
 			$retval .= $this->getTableSummary();
 		}
 		else
 		{
-			foreach($t->getPlayersForTable() as $p)/* @var $p Player */
+			foreach($table->getPlayersForTable() as $p)/* @var $p Player */
 			{
-				$c = $p->getCurrentGame()->getCard();
-				if($p->getIdUser() == User::getCurrent()->getIdUser())
+				if($p->getIdRole() != Role::OBSERVER)
 				{
-					if($c->getIdCard() > 0)
+					$c = $p->getCurrentGame()->getCard();
+					if($p->getIdUser() == User::getCurrent()->getIdUser())
 					{
-						$retval .= $this->getPlayerItem($p, $c, true, $angle[$numer]);
+						if($c->getIdCard() > 0)
+						{
+							$retval .= $this->getPlayerItem($p, $c, true, $angle[$numer]);
+						}
+						else
+						{
+							$retval .= $this->getPlayerItem($p, Card::get(), false, $angle[$numer]);
+						}
 					}
 					else
 					{
-						$retval .= $this->getPlayerItem($p, Card::get(), false, $angle[$numer]);
+						if($c->getIdCard() > 0)
+						{
+							$retval .= $this->getPlayerItem($p, Card::get(), true, $angle[$numer]);
+						}
+						else
+						{
+							$retval .= $this->getPlayerItem($p, Card::get(), false, $angle[$numer]);
+						}
 					}
+					$numer++;
 				}
-				else
-				{
-					if($c->getIdCard() > 0)
-					{
-						$retval .= $this->getPlayerItem($p, Card::get(), true, $angle[$numer]);
-					}
-					else
-					{
-						$retval .= $this->getPlayerItem($p, Card::get(), false, $angle[$numer]);
-					}
-				}
-				$numer++;
 			}
 		}
 
@@ -185,22 +210,23 @@ class WebControler extends Action
 	// -------------------------------------------------------------------------
 	private function getChairMenu()
 	{
-		if(Player::getCurrent()->getStatus() == Player::PLAY)
+		if(Player::getCurrent()->getIdRole() == Role::OBSERVER)
 		{
-			$href = "?action=GetUpFromTable";
-			$content = "Get up from table";
-		}
-		elseif(Player::getCurrent()->getStatus() == Player::OBSERVE)
-		{
-			$href = "?action=SitDownToTable&amp;arg1=".Player::getCurrent()->getIdTable();
+			$href = "?action=SitDownToTable&amp;arg1=" . Player::getCurrent()->getIdTable();
 			$content = "Sit down to table";
 		}
 		else
 		{
-			$href = "#";
-			$content = "UNKNOW STATUS";
+			$href = "?action=GetUpFromTable";
+			$content = "Get up from table";
 		}
 		$retval = Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:0px; left:0px '");
+		if(Player::getCurrent()->getIdRole() == Role::DEVELOPER)
+		{
+			$href = "?action=MakeMeSM";
+			$content = "Make me ScrumMaster";
+			$retval .= Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:16px; left:0px '");
+		}
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
@@ -272,18 +298,19 @@ class WebControler extends Action
 	// -------------------------------------------------------------------------
 	private function insertTask()
 	{
-		$t = Task::get();
-		$t->setSubject(PostChecker::get("subject"));
-		$t->setUrl(PostChecker::get("url"));
-		$t->setIdTable(Player::getCurrent()->getIdTable());
-		if($t->save())
+		$task = Task::get();
+		$task->setSubject(PostChecker::get("subject"));
+		$task->setUrl(PostChecker::get("url"));
+		$task->setIdTable(Player::getCurrent()->getIdTable());
+		if($task->save())
 		{
 			addMsg("Task saved");
-			Player::getCurrent()->getTable()->setIdTask($t->getIdTask());
+			Player::getCurrent()->getTable()->setIdTask($task->getIdTask());
 			if(Player::getCurrent()->getTable()->save())
 			{
-				$this->r->addChange($this->getTableForm());
-				$this->getTableRefresh();
+				Game::initByPlayer(Player::getCurrent());
+				PostChecker::set("arg1", Table::getCurrent()->getIdTable());
+				$this->getTable();
 				$this->r->closePopUp();
 			}
 		}
@@ -326,12 +353,18 @@ class WebControler extends Action
 			}
 			else
 			{
-
-				$g->setIdCard($c->getIdCard());
-				if($g->save())
+				if($g->getPlayer()->isPlaying())
 				{
-					addMsg("Card " . $c->getName() . " played ok");
-					$this->getTableRefresh();
+					$g->setIdCard($c->getIdCard());
+					if($g->save())
+					{
+						addMsg("Card " . $c->getName() . " played ok");
+						$this->refreshTable();
+					}
+				}
+				else
+				{
+					addAlert("PP:20203 You can't play card when not sitting at the table");
 				}
 			}
 		}
@@ -346,28 +379,19 @@ class WebControler extends Action
 		try
 		{
 			$t = Table::get(PostChecker::get("arg1"));
+			Table::setCurrent($t);
 			if($t->isCanSee())
 			{
 				Player::getCurrent()->sitDownToTable($t);
-				if(is_null(Player::getCurrent()->getCurrentGame()->getIdTask()))
+				if(is_null($t->getIdTask()))
 				{
 					$this->newTaskForm();
 				}
 				else
 				{
-					$retval = $this->getTableForm();
-					if(is_null(Task::getCurrent()->getIdTask()))
-					{
-						$tmp = Tags::ajaxLink("?action=NewTask", "New task...");
-						$this->r->addChange($tmp, "#TaskBox");
-					}
-					else
-					{
-						$this->refreshTaskInfo();
-						$retval .= $this->getPlayerTable();
-					}
-					$this->r->addChange($retval);
-					$this->getTableRefresh();
+					$this->prepareTable();
+					$this->getPlayerCards();
+					$this->refreshTable();
 				}
 			}
 		}
@@ -377,19 +401,19 @@ class WebControler extends Action
 		}
 	}
 	// -------------------------------------------------------------------------
-	private function getPlayerTable()
+	private function getPlayerCards()
 	{
 		$retval = "";
 		foreach(Card::getAll() as $c)/* @var $c Card */
 		{
 			$retval .= Tags::a($c->getTag(), "class='cardInHand' onclick='selectCard(this);' onmouseout='inHandCard(this);' onmouseover='focusCard(this);'");
 		}
-		return Tags::div($retval, "id='PlayerTable'");
+		$this->r->addChange($retval, "#PlayerCards");
 	}
 	// -------------------------------------------------------------------------
-	private function getTableForm()
+	private function prepareTable()
 	{
-		return Tags::div("", "id='PlayingTable'") . Tags::script("startRefreshTable();");
+		$this->r->addChange(Tags::div("", "id='PlayingTable'") . Tags::div("", "id='PlayerCards'") . Tags::script("startRefreshTable();"));
 	}
 	// -------------------------------------------------------------------------
 	private function insertTable()
@@ -400,10 +424,12 @@ class WebControler extends Action
 		$t->setIdPrivacyStatus(PostChecker::get("idprivacy_status"));
 		if($t->save())
 		{
+			$this->r->closePopUp();
+			Table::setCurrent($t);
 			Player::getCurrent()->setIdRole(Role::SCRUM_MASTER);
 			Player::getCurrent()->sitDownToTable($t);
-			$this->refreshTableList();
-			$this->r->closePopUp();
+			PostChecker::set("arg1", $t->getIdTable());
+			$this->getTable();
 		}
 	}
 	// -------------------------------------------------------------------------

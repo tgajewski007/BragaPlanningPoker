@@ -25,6 +25,16 @@ class Game extends GameDAO implements DAO
 		return true;
 	}
 	// -------------------------------------------------------------------------
+	public static function initByPlayer(Player $p)
+	{
+		$g = self::get();
+		$g->setIdPlayer($p->getIdPlayer());
+		$g->setIdTable($p->getIdTable());
+		$g->setIdTask($p->getTable()->getIdTask());
+		$g->setStatus(self::OPEN);
+		return $g->save();
+	}
+	// -------------------------------------------------------------------------
 	/**
 	 * Methods add object of class Game
 	 * insert record into table game
@@ -64,7 +74,7 @@ class Game extends GameDAO implements DAO
 	 */
 	public function save()
 	{
-		// TODO: please set atrib independens of clients ex lastupdate
+		$this->setDate(date(PHP_DATETIME_FORMAT));
 		if($this->check())
 		{
 			if($this->isReaded())

@@ -28,7 +28,6 @@ class Card extends CardDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
-	 *
 	 * @return boolean
 	 */
 	protected function check()
@@ -39,7 +38,6 @@ class Card extends CardDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method saves the object of the classCard
-	 *
 	 * @return boolean
 	 */
 	public function save()
@@ -92,7 +90,6 @@ class Card extends CardDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method removes an object of class Card
-	 *
 	 * @return boolean
 	 */
 	public function kill()
@@ -104,7 +101,6 @@ class Card extends CardDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * This method returns a collection of objects
-	 *
 	 * @return Collection &lt;Card&gt;
 	 */
 	public static function getAll()
@@ -125,7 +121,7 @@ class Card extends CardDAO implements DAO
 	public static function getMedianCardForTask(Task $t)
 	{
 		$db = new DB();
-		$sql = "SELECT Ceil(Count(*)/2) ";
+		$sql = "SELECT Floor(Count(*)/2) ";
 		$sql .= "FROM " . DB_SCHEMA . ".game ";
 		$sql .= "WHERE idtask = :IDTASK ";
 		$db->setParam("IDTASK", $t->getIdTask());
