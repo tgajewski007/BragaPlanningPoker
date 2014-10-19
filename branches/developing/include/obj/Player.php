@@ -95,12 +95,25 @@ class Player extends PlayerDAO implements DAO
 	/**
 	 *
 	 * @return Player
+	 * @throws PlayerException
 	 */
 	public static function getCurrent()
 	{
-		return self::get($_SESSION[SessionName::CURRENT_PLAYER]);
+		if(isset($_SESSION[SessionName::CURRENT_PLAYER]))
+		{
+			return self::get($_SESSION[SessionName::CURRENT_PLAYER]);
+		}
+		else
+		{
+			throw new PlayerException("PP:10512 There's no default player");
+		}
 	}
 	// -------------------------------------------------------------------------
+	/**
+	 *
+	 * @param Table $t
+	 * @throws PlayerException
+	 */
 	public static function sitDownToTable(Table $t)
 	{
 		try
@@ -124,8 +137,13 @@ class Player extends PlayerDAO implements DAO
 	// -------------------------------------------------------------------------
 	public static function getUpFromTable()
 	{
-		self::getCurrent()->kill();
-		unset($_SESSION[SessionName::CURRENT_PLAYER]);
+		if(isset($_SESSION[SessionName::CURRENT_PLAYER]))
+		{
+			unset($_SESSION[SessionName::CURRENT_PLAYER]);
+			Game::getCurrent()->setStatus(Game::CLOSE);
+			Game::getCurrent()->save();
+
+		}
 	}
 	// -------------------------------------------------------------------------
 }
