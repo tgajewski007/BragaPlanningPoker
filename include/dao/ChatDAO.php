@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 21-04-2014 22:24:22
+ * Created on 19-10-2014 12:32:08
  * @author Tomasz Gajewski
- * @package PHPPlanningPoker
+ * @package Poker
  * error prefix PP:102
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -193,19 +193,19 @@ class ChatDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return User
-	 */
-	public function getUser()
-	{
-		return User::get($this->getIdUser());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return Table
 	 */
 	public function getTable()
 	{
 		return Table::get($this->getIdTable());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return User
+	 */
+	public function getUser()
+	{
+		return User::get($this->getIdUser());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -338,13 +338,13 @@ class ChatDAO
 	 * Methods return colection of  Chat
 	 * @return Collection &lt;Chat&gt; 
 	 */
-	public static function getAllByUser(UserDAO $user)
+	public static function getAllByTable(TableDAO $table)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".chat ";
-		$sql .= "WHERE iduser = :IDUSER ";
-		$db->setParam("IDUSER", $user->getIdUser());
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->query($sql);
 		return new Collection($db, Chat::get());
 	}
@@ -353,13 +353,13 @@ class ChatDAO
 	 * Methods return colection of  Chat
 	 * @return Collection &lt;Chat&gt; 
 	 */
-	public static function getAllByTable(TableDAO $table)
+	public static function getAllByUser(UserDAO $user)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".chat ";
-		$sql .= "WHERE idtable = :IDTABLE ";
-		$db->setParam("IDTABLE", $table->getIdTable());
+		$sql .= "WHERE iduser = :IDUSER ";
+		$db->setParam("IDUSER", $user->getIdUser());
 		$db->query($sql);
 		return new Collection($db, Chat::get());
 	}

@@ -15,8 +15,6 @@ class Game extends GameDAO implements DAO
 	const OPEN = "OPEN";
 	const CLOSE = "CLOSE";
 	// -------------------------------------------------------------------------
-	static $currentGame = null;
-	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
 	 * @return boolean
@@ -144,44 +142,39 @@ class Game extends GameDAO implements DAO
 	// -------------------------------------------------------------------------
 	public static function getForPlayerInTable(Player $p, Table $t)
 	{
-		if(empty(self::$currentGame))
+		$game = new self();
+		$db = new DB();
+		$sql = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".game ";
+		$sql .= "WHERE idplayer = :IDPLAYER ";
+		$sql .= "AND idtable = :IDTABLE ";
+		$sql .= "AND idtask = :IDTASK ";
+		$sql .= "ORDER BY idgame DESC ";
+		$db->setParam("IDPLAYER", $p->getIdPlayer());
+		$db->setParam("IDTABLE", $t->getIdTable());
+		$db->setParam("IDTASK", Player::getCurrent()->getTable()->getIdTask());
+		$db->setLimit(0, 1);
+		$db->query($sql);
+		if($db->nextRecord())
 		{
-
-			$game = new self();
-			$db = new DB();
-			$sql = "SELECT * ";
-			$sql .= "FROM " . DB_SCHEMA . ".game ";
-			$sql .= "WHERE idplayer = :IDPLAYER ";
-			$sql .= "AND idtable = :IDTABLE ";
-			$sql .= "AND idtask = :IDTASK ";
-			$sql .= "ORDER BY idgame DESC ";
-			$db->setParam("IDPLAYER", $p->getIdPlayer());
-			$db->setParam("IDTABLE", $t->getIdTable());
-			$db->setParam("IDTASK", Player::getCurrent()->getTable()->getIdTask());
-			$db->setLimit(0, 1);
-			$db->query($sql);
-			if($db->nextRecord())
+			return self::getByDataSource($db);
+		}
+		else
+		{
+			$game = self::get();
+			$game->setIdTable($t->getIdTable());
+			$game->setIdTask(Player::getCurrent()->getTable()->getIdTask());
+			$game->setIdPlayer($p->getIdPlayer());
+			$game->setStatus(self::OPEN);
+			if($game->save())
 			{
-				self::$currentGame = self::getByDataSource($db);
+				return $game;
 			}
 			else
 			{
-				$game = self::get();
-				$game->setIdTable($t->getIdTable());
-				$game->setIdTask(Player::getCurrent()->getTable()->getIdTask());
-				$game->setIdPlayer($p->getIdPlayer());
-				$game->setStatus(self::OPEN);
-				if($game->save())
-				{
-					self::$currentGame = $game;
-				}
-				else
-				{
-					throw new GameException("PP:10310 Can't save game");
-				}
+				throw new GameException("PP:10310 Can't save game");
 			}
 		}
-		return self::$currentGame;
 	}
 	// -------------------------------------------------------------------------
 	public static function getCurrent()

@@ -1,14 +1,14 @@
 <?php
 /**
- * Created on 21-04-2014 22:24:23
+ * Created on 19-10-2014 12:32:08
  * @author Tomasz Gajewski
- * @package PHPPlanningPoker
+ * @package Poker
  * error prefix PP:106
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
- * https://sourceforge.net/projects/simplephpdaogen/
+ * https://sourceforge.net/projects/simplephpdaogen/ 
  * Designed by schama CRUD http://wikipedia.org/wiki/CRUD
- * class generated automatically, please do not modify under pain of
- * OVERWRITTEN WITHOUT WARNING
+ * class generated automatically, please do not modify under pain of 
+ * OVERWRITTEN WITHOUT WARNING 
  */
 class PlayerDAO
 {
@@ -20,9 +20,6 @@ class PlayerDAO
 	protected $idRole = null;
 	protected $idUser = null;
 	protected $readed = false;
-	// -------------------------------------------------------------------------
-	protected $gamesForPlayer = null;
-	protected $tasksForPlayer = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param int $idPlayer
@@ -179,28 +176,28 @@ class PlayerDAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods returns colection of objects Game
-	 * @return Collection &lt;Game&gt;
+	 * @return Collection &lt;Game&gt; 
 	 */
 	public function getGamesForPlayer()
 	{
-		if(is_null($this->gamesForPlayer))
-		{
-			$this->gamesForPlayer = Game::getAllByPlayer($this);
-		}
-		return $this->gamesForPlayer;
+		return Game::getAllByPlayer($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods returns colection of objects Task
-	 * @return Collection &lt;Task&gt;
+	 * @return Collection &lt;Task&gt; 
 	 */
 	public function getTasksForPlayer()
 	{
-		if(is_null($this->tasksForPlayer))
-		{
-			$this->tasksForPlayer = Task::getAllByPlayer($this);
-		}
-		return $this->tasksForPlayer;
+		return Task::getAllByPlayer($this);
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Role
+	 */
+	public function getRole()
+	{
+		return Role::get($this->getIdRole());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -217,14 +214,6 @@ class PlayerDAO
 	public function getUser()
 	{
 		return User::get($this->getIdUser());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * @return Role
-	 */
-	public function getRole()
-	{
-		return Role::get($this->getIdRole());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -351,39 +340,7 @@ class PlayerDAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt;
-	 */
-	public static function getAllByTable(TableDAO $table)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".player ";
-		$sql .= "WHERE idtable = :IDTABLE ";
-		$sql .= "ORDER BY CASE  WHEN  iduser = :IDUZYTKOWNIK THEN 0 ELSE idplayer END  ";
-		$db->setParam("IDTABLE", $table->getIdTable());
-		$db->setParam("IDUZYTKOWNIK", User::getCurrent()->getIdUser());
-		$db->query($sql);
-		return new Collection($db, Player::get());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt;
-	 */
-	public static function getAllByUser(UserDAO $user)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".player ";
-		$sql .= "WHERE iduser = :IDUSER ";
-		$db->setParam("IDUSER", $user->getIdUser());
-		$db->query($sql);
-		return new Collection($db, Player::get());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt;
+	 * @return Collection &lt;Player&gt; 
 	 */
 	public static function getAllByRole(RoleDAO $role)
 	{
@@ -392,6 +349,36 @@ class PlayerDAO
 		$sql .= "FROM " . DB_SCHEMA . ".player ";
 		$sql .= "WHERE idrole = :IDROLE ";
 		$db->setParam("IDROLE", $role->getIdRole());
+		$db->query($sql);
+		return new Collection($db, Player::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Player
+	 * @return Collection &lt;Player&gt; 
+	 */
+	public static function getAllByTable(TableDAO $table)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".player ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
+		$db->query($sql);
+		return new Collection($db, Player::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Player
+	 * @return Collection &lt;Player&gt; 
+	 */
+	public static function getAllByUser(UserDAO $user)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".player ";
+		$sql .= "WHERE iduser = :IDUSER ";
+		$db->setParam("IDUSER", $user->getIdUser());
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}

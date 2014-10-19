@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 21-04-2014 22:24:22
+ * Created on 19-10-2014 12:32:08
  * @author Tomasz Gajewski
- * @package PHPPlanningPoker
+ * @package Poker
  * error prefix PP:101
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -19,9 +19,6 @@ class CardDAO
 	protected $name = null;
 	protected $value = null;
 	protected $readed = false;
-	// -------------------------------------------------------------------------
-	protected $gamesForCard = null;
-	protected $tasksForCard = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param int $idCard
@@ -158,11 +155,7 @@ class CardDAO
 	 */
 	public function getGamesForCard()
 	{
-		if(is_null($this->gamesForCard))
-		{
-			$this->gamesForCard = Game::getAllByCard($this);
-		}
-		return $this->gamesForCard;
+		return Game::getAllByCard($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -171,11 +164,7 @@ class CardDAO
 	 */
 	public function getTasksForCard()
 	{
-		if(is_null($this->tasksForCard))
-		{
-			$this->tasksForCard = Task::getAllByCard($this);
-		}
-		return $this->tasksForCard;
+		return Task::getAllByCard($this);
 	}
 	// -------------------------------------------------------------------------
 	/**

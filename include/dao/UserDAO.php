@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 21-04-2014 22:24:23
+ * Created on 19-10-2014 12:32:08
  * @author Tomasz Gajewski
- * @package PHPPlanningPoker
+ * @package Poker
  * error prefix PP:111
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -26,11 +26,6 @@ class UserDAO
 	protected $avatarUrl = null;
 	protected $god = null;
 	protected $readed = false;
-	// -------------------------------------------------------------------------
-	protected $chatsForUser = null;
-	protected $logsForUser = null;
-	protected $playersForUser = null;
-	protected $newssForUser = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param string $idUser
@@ -293,11 +288,7 @@ class UserDAO
 	 */
 	public function getChatsForUser()
 	{
-		if(is_null($this->chatsForUser))
-		{
-			$this->chatsForUser = Chat::getAllByUser($this);
-		}
-		return $this->chatsForUser;
+		return Chat::getAllByUser($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -306,11 +297,7 @@ class UserDAO
 	 */
 	public function getLogsForUser()
 	{
-		if(is_null($this->logsForUser))
-		{
-			$this->logsForUser = Log::getAllByUser($this);
-		}
-		return $this->logsForUser;
+		return Log::getAllByUser($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -319,11 +306,7 @@ class UserDAO
 	 */
 	public function getPlayersForUser()
 	{
-		if(is_null($this->playersForUser))
-		{
-			$this->playersForUser = Player::getAllByUser($this);
-		}
-		return $this->playersForUser;
+		return Player::getAllByUser($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -332,11 +315,7 @@ class UserDAO
 	 */
 	public function getNewssForUser()
 	{
-		if(is_null($this->newssForUser))
-		{
-			$this->newssForUser = News::getAllByUser($this);
-		}
-		return $this->newssForUser;
+		return News::getAllByUser($this);
 	}
 	// -------------------------------------------------------------------------
 	/**

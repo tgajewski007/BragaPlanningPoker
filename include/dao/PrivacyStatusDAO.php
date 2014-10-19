@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 21-04-2014 22:24:23
+ * Created on 19-10-2014 12:32:08
  * @author Tomasz Gajewski
- * @package PHPPlanningPoker
+ * @package Poker
  * error prefix PP:107
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -18,8 +18,6 @@ class PrivacyStatusDAO
 	protected $idPrivacyStatus = null;
 	protected $name = null;
 	protected $readed = false;
-	// -------------------------------------------------------------------------
-	protected $tablesForPrivacyStatus = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param int $idPrivacyStatus
@@ -146,11 +144,7 @@ class PrivacyStatusDAO
 	 */
 	public function getTablesForPrivacyStatus()
 	{
-		if(is_null($this->tablesForPrivacyStatus))
-		{
-			$this->tablesForPrivacyStatus = Table::getAllByPrivacyStatus($this);
-		}
-		return $this->tablesForPrivacyStatus;
+		return Table::getAllByPrivacyStatus($this);
 	}
 	// -------------------------------------------------------------------------
 	/**

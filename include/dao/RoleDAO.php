@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 21-04-2014 22:24:23
+ * Created on 19-10-2014 12:32:08
  * @author Tomasz Gajewski
- * @package PHPPlanningPoker
+ * @package Poker
  * error prefix PP:108
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -18,8 +18,6 @@ class RoleDAO
 	protected $idRole = null;
 	protected $name = null;
 	protected $readed = false;
-	// -------------------------------------------------------------------------
-	protected $playersForRole = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param int $idRole
@@ -146,11 +144,7 @@ class RoleDAO
 	 */
 	public function getPlayersForRole()
 	{
-		if(is_null($this->playersForRole))
-		{
-			$this->playersForRole = Player::getAllByRole($this);
-		}
-		return $this->playersForRole;
+		return Player::getAllByRole($this);
 	}
 	// -------------------------------------------------------------------------
 	/**

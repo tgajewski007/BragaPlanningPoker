@@ -83,7 +83,9 @@ class Task extends TaskDAO implements DAO
 		$sql .= "FROM " . DB_SCHEMA . ".game g ";
 		$sql .= "INNER JOIN " . DB_SCHEMA . ".card c ON c.idcard = g.idcard ";
 		$sql .= "WHERE idtask = :IDTASK ";
+		$sql .= "AND g.status = :OPEN ";
 		$db->setParam("IDTASK", $this->getIdTask());
+		$db->setParam("OPEN", Game::OPEN);
 		$db->query($sql);
 		if($db->nextRecord())
 		{

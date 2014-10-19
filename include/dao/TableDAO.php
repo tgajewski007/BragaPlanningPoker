@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 21-04-2014 22:24:23
+ * Created on 19-10-2014 12:32:08
  * @author Tomasz Gajewski
- * @package PHPPlanningPoker
+ * @package Poker
  * error prefix PP:109
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -23,11 +23,6 @@ class TableDAO
 	protected $idPrivacyStatus = null;
 	protected $closeDate = null;
 	protected $readed = false;
-	// -------------------------------------------------------------------------
-	protected $chatsForTable = null;
-	protected $gamesForTable = null;
-	protected $playersForTable = null;
-	protected $tasksForTable = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param string $idTable
@@ -239,11 +234,7 @@ class TableDAO
 	 */
 	public function getChatsForTable()
 	{
-		if(is_null($this->chatsForTable))
-		{
-			$this->chatsForTable = Chat::getAllByTable($this);
-		}
-		return $this->chatsForTable;
+		return Chat::getAllByTable($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -252,11 +243,7 @@ class TableDAO
 	 */
 	public function getGamesForTable()
 	{
-		if(is_null($this->gamesForTable))
-		{
-			$this->gamesForTable = Game::getAllByTable($this);
-		}
-		return $this->gamesForTable;
+		return Game::getAllByTable($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -265,11 +252,7 @@ class TableDAO
 	 */
 	public function getPlayersForTable()
 	{
-		if(is_null($this->playersForTable))
-		{
-			$this->playersForTable = Player::getAllByTable($this);
-		}
-		return $this->playersForTable;
+		return Player::getAllByTable($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -278,19 +261,7 @@ class TableDAO
 	 */
 	public function getTasksForTable()
 	{
-		if(is_null($this->tasksForTable))
-		{
-			$this->tasksForTable = Task::getAllByTable($this);
-		}
-		return $this->tasksForTable;
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * @return Task
-	 */
-	public function getTask()
-	{
-		return Task::get($this->getIdTask());
+		return Task::getAllByTable($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -299,6 +270,14 @@ class TableDAO
 	public function getPrivacyStatus()
 	{
 		return PrivacyStatus::get($this->getIdPrivacyStatus());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Task
+	 */
+	public function getTask()
+	{
+		return Task::get($this->getIdTask());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -439,13 +418,13 @@ class TableDAO
 	 * Methods return colection of  Table
 	 * @return Collection &lt;Table&gt; 
 	 */
-	public static function getAllByTask(TaskDAO $task)
+	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".table ";
-		$sql .= "WHERE idtask = :IDTASK ";
-		$db->setParam("IDTASK", $task->getIdTask());
+		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
+		$db->setParam("IDPRIVACY_STATUS", $privacyStatus->getIdPrivacyStatus());
 		$db->query($sql);
 		return new Collection($db, Table::get());
 	}
@@ -454,13 +433,13 @@ class TableDAO
 	 * Methods return colection of  Table
 	 * @return Collection &lt;Table&gt; 
 	 */
-	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
+	public static function getAllByTask(TaskDAO $task)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".table ";
-		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
-		$db->setParam("IDPRIVACY_STATUS", $privacyStatus->getIdPrivacyStatus());
+		$sql .= "WHERE idtask = :IDTASK ";
+		$db->setParam("IDTASK", $task->getIdTask());
 		$db->query($sql);
 		return new Collection($db, Table::get());
 	}
