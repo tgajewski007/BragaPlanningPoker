@@ -282,6 +282,7 @@ class WebControler extends Action
 			Player::getCurrent()->getTable()->setIdTask($t->getIdTask());
 			if(Player::getCurrent()->getTable()->save())
 			{
+				$this->r->addChange($this->getTableForm());
 				$this->getTableRefresh();
 				$this->r->closePopUp();
 			}
