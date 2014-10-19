@@ -26,7 +26,7 @@ class User extends UserDAO implements DAO
 		}
 		if(strlen($this->getEmail()) > 0)
 		{
-			if(isEmail($this->getEmail()))
+			if(!isEmail($this->getEmail()))
 			{
 				addAlert("PP:11002 Email appears to be invalid");
 				$retval = false;

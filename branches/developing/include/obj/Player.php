@@ -22,16 +22,40 @@ class Player extends PlayerDAO implements DAO
 		return true;
 	}
 	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of Player
+	 * @return Collection &lt;Player&gt;
+	 */
+	public static function getAllByTable(TableDAO $table)
+	{
+		$db = new DB();
+		$sql = "SELECT p.* ";
+		$sql .= "FROM " . DB_SCHEMA . ".player p ";
+		$sql .= "INNER JOIN " . DB_SCHEMA . ".game g ON g.idplayer = p.idplayer ";
+		$sql .= "WHERE p.idtable = :IDTABLE ";
+		$sql .= "AND g.status = :OPEN ";
+		$sql .= "ORDER BY CASE  WHEN p.iduser = :IDUZYTKOWNIK THEN 0 ELSE p.idplayer END  ";
+		$db->setParam("IDTABLE", $table->getIdTable());
+		$db->setParam("IDUZYTKOWNIK", User::getCurrent()->getIdUser());
+		$db->setParam("OPEN", Game::OPEN);
+		$db->query($sql);
+		return new Collection($db, Player::get());
+	}
+	// -------------------------------------------------------------------------
 	public static function retriveByTable(Table $t)
 	{
 		$db = new DB();
-		$sql = "SELECT * FROM " . DB_SCHEMA . ".player ";
-		$sql .= "WHERE iduser = :IDUSER ";
-		$sql .= "AND idtable = :IDTABLE ";
-		$sql .= "ORDER BY idplayer DESC ";
+		$sql = "SELECT p.* ";
+		$sql .= "FROM " . DB_SCHEMA . ".player p ";
+		$sql .= "INNER JOIN " . DB_SCHEMA . ".game g ON g.idplayer = p.idplayer ";
+		$sql .= "WHERE p.iduser = :IDUSER ";
+		$sql .= "AND p.idtable = :IDTABLE ";
+		$sql .= "AND g.status = :OPEN ";
+		$sql .= "ORDER BY p.idplayer DESC ";
 		$sql .= "LIMIT 1 ";
 		$db->setParam("IDUSER", User::getCurrent()->getIdUser());
 		$db->setParam("IDTABLE", $t->getIdTable());
+		$db->setParam("OPEN", Game::OPEN);
 		$db->query($sql);
 		if($db->nextRecord())
 		{
@@ -142,7 +166,6 @@ class Player extends PlayerDAO implements DAO
 			unset($_SESSION[SessionName::CURRENT_PLAYER]);
 			Game::getCurrent()->setStatus(Game::CLOSE);
 			Game::getCurrent()->save();
-
 		}
 	}
 	// -------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 <?php
 /**
- * Created on 21-04-2014 22:24:23
+ * Created on 19-10-2014 12:32:08
  * @author Tomasz Gajewski
- * @package PHPPlanningPoker
+ * @package Poker
  * error prefix PP:110
  * Genreated by SimplePHPDAOClassGenerator ver 2.2.0
  * https://sourceforge.net/projects/simplephpdaogen/ 
@@ -23,9 +23,6 @@ class TaskDAO
 	protected $lastUpdate = null;
 	protected $idPlayer = null;
 	protected $readed = false;
-	// -------------------------------------------------------------------------
-	protected $gamesForTask = null;
-	protected $tablesForTask = null;
 	// -------------------------------------------------------------------------
 	/**
 	 * @param int $idTask
@@ -237,11 +234,7 @@ class TaskDAO
 	 */
 	public function getGamesForTask()
 	{
-		if(is_null($this->gamesForTask))
-		{
-			$this->gamesForTask = Game::getAllByTask($this);
-		}
-		return $this->gamesForTask;
+		return Game::getAllByTask($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -250,19 +243,15 @@ class TaskDAO
 	 */
 	public function getTablesForTask()
 	{
-		if(is_null($this->tablesForTask))
-		{
-			$this->tablesForTask = Table::getAllByTask($this);
-		}
-		return $this->tablesForTask;
+		return Table::getAllByTask($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Table
+	 * @return Card
 	 */
-	public function getTable()
+	public function getCard()
 	{
-		return Table::get($this->getIdTable());
+		return Card::get($this->getIdCard());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -274,11 +263,11 @@ class TaskDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Card
+	 * @return Table
 	 */
-	public function getCard()
+	public function getTable()
 	{
-		return Card::get($this->getIdCard());
+		return Table::get($this->getIdTable());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -419,13 +408,13 @@ class TaskDAO
 	 * Methods return colection of  Task
 	 * @return Collection &lt;Task&gt; 
 	 */
-	public static function getAllByTable(TableDAO $table)
+	public static function getAllByCard(CardDAO $card)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".task ";
-		$sql .= "WHERE idtable = :IDTABLE ";
-		$db->setParam("IDTABLE", $table->getIdTable());
+		$sql .= "WHERE idcard = :IDCARD ";
+		$db->setParam("IDCARD", $card->getIdCard());
 		$db->query($sql);
 		return new Collection($db, Task::get());
 	}
@@ -449,13 +438,13 @@ class TaskDAO
 	 * Methods return colection of  Task
 	 * @return Collection &lt;Task&gt; 
 	 */
-	public static function getAllByCard(CardDAO $card)
+	public static function getAllByTable(TableDAO $table)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".task ";
-		$sql .= "WHERE idcard = :IDCARD ";
-		$db->setParam("IDCARD", $card->getIdCard());
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->query($sql);
 		return new Collection($db, Task::get());
 	}
