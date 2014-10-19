@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 13:16:07
+ * Created on 19-10-2014 21:35:18
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:103
@@ -230,11 +230,11 @@ class GameDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Player
+	 * @return Task
 	 */
-	public function getPlayer()
+	public function getTask()
 	{
-		return Player::get($this->getIdPlayer());
+		return Task::get($this->getIdTask());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -246,11 +246,11 @@ class GameDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Task
+	 * @return Player
 	 */
-	public function getTask()
+	public function getPlayer()
 	{
-		return Task::get($this->getIdTask());
+		return Player::get($this->getIdPlayer());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -406,13 +406,13 @@ class GameDAO
 	 * Methods return colection of  Game
 	 * @return Collection &lt;Game&gt; 
 	 */
-	public static function getAllByPlayer(PlayerDAO $player)
+	public static function getAllByTask(TaskDAO $task)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".game ";
-		$sql .= "WHERE idplayer = :IDPLAYER ";
-		$db->setParam("IDPLAYER", $player->getIdPlayer());
+		$sql .= "WHERE idtask = :IDTASK ";
+		$db->setParam("IDTASK", $task->getIdTask());
 		$db->query($sql);
 		return new Collection($db, Game::get());
 	}
@@ -436,13 +436,13 @@ class GameDAO
 	 * Methods return colection of  Game
 	 * @return Collection &lt;Game&gt; 
 	 */
-	public static function getAllByTask(TaskDAO $task)
+	public static function getAllByPlayer(PlayerDAO $player)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".game ";
-		$sql .= "WHERE idtask = :IDTASK ";
-		$db->setParam("IDTASK", $task->getIdTask());
+		$sql .= "WHERE idplayer = :IDPLAYER ";
+		$db->setParam("IDPLAYER", $player->getIdPlayer());
 		$db->query($sql);
 		return new Collection($db, Game::get());
 	}

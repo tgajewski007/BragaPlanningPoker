@@ -34,7 +34,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
-	 *
 	 * @return boolean
 	 */
 	protected function check()
@@ -65,7 +64,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method saves the object of the classTable
-	 *
 	 * @return boolean
 	 */
 	public function save()
@@ -93,7 +91,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method removes an object of class Table
-	 *
 	 * @return boolean
 	 */
 	public function kill()
@@ -104,7 +101,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * This method returns a collection of objects
-	 *
 	 * @return Collection &lt;Table&gt;
 	 */
 	public static function getAll()
@@ -118,13 +114,13 @@ class Table extends TableDAO implements DAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * Methods return colection of  Table
+	 * Methods return colection of Table
 	 * @return Collection &lt;Table&gt;
 	 */
 	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
 	{
 		$db = new DB();
-		$sql  = "SELECT * ";
+		$sql = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".table ";
 		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
 		$sql .= "AND close_date IS NULL ";
@@ -133,9 +129,26 @@ class Table extends TableDAO implements DAO
 		return new Collection($db, Table::get());
 	}
 	// -------------------------------------------------------------------------
+	static function getCurrent()
+	{
+		if(isset($_SESSION[SessionName::CURRENT_TABLE]))
+		{
+			return self::get($_SESSION[SessionName::CURRENT_TABLE]);
+		}
+		else
+		{
+			return self::get();
+		}
+	}
+	// -------------------------------------------------------------------------
+	static function setCurrent(Table $t)
+	{
+		$_SESSION[SessionName::CURRENT_TABLE] = $t->getIdTable();
+	}
+	// -------------------------------------------------------------------------
 	public function cleanCurrentGame()
 	{
-		foreach (Game::getAllByTask(Task::getCurrent()) as $g) /* @var $g Game */
+		foreach(Game::getAllByTask(Task::getCurrent()) as $g) /* @var $g Game */
 		{
 			$g->setIdCard(null);
 			$g->save();

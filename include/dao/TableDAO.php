@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 13:16:07
+ * Created on 19-10-2014 21:35:18
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:109
@@ -265,19 +265,19 @@ class TableDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return PrivacyStatus
-	 */
-	public function getPrivacyStatus()
-	{
-		return PrivacyStatus::get($this->getIdPrivacyStatus());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return Task
 	 */
 	public function getTask()
 	{
 		return Task::get($this->getIdTask());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return PrivacyStatus
+	 */
+	public function getPrivacyStatus()
+	{
+		return PrivacyStatus::get($this->getIdPrivacyStatus());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -418,13 +418,13 @@ class TableDAO
 	 * Methods return colection of  Table
 	 * @return Collection &lt;Table&gt; 
 	 */
-	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
+	public static function getAllByTask(TaskDAO $task)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".table ";
-		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
-		$db->setParam("IDPRIVACY_STATUS", $privacyStatus->getIdPrivacyStatus());
+		$sql .= "WHERE idtask = :IDTASK ";
+		$db->setParam("IDTASK", $task->getIdTask());
 		$db->query($sql);
 		return new Collection($db, Table::get());
 	}
@@ -433,13 +433,13 @@ class TableDAO
 	 * Methods return colection of  Table
 	 * @return Collection &lt;Table&gt; 
 	 */
-	public static function getAllByTask(TaskDAO $task)
+	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".table ";
-		$sql .= "WHERE idtask = :IDTASK ";
-		$db->setParam("IDTASK", $task->getIdTask());
+		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
+		$db->setParam("IDPRIVACY_STATUS", $privacyStatus->getIdPrivacyStatus());
 		$db->query($sql);
 		return new Collection($db, Table::get());
 	}

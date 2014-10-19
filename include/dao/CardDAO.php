@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 13:16:07
+ * Created on 19-10-2014 21:35:17
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:101

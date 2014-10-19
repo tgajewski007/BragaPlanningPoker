@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 13:16:07
+ * Created on 19-10-2014 21:35:18
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:110
@@ -255,19 +255,19 @@ class TaskDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Player
-	 */
-	public function getPlayer()
-	{
-		return Player::get($this->getIdPlayer());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return Table
 	 */
 	public function getTable()
 	{
 		return Table::get($this->getIdTable());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Player
+	 */
+	public function getPlayer()
+	{
+		return Player::get($this->getIdPlayer());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -423,13 +423,13 @@ class TaskDAO
 	 * Methods return colection of  Task
 	 * @return Collection &lt;Task&gt; 
 	 */
-	public static function getAllByPlayer(PlayerDAO $player)
+	public static function getAllByTable(TableDAO $table)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".task ";
-		$sql .= "WHERE idplayer = :IDPLAYER ";
-		$db->setParam("IDPLAYER", $player->getIdPlayer());
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->query($sql);
 		return new Collection($db, Task::get());
 	}
@@ -438,13 +438,13 @@ class TaskDAO
 	 * Methods return colection of  Task
 	 * @return Collection &lt;Task&gt; 
 	 */
-	public static function getAllByTable(TableDAO $table)
+	public static function getAllByPlayer(PlayerDAO $player)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".task ";
-		$sql .= "WHERE idtable = :IDTABLE ";
-		$db->setParam("IDTABLE", $table->getIdTable());
+		$sql .= "WHERE idplayer = :IDPLAYER ";
+		$db->setParam("IDPLAYER", $player->getIdPlayer());
 		$db->query($sql);
 		return new Collection($db, Task::get());
 	}
