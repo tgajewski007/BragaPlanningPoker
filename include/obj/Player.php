@@ -12,6 +12,9 @@
 class Player extends PlayerDAO implements DAO
 {
 	// -------------------------------------------------------------------------
+	const PLAY = "PLAY";
+	const OBSERVE = "OBSERVE";
+	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
 	 * @return boolean
@@ -31,40 +34,14 @@ class Player extends PlayerDAO implements DAO
 		$db = new DB();
 		$sql = "SELECT p.* ";
 		$sql .= "FROM " . DB_SCHEMA . ".player p ";
-		$sql .= "INNER JOIN " . DB_SCHEMA . ".game g ON g.idplayer = p.idplayer ";
 		$sql .= "WHERE p.idtable = :IDTABLE ";
-		$sql .= "AND g.status = :OPEN ";
+		$sql .= "AND p.status = :PLAY ";
 		$sql .= "ORDER BY CASE  WHEN p.iduser = :IDUZYTKOWNIK THEN 0 ELSE p.idplayer END  ";
 		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->setParam("IDUZYTKOWNIK", User::getCurrent()->getIdUser());
-		$db->setParam("OPEN", Game::OPEN);
+		$db->setParam("PLAY", Player::PLAY);
 		$db->query($sql);
 		return new Collection($db, Player::get());
-	}
-	// -------------------------------------------------------------------------
-	public static function retriveByTable(Table $t)
-	{
-		$db = new DB();
-		$sql = "SELECT p.* ";
-		$sql .= "FROM " . DB_SCHEMA . ".player p ";
-		$sql .= "INNER JOIN " . DB_SCHEMA . ".game g ON g.idplayer = p.idplayer ";
-		$sql .= "WHERE p.iduser = :IDUSER ";
-		$sql .= "AND p.idtable = :IDTABLE ";
-		$sql .= "AND g.status = :OPEN ";
-		$sql .= "ORDER BY p.idplayer DESC ";
-		$sql .= "LIMIT 1 ";
-		$db->setParam("IDUSER", User::getCurrent()->getIdUser());
-		$db->setParam("IDTABLE", $t->getIdTable());
-		$db->setParam("OPEN", Game::OPEN);
-		$db->query($sql);
-		if($db->nextRecord())
-		{
-			return self::getByDataSource($db);
-		}
-		else
-		{
-			throw new PlayerException("PP:10510 No table found");
-		}
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -129,8 +106,21 @@ class Player extends PlayerDAO implements DAO
 		}
 		else
 		{
-			throw new PlayerException("PP:10512 There's no default player");
+			$p = self::get();
+			$p->setIdRole(Role::DEVELOPER);
+			$p->setIdUser(User::getCurrent()->getIdUser());
+			return $p;
 		}
+	}
+	// -------------------------------------------------------------------------
+	protected static function setCurrent(Player $p)
+	{
+		$_SESSION[SessionName::CURRENT_PLAYER] = $p->getIdPlayer();
+	}
+	// -------------------------------------------------------------------------
+	public function getCurrentGame()
+	{
+		return Game::getCurrentGameForPlayer($this);
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -138,35 +128,19 @@ class Player extends PlayerDAO implements DAO
 	 * @param Table $t
 	 * @throws PlayerException
 	 */
-	public static function sitDownToTable(Table $t)
+	public function sitDownToTable(Table $t)
 	{
-		try
-		{
-			$p = self::retriveByTable($t);
-		}
-		catch(Exception $e)
-		{
-			$p = self::get();
-			$p->setIdUser(User::getCurrent()->getIdUser());
-			$p->setIdTable($t->getIdTable());
-			$p->setIdRole(Role::getCurrent()->getIdRole());
-			if(!$p->save())
-			{
-				throw new PlayerException("PP:10511 Can't create Player");
-			}
-		}
-		Table::setCurrent($t);
-		$_SESSION[SessionName::CURRENT_PLAYER] = $p->getIdPlayer();
+		//TODO: być może sprawdzić czy nie jest pierwszy... i zrobić z niego ScrumMastera
+		$this->setIdTable($t->getIdTable());
+		$this->setStatus(self::PLAY);
+		$this->save();
+		self::setCurrent($this);
 	}
 	// -------------------------------------------------------------------------
-	public static function getUpFromTable()
+	public function getUpFromTable()
 	{
-		if(isset($_SESSION[SessionName::CURRENT_PLAYER]))
-		{
-			unset($_SESSION[SessionName::CURRENT_PLAYER]);
-			Game::getCurrent()->setStatus(Game::CLOSE);
-			Game::getCurrent()->save();
-		}
+		$this->setStatus(self::OBSERVE);
+		return $this->save();
 	}
 	// -------------------------------------------------------------------------
 }

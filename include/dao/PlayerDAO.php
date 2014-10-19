@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 12:32:08
+ * Created on 19-10-2014 13:16:07
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:106
@@ -19,6 +19,7 @@ class PlayerDAO
 	protected $idTable = null;
 	protected $idRole = null;
 	protected $idUser = null;
+	protected $status = null;
 	protected $readed = false;
 	// -------------------------------------------------------------------------
 	/**
@@ -149,6 +150,11 @@ class PlayerDAO
 		}
 	}
 	// -------------------------------------------------------------------------
+	public function setStatus($status)
+	{
+		$this->status = $status;
+	}
+	// -------------------------------------------------------------------------
 	public function getIdPlayer()
 	{
 		return $this->idPlayer;
@@ -167,6 +173,11 @@ class PlayerDAO
 	public function getIdUser()
 	{
 		return $this->idUser;
+	}
+	// -------------------------------------------------------------------------
+	public function getStatus()
+	{
+		return $this->status;
 	}
 	// -------------------------------------------------------------------------
 	public function getKey()
@@ -247,11 +258,12 @@ class PlayerDAO
 	protected function create()
 	{
 		$db = new DB();
-		$sql  = "INSERT INTO " . DB_SCHEMA . ".player(idtable, idrole, iduser) ";
-		$sql .= "VALUES(:IDTABLE, :IDROLE, :IDUSER) ";
+		$sql  = "INSERT INTO " . DB_SCHEMA . ".player(idtable, idrole, iduser, status) ";
+		$sql .= "VALUES(:IDTABLE, :IDROLE, :IDUSER, :STATUS) ";
 		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDROLE",$this->getIdRole());
 		$db->setParam("IDUSER",$this->getIdUser());
+		$db->setParam("STATUS",$this->getStatus());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -281,11 +293,13 @@ class PlayerDAO
 		$sql .= "SET idtable = :IDTABLE ";
 		$sql .= " , idrole = :IDROLE ";
 		$sql .= " , iduser = :IDUSER ";
+		$sql .= " , status = :STATUS ";
 		$sql .= "WHERE idplayer = :IDPLAYER ";
 		$db->setParam("IDPLAYER",$this->getIdPlayer());
 		$db->setParam("IDTABLE",$this->getIdTable());
 		$db->setParam("IDROLE",$this->getIdRole());
 		$db->setParam("IDUSER",$this->getIdUser());
+		$db->setParam("STATUS",$this->getStatus());
 		$db->query($sql);
 		if(1 == $db->getRowAffected())
 		{
@@ -335,6 +349,7 @@ class PlayerDAO
 		$this->setIdTable($db->f("idtable"));
 		$this->setIdRole($db->f("idrole"));
 		$this->setIdUser($db->f("iduser"));
+		$this->setStatus($db->f("status"));
 		$this->setReaded();
 	}
 	// -------------------------------------------------------------------------

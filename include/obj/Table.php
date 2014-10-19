@@ -133,36 +133,6 @@ class Table extends TableDAO implements DAO
 		return new Collection($db, Table::get());
 	}
 	// -------------------------------------------------------------------------
-	/**
-	 *
-	 * @return Game
-	 */
-	public function getCurrentGame()
-	{
-		return Game::getCurrent();
-	}
-	// -------------------------------------------------------------------------
-	public static function setCurrent(Table $t)
-	{
-		$_SESSION[SessionName::CURRENT_TABLE] = $t->getIdTable();
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 *
-	 * @return Table
-	 */
-	public static function getCurrent()
-	{
-		if(isset($_SESSION[SessionName::CURRENT_TABLE]))
-		{
-			return self::get($_SESSION[SessionName::CURRENT_TABLE]);
-		}
-		else
-		{
-			throw new TableException("PP:10810 Default table doesn't exists");
-		}
-	}
-	// -------------------------------------------------------------------------
 	public function cleanCurrentGame()
 	{
 		foreach (Game::getAllByTask(Task::getCurrent()) as $g) /* @var $g Game */
