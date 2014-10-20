@@ -62,3 +62,13 @@
 {
 	background-position: -195px -180px;
 }
+/* ======= third row ========== */
+.DeveloperPlace
+{	
+	background-position: 0px -270px;
+}
+.ScrumMasterPlace
+{	
+	background-position: -138px -270px;
+	border-color: red !important;
+}

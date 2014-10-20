@@ -256,6 +256,7 @@ class WebControler extends Action
 		$retval = Tags::p($p->getUser()->getName(), "class='b c PlayerPlaceName'");
 		$retval .= Tags::p($p->getUser()->getEmail(), "class='r i PlayerPlaceEmail'");
 		$retval .= Tags::span("", "style='background-image: url(\"" . $p->getUser()->getAvatarUrl() . "\");' class='r i PlayerPlaceAvatar zLewej'");
+
 		if($enabled)
 		{
 			$retval .= Tags::span($c->getTag(), "class='PlayerPlaceCard'");
@@ -268,7 +269,19 @@ class WebControler extends Action
 		$point = $this->getPointOfSuperEclipsa($angle);
 		$left = $point->x;
 		$top = $point->y;
-		return Tags::div($retval, "class='PlayerPlace' style='top:" . $top . "px;left:" . $left . "px;'");
+		return Tags::div($retval, "class='PlayerPlace sprite ".$this->getClassForPlayerPlace($p)."' style='top:" . $top . "px;left:" . $left . "px;'");
+	}
+	// -------------------------------------------------------------------------
+	private function getClassForPlayerPlace(Player $p)
+	{
+		if($p->getIdRole() == Role::SCRUM_MASTER)
+		{
+			return "ScrumMasterPlace";
+		}
+		else
+		{
+			return "DeveloperPlace";
+		}
 	}
 	// -------------------------------------------------------------------------
 	/**

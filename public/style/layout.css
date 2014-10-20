@@ -177,7 +177,7 @@ a.cardInHand {
 div.PlayerPlace {
 	width: 138px;
 	height: 138px;
-	border: 2px brown solid;
+	border: 2px orange solid;
 	border-radius: 4px;
 	position: absolute;
 	padding: 4px;
