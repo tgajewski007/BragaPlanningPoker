@@ -12,7 +12,7 @@
 class Role extends RoleDAO implements DAO
 {
 	// -------------------------------------------------------------------------
-	const SCRUM_MASTER = 1;
+	const BANCO = 1;
 	const DEVELOPER = 2;
 	const PRODUCT_OWNER = 3;
 	const OBSERVER = 4;

@@ -50,6 +50,12 @@ body {
 	padding: 40px;
 }
 
+#DropDownMenu {
+	position: absolute;
+	font-size: 1em !important;
+	z-index: 10;
+}
+
 #Footer {
 	margin-left: auto;
 	margin-right: auto;
@@ -98,16 +104,10 @@ body {
 	width: 920px;
 	margin-bottom: 10px;
 	padding: 10px 40px;
-	text-align: right;
 }
 
 #TaskBox {
 	display: inline-block;
-	float: left;
-	max-width: 500px;
-	overflow: hidden;
-	padding-right: 10px;
-	max-height: 20px;
 }
 
 #MainBox {
@@ -157,7 +157,7 @@ span.card {
 	background-color: #194D1E;
 	border-radius: 240px;
 	position: relative;
-	left:-20px;
+	left: -20px;
 	border: 7px brown solid;
 }
 
@@ -177,12 +177,15 @@ a.cardInHand {
 div.PlayerPlace {
 	width: 138px;
 	height: 138px;
-	border: 2px orange solid;
+	border: 2px #fef4c0 solid;
 	border-radius: 4px;
 	position: absolute;
 	padding: 4px;
 	overflow: hidden;
 	display: inline-block;
+}
+div.BankoPlace {
+	border-color: #57a5fb !important;
 }
 
 p.PlayerPlaceEmail {
