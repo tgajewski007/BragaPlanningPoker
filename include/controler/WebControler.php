@@ -14,8 +14,8 @@ class WebControler extends Action
 		switch(PostChecker::get("action"))
 		{
 			// ----------------------------
-			case "MakeMeSM":
-				$this->makeMyScrumMaster();
+			case "MakeMeBanco":
+				$this->makeMyBanco();
 				break;
 			// ----------------------------
 			case "GetUpFromTable":
@@ -77,17 +77,17 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
-	private function makeMyScrumMaster()
+	private function makeMyBanco()
 	{
 		foreach (Player::getAllByTable(Table::getCurrent()) as $p)/* @var $p Player */
 		{
-			if($p->getIdRole() == Role::SCRUM_MASTER)
+			if($p->getIdRole() == Role::BANCO)
 			{
 				$p->setIdRole(Role::DEVELOPER);
 				$p->save();
 			}
 		}
-		Player::getCurrent()->setIdRole(Role::SCRUM_MASTER);
+		Player::getCurrent()->setIdRole(Role::BANCO);
 		Player::getCurrent()->save();
 		$this->refreshTable();
 	}
@@ -223,8 +223,8 @@ class WebControler extends Action
 		$retval = Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:0px; left:0px '");
 		if(Player::getCurrent()->getIdRole() == Role::DEVELOPER)
 		{
-			$href = "?action=MakeMeSM";
-			$content = "Make me ScrumMaster";
+			$href = "?action=MakeMeBanco";
+			$content = "Make me Banco";
 			$retval .= Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:16px; left:0px '");
 		}
 		return $retval;
@@ -237,7 +237,7 @@ class WebControler extends Action
 		$cardBox = Task::getCurrent()->getMedianCard()->getTag();
 		$cardTaskBox = Task::getCurrent()->getCard()->getTag();
 		$actions = "";
-		if(Player::getCurrent()->getRole()->getIdRole() == Role::SCRUM_MASTER)
+		if(Player::getCurrent()->getRole()->getIdRole() == Role::BANCO)
 		{
 			$actions .= Tags::p(Tags::ajaxLink("?action=PlayAgain", "Clean table and play again?"), "class='b Cinzel'");
 			$actions .= Tags::p(Tags::ajaxLink("?action=CloseTask", "Close / Next task"), "class='b Cinzel'");
@@ -269,18 +269,14 @@ class WebControler extends Action
 		$point = $this->getPointOfSuperEclipsa($angle);
 		$left = $point->x;
 		$top = $point->y;
-		return Tags::div($retval, "class='PlayerPlace sprite ".$this->getClassForPlayerPlace($p)."' style='top:" . $top . "px;left:" . $left . "px;'");
+		return Tags::div($retval, "class='PlayerPlace ".$this->getClassForPlayerPlace($p)."' style='top:" . $top . "px;left:" . $left . "px;'");
 	}
 	// -------------------------------------------------------------------------
 	private function getClassForPlayerPlace(Player $p)
 	{
-		if($p->getIdRole() == Role::SCRUM_MASTER)
+		if($p->getIdRole() == Role::BANCO)
 		{
-			return "ScrumMasterPlace";
-		}
-		else
-		{
-			return "DeveloperPlace";
+			return "BankoPlace";
 		}
 	}
 	// -------------------------------------------------------------------------
@@ -331,15 +327,14 @@ class WebControler extends Action
 	// -------------------------------------------------------------------------
 	private function refreshTaskInfo()
 	{
-		$retval = Tags::ajaxLink("?action=GetTableContent", icon("ui-icon-refresh"));
-		$retval .= Tags::ajaxLink("?action=GetTask", icon("ui-icon-wrench"), "Change task");
+		$retval = "";
 		if(is_null(Task::getCurrent()->getIdCard()))
 		{
-			$retval .= Tags::a(Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank'");
+			$retval .= Tags::a("Task: ".Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank'");
 		}
 		else
 		{
-			$retval .= Tags::a(Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank' class='s'");
+			$retval .= Tags::a("Task: ".Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank' class='s'");
 		}
 		$this->r->addChange($retval, "#TaskBox");
 	}
@@ -439,7 +434,7 @@ class WebControler extends Action
 		{
 			$this->r->closePopUp();
 			Table::setCurrent($t);
-			Player::getCurrent()->setIdRole(Role::SCRUM_MASTER);
+			Player::getCurrent()->setIdRole(Role::BANCO);
 			Player::getCurrent()->sitDownToTable($t);
 			PostChecker::set("arg1", $t->getIdTable());
 			$this->getTable();
