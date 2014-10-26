@@ -56,10 +56,6 @@ class Table extends TableDAO implements DAO
 		{
 			$this->setPassword(getHashPass($this->passwordNonHashed, $this->getIdTable()));
 		}
-		else
-		{
-			$this->setPassword(null);
-		}
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -68,17 +64,16 @@ class Table extends TableDAO implements DAO
 	 */
 	public function save()
 	{
+		$this->hashPass();
 		if($this->check())
 		{
 			if($this->isReaded())
 			{
-				$this->hashPass();
 				return $this->update();
 			}
 			else
 			{
 				$this->setIdTable(Guid::get());
-				$this->hashPass();
 				$this->setStartDate(date(PHP_DATETIME_FORMAT));
 				return $this->create();
 			}

@@ -142,6 +142,15 @@ class Player extends PlayerDAO implements DAO
 		$_SESSION[SessionName::CURRENT_PLAYER] = $p->getIdPlayer();
 	}
 	// -------------------------------------------------------------------------
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function canCreateTask()
+	{
+		return ($this->getIdRole() == Role::BANCO || $this->getIdRole() == Role::PRODUCT_OWNER);
+	}
+	// -------------------------------------------------------------------------
 	public function getCurrentGame()
 	{
 		return Game::getCurrentGameForPlayer($this);
@@ -156,12 +165,18 @@ class Player extends PlayerDAO implements DAO
 	{
 		foreach(Player::getAllByUser(User::getCurrent()) as $p)/* @var $p Player */
 		{
-			$p->setIdRole(Role::OBSERVER);
-			$p->save();
+			if($this->getIdTable() != $t->getIdTable())
+			{
+				$p->setIdRole(Role::OBSERVER);
+				$p->save();
+			}
 		}
-		// TODO: być może sprawdzić czy nie jest pierwszy... i zrobić z niego ScrumMastera
+		// TODO: być może sprawdzić czy nie jest pierwszy... i zrobić z niego Bankiera
 		$this->setIdTable($t->getIdTable());
-		$this->setIdRole(Role::DEVELOPER);
+		if($this->getIdRole() == Role::OBSERVER)
+		{
+			$this->setIdRole(Role::DEVELOPER);
+		}
 		$this->save();
 		self::setCurrent($this);
 	}

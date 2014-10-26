@@ -22,7 +22,7 @@ class TaskForm extends Field
 	public function out()
 	{
 		$retval = getFormRow("Subject", textField("subject", $this->task->getSubject(), true));
-		$retval .= getFormRow("URL", textField("url", $this->task->getUrl(), true));
+		$retval .= getFormRow("URL", textField("url", $this->task->getUrl()));
 		$retval .= getFormRow("Esimate", $this->task->getCard()->getName());
 
 		return $retval;
