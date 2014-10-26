@@ -20,7 +20,7 @@ class Page
 		$retval .= Tags::link("rel='shortcut icon' href='/img/favicon.ico'");
 		if(PRODUCTION)
 		{
-			$retval .= Tags::link("rel='stylesheet' type='text/css' href='" . STATIC_URL . "css/style.css?" . self::VERSION . "'");
+			$retval .= Tags::link("rel='stylesheet' type='text/css' href='" . STATIC_URL . "style/style.css?" . self::VERSION . "'");
 		}
 		else
 		{
