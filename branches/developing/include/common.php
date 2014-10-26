@@ -80,6 +80,7 @@ require "layout/StartLayout.php";
 require "form/LoginForm.php";
 require "form/TableForm.php";
 require "form/TaskForm.php";
+require "form/UserForm.php";
 // -----------------------------------------------------------------------------
 require "widget/PrivacyStatusSelect.php";
 require "widget/SelectCard.php";

@@ -184,8 +184,13 @@ div.PlayerPlace {
 	overflow: hidden;
 	display: inline-block;
 }
+
 div.BankoPlace {
 	border-color: #57a5fb !important;
+}
+
+div.ProductOwnerPlace {
+	border-color: gold !important;
 }
 
 p.PlayerPlaceEmail {
@@ -221,7 +226,7 @@ span.PlayerPlaceCard {
 }
 
 #TableSummary {
-	border: 2px solid brown;
+	border: 2px solid #fef4c0;
 	border-radius: 4px;
 	display: inline-block;
 	height: 124px;

@@ -14,6 +14,16 @@ class WebControler extends Action
 		switch(PostChecker::get("action"))
 		{
 			// ----------------------------
+			case "UpdProfile":
+				$this->updateProfile();
+				break;
+			case "GetProfile":
+				$this->getProfile();
+				break;
+			// ----------------------------
+			case "MakeMePO":
+				$this->makeMyProductOwner();
+				break;
 			case "MakeMeBanco":
 				$this->makeMyBanco();
 				break;
@@ -38,6 +48,12 @@ class WebControler extends Action
 				$this->getPlayAgainForm();
 				break;
 			// ----------------------------
+			case "GetCurrentTask":
+				$this->getCurrentTaskForm();
+				break;
+			case "UpdTask":
+				$this->updateTask();
+				break;
 			case "InsTask":
 				$this->insertTask();
 				break;
@@ -77,9 +93,46 @@ class WebControler extends Action
 		$this->page();
 	}
 	// -------------------------------------------------------------------------
+	private function updateProfile()
+	{
+		$u = User::getCurrent();
+		$u->setName(PostChecker::get("name"));
+		$u->setEmail(PostChecker::get("email"));
+		$u->setAvatarUrl(PostChecker::get("avatar_url"));
+		if($u->save())
+		{
+			addMsg("Update successfull");
+			$this->r->closePopUp();
+		}
+	}
+	// -------------------------------------------------------------------------
+	private function getProfile()
+	{
+		$f = new UserForm(User::getCurrent());
+		$retval = $f->out();
+		$retval .= getFormSubmitRow(submitButton("Update") . hiddenField("action", "UpdProfile"));
+		$retval = Tags::formularz($retval);
+		$this->r->popUpWin("Profile", $retval);
+	}
+	// -------------------------------------------------------------------------
+	private function makeMyProductOwner()
+	{
+		foreach(Player::getAllByTable(Table::getCurrent()) as $p)/* @var $p Player */
+		{
+			if($p->getIdRole() == Role::PRODUCT_OWNER)
+			{
+				$p->setIdRole(Role::DEVELOPER);
+				$p->save();
+			}
+		}
+		Player::getCurrent()->setIdRole(Role::PRODUCT_OWNER);
+		Player::getCurrent()->save();
+		$this->refreshTable();
+	}
+	// -------------------------------------------------------------------------
 	private function makeMyBanco()
 	{
-		foreach (Player::getAllByTable(Table::getCurrent()) as $p)/* @var $p Player */
+		foreach(Player::getAllByTable(Table::getCurrent()) as $p)/* @var $p Player */
 		{
 			if($p->getIdRole() == Role::BANCO)
 			{
@@ -221,11 +274,17 @@ class WebControler extends Action
 			$content = "Get up from table";
 		}
 		$retval = Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:0px; left:0px '");
-		if(Player::getCurrent()->getIdRole() == Role::DEVELOPER)
+		if(Player::getCurrent()->getIdRole() != Role::BANCO)
 		{
 			$href = "?action=MakeMeBanco";
 			$content = "Make me Banco";
 			$retval .= Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:16px; left:0px '");
+		}
+		if(Player::getCurrent()->getIdRole() != Role::PRODUCT_OWNER)
+		{
+			$href = "?action=MakeMePO";
+			$content = "Make me Product Owner";
+			$retval .= Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:32px; left:0px '");
 		}
 		return $retval;
 	}
@@ -269,7 +328,7 @@ class WebControler extends Action
 		$point = $this->getPointOfSuperEclipsa($angle);
 		$left = $point->x;
 		$top = $point->y;
-		return Tags::div($retval, "class='PlayerPlace ".$this->getClassForPlayerPlace($p)."' style='top:" . $top . "px;left:" . $left . "px;'");
+		return Tags::div($retval, "class='PlayerPlace " . $this->getClassForPlayerPlace($p) . "' style='top:" . $top . "px;left:" . $left . "px;'");
 	}
 	// -------------------------------------------------------------------------
 	private function getClassForPlayerPlace(Player $p)
@@ -277,6 +336,10 @@ class WebControler extends Action
 		if($p->getIdRole() == Role::BANCO)
 		{
 			return "BankoPlace";
+		}
+		elseif($p->getIdRole() == Role::PRODUCT_OWNER)
+		{
+			return "ProductOwnerPlace";
 		}
 	}
 	// -------------------------------------------------------------------------
@@ -305,48 +368,96 @@ class WebControler extends Action
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
-	private function insertTask()
-	{
-		$task = Task::get();
-		$task->setSubject(PostChecker::get("subject"));
-		$task->setUrl(PostChecker::get("url"));
-		$task->setIdTable(Player::getCurrent()->getIdTable());
-		if($task->save())
-		{
-			addMsg("Task saved");
-			Player::getCurrent()->getTable()->setIdTask($task->getIdTask());
-			if(Player::getCurrent()->getTable()->save())
-			{
-				Game::initByPlayer(Player::getCurrent());
-				PostChecker::set("arg1", Table::getCurrent()->getIdTable());
-				$this->getTable();
-				$this->r->closePopUp();
-			}
-		}
-	}
-	// -------------------------------------------------------------------------
 	private function refreshTaskInfo()
 	{
 		$retval = "";
+		$href = "";
+		if(Task::getCurrent()->getUrl() != "")
+		{
+			$href = "href='" . Task::getCurrent()->getUrl() . "' target='_blank' ";
+		}
 		if(is_null(Task::getCurrent()->getIdCard()))
 		{
-			$retval .= Tags::a("Task: ".Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank'");
+			$retval .= Tags::a("Task: " . Task::getCurrent()->getSubject(), $href . "");
 		}
 		else
 		{
-			$retval .= Tags::a("Task: ".Task::getCurrent()->getSubject(), "href='" . Task::getCurrent()->getUrl() . "' target='_blank' class='s'");
+			$retval .= Tags::a("Task: " . Task::getCurrent()->getSubject(), $href . "class='s'");
 		}
 		$this->r->addChange($retval, "#TaskBox");
 	}
 	// -------------------------------------------------------------------------
-	private function newTaskForm()
+	private function getCurrentTaskForm()
 	{
-		$t = Task::get();
+		$t = Player::getCurrent()->getTable()->getTask();
 		$f = new TaskForm($t);
 		$retval = $f->out();
-		$retval .= getFormSubmitRow(submitButton("Create") . hiddenField("action", "InsTask"));
+		$retval .= getFormSubmitRow(submitButton("Update") . hiddenField("action", "UpdTask"));
 		$retval = Tags::formularz($retval);
 		$this->r->popUpWin("New task", $retval);
+	}
+	// -------------------------------------------------------------------------
+	private function newTaskForm()
+	{
+		if(Player::getCurrent()->canCreateTask())
+		{
+			$t = Task::get();
+			$f = new TaskForm($t);
+			$retval = $f->out();
+			$retval .= getFormSubmitRow(submitButton("Create") . hiddenField("action", "InsTask"));
+			$retval = Tags::formularz($retval);
+			$this->r->popUpWin("New task", $retval);
+		}
+		else
+		{
+			addAlert("PP:20202 Your role precludes the creation of task");
+		}
+	}
+	// -------------------------------------------------------------------------
+	private function updateTask()
+	{
+		if(Player::getCurrent()->canCreateTask())
+		{
+			$task = Player::getCurrent()->getTable()->getTask();
+			$task->setSubject(PostChecker::get("subject"));
+			$task->setUrl(PostChecker::get("url"));
+			if($task->save())
+			{
+				addMsg("Task saved");
+				$this->r->closePopUp();
+			}
+		}
+		else
+		{
+			addAlert("PP:20203 Your role precludes the creation of task");
+		}
+	}
+	// -------------------------------------------------------------------------
+	private function insertTask()
+	{
+		if(Player::getCurrent()->canCreateTask())
+		{
+			$task = Task::get();
+			$task->setSubject(PostChecker::get("subject"));
+			$task->setUrl(PostChecker::get("url"));
+			$task->setIdTable(Player::getCurrent()->getIdTable());
+			if($task->save())
+			{
+				addMsg("Task saved");
+				Player::getCurrent()->getTable()->setIdTask($task->getIdTask());
+				if(Player::getCurrent()->getTable()->save())
+				{
+					Game::initByPlayer(Player::getCurrent());
+					PostChecker::set("arg1", Table::getCurrent()->getIdTable());
+					$this->getTable();
+					$this->r->closePopUp();
+				}
+			}
+		}
+		else
+		{
+			addAlert("PP:20204 Your role precludes the creation of task");
+		}
 	}
 	// -------------------------------------------------------------------------
 	private function setCard()
@@ -357,7 +468,7 @@ class WebControler extends Action
 			$g = Player::getCurrent()->getCurrentGame();
 			if(Game::isAllPlayersSetCard(Player::getCurrent()->getTable()))
 			{
-				addAlert("PP:20202 Change card is unaviable. All card played");
+				addAlert("PP:20205 Change card is unaviable. All card played");
 			}
 			else
 			{
@@ -372,7 +483,7 @@ class WebControler extends Action
 				}
 				else
 				{
-					addAlert("PP:20203 You can't play card when not sitting at the table");
+					addAlert("PP:20206 You can't play card when not sitting at the table");
 				}
 			}
 		}
