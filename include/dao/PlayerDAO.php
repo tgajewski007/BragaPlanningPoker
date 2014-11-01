@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:18
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:106
@@ -193,14 +193,6 @@ class PlayerDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Role
-	 */
-	public function getRole()
-	{
-		return Role::get($this->getIdRole());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return Table
 	 */
 	public function getTable()
@@ -214,6 +206,14 @@ class PlayerDAO
 	public function getUser()
 	{
 		return User::get($this->getIdUser());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Role
+	 */
+	public function getRole()
+	{
+		return Role::get($this->getIdRole());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -264,7 +264,7 @@ class PlayerDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10602 Dodanie rekordu do tablicy player nie powiodło się");
+			AddAlert("PP:10602 Insert record into table player fail");
 			return false;
 		}
 	}
@@ -295,7 +295,7 @@ class PlayerDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10603 Zmiana rekordu w tablicy player nie powiodło się");
+			AddAlert("PP:10603 Update record in table player fail");
 			return false;
 		}
 	}
@@ -342,21 +342,6 @@ class PlayerDAO
 	 * Methods return colection of  Player
 	 * @return Collection &lt;Player&gt; 
 	 */
-	public static function getAllByRole(RoleDAO $role)
-	{
-		$db = new DB();
-		$sql  = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".player ";
-		$sql .= "WHERE idrole = :IDROLE ";
-		$db->setParam("IDROLE", $role->getIdRole());
-		$db->query($sql);
-		return new Collection($db, Player::get());
-	}
-	// -------------------------------------------------------------------------
-	/**
-	 * Methods return colection of  Player
-	 * @return Collection &lt;Player&gt; 
-	 */
 	public static function getAllByTable(TableDAO $table)
 	{
 		$db = new DB();
@@ -379,6 +364,21 @@ class PlayerDAO
 		$sql .= "FROM " . DB_SCHEMA . ".player ";
 		$sql .= "WHERE iduser = :IDUSER ";
 		$db->setParam("IDUSER", $user->getIdUser());
+		$db->query($sql);
+		return new Collection($db, Player::get());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * Methods return colection of  Player
+	 * @return Collection &lt;Player&gt; 
+	 */
+	public static function getAllByRole(RoleDAO $role)
+	{
+		$db = new DB();
+		$sql  = "SELECT * ";
+		$sql .= "FROM " . DB_SCHEMA . ".player ";
+		$sql .= "WHERE idrole = :IDROLE ";
+		$db->setParam("IDROLE", $role->getIdRole());
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}

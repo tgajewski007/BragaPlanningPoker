@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:19
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:111
@@ -372,7 +372,7 @@ class UserDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11102 Dodanie rekordu do tablicy user nie powiodło się");
+			AddAlert("PP:11102 Insert record into table user fail");
 			return false;
 		}
 	}
@@ -415,7 +415,7 @@ class UserDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11103 Zmiana rekordu w tablicy user nie powiodło się");
+			AddAlert("PP:11103 Update record in table user fail");
 			return false;
 		}
 	}

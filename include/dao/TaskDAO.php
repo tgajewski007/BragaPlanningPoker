@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:18
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:110
@@ -247,11 +247,11 @@ class TaskDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Card
+	 * @return Player
 	 */
-	public function getCard()
+	public function getPlayer()
 	{
-		return Card::get($this->getIdCard());
+		return Player::get($this->getIdPlayer());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -263,11 +263,11 @@ class TaskDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Player
+	 * @return Card
 	 */
-	public function getPlayer()
+	public function getCard()
 	{
-		return Player::get($this->getIdPlayer());
+		return Card::get($this->getIdCard());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -321,7 +321,7 @@ class TaskDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11002 Dodanie rekordu do tablicy task nie powiodło się");
+			AddAlert("PP:11002 Insert record into table task fail");
 			return false;
 		}
 	}
@@ -358,7 +358,7 @@ class TaskDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11003 Zmiana rekordu w tablicy task nie powiodło się");
+			AddAlert("PP:11003 Update record in table task fail");
 			return false;
 		}
 	}
@@ -408,13 +408,13 @@ class TaskDAO
 	 * Methods return colection of  Task
 	 * @return Collection &lt;Task&gt; 
 	 */
-	public static function getAllByCard(CardDAO $card)
+	public static function getAllByPlayer(PlayerDAO $player)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".task ";
-		$sql .= "WHERE idcard = :IDCARD ";
-		$db->setParam("IDCARD", $card->getIdCard());
+		$sql .= "WHERE idplayer = :IDPLAYER ";
+		$db->setParam("IDPLAYER", $player->getIdPlayer());
 		$db->query($sql);
 		return new Collection($db, Task::get());
 	}
@@ -438,13 +438,13 @@ class TaskDAO
 	 * Methods return colection of  Task
 	 * @return Collection &lt;Task&gt; 
 	 */
-	public static function getAllByPlayer(PlayerDAO $player)
+	public static function getAllByCard(CardDAO $card)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".task ";
-		$sql .= "WHERE idplayer = :IDPLAYER ";
-		$db->setParam("IDPLAYER", $player->getIdPlayer());
+		$sql .= "WHERE idcard = :IDCARD ";
+		$db->setParam("IDCARD", $card->getIdCard());
 		$db->query($sql);
 		return new Collection($db, Task::get());
 	}

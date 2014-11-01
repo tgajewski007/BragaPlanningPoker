@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:17
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:101
@@ -214,7 +214,7 @@ class CardDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10102 Dodanie rekordu do tablicy card nie powiodło się");
+			AddAlert("PP:10102 Insert record into table card fail");
 			return false;
 		}
 	}
@@ -243,7 +243,7 @@ class CardDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10103 Zmiana rekordu w tablicy card nie powiodło się");
+			AddAlert("PP:10103 Update record in table card fail");
 			return false;
 		}
 	}

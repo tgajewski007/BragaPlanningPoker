@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:18
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:104
@@ -261,7 +261,7 @@ class LogDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10402 Dodanie rekordu do tablicy log nie powiodło się");
+			AddAlert("PP:10402 Insert record into table log fail");
 			return false;
 		}
 	}
@@ -296,7 +296,7 @@ class LogDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10403 Zmiana rekordu w tablicy log nie powiodło się");
+			AddAlert("PP:10403 Update record in table log fail");
 			return false;
 		}
 	}
