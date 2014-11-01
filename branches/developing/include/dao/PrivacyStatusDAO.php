@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:18
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:107
@@ -193,7 +193,7 @@ class PrivacyStatusDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10702 Dodanie rekordu do tablicy privacy_status nie powiodło się");
+			AddAlert("PP:10702 Insert record into table privacy_status fail");
 			return false;
 		}
 	}
@@ -220,7 +220,7 @@ class PrivacyStatusDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10703 Zmiana rekordu w tablicy privacy_status nie powiodło się");
+			AddAlert("PP:10703 Update record in table privacy_status fail");
 			return false;
 		}
 	}

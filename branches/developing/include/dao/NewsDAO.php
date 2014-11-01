@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:19
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:105
@@ -261,7 +261,7 @@ class NewsDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10502 Dodanie rekordu do tablicy news nie powiodło się");
+			AddAlert("PP:10502 Insert record into table news fail");
 			return false;
 		}
 	}
@@ -296,7 +296,7 @@ class NewsDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10503 Zmiana rekordu w tablicy news nie powiodło się");
+			AddAlert("PP:10503 Update record in table news fail");
 			return false;
 		}
 	}

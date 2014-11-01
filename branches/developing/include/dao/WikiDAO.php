@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:19
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:112
@@ -234,7 +234,7 @@ class WikiDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11202 Dodanie rekordu do tablicy wiki nie powiodło się");
+			AddAlert("PP:11202 Insert record into table wiki fail");
 			return false;
 		}
 	}
@@ -267,7 +267,7 @@ class WikiDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:11203 Zmiana rekordu w tablicy wiki nie powiodło się");
+			AddAlert("PP:11203 Update record in table wiki fail");
 			return false;
 		}
 	}

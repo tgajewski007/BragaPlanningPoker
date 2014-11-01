@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:18
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:109
@@ -331,7 +331,7 @@ class TableDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10902 Dodanie rekordu do tablicy table nie powiodło się");
+			AddAlert("PP:10902 Insert record into table table fail");
 			return false;
 		}
 	}
@@ -368,7 +368,7 @@ class TableDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10903 Zmiana rekordu w tablicy table nie powiodło się");
+			AddAlert("PP:10903 Update record in table table fail");
 			return false;
 		}
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:17
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:102
@@ -193,19 +193,19 @@ class ChatDAO
 	}
 	// -------------------------------------------------------------------------
 	/**
-	 * @return Table
-	 */
-	public function getTable()
-	{
-		return Table::get($this->getIdTable());
-	}
-	// -------------------------------------------------------------------------
-	/**
 	 * @return User
 	 */
 	public function getUser()
 	{
 		return User::get($this->getIdUser());
+	}
+	// -------------------------------------------------------------------------
+	/**
+	 * @return Table
+	 */
+	public function getTable()
+	{
+		return Table::get($this->getIdTable());
 	}
 	// -------------------------------------------------------------------------
 	/**
@@ -257,7 +257,7 @@ class ChatDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10202 Dodanie rekordu do tablicy chat nie powiodło się");
+			AddAlert("PP:10202 Insert record into table chat fail");
 			return false;
 		}
 	}
@@ -290,7 +290,7 @@ class ChatDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10203 Zmiana rekordu w tablicy chat nie powiodło się");
+			AddAlert("PP:10203 Update record in table chat fail");
 			return false;
 		}
 	}
@@ -338,13 +338,13 @@ class ChatDAO
 	 * Methods return colection of  Chat
 	 * @return Collection &lt;Chat&gt; 
 	 */
-	public static function getAllByTable(TableDAO $table)
+	public static function getAllByUser(UserDAO $user)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".chat ";
-		$sql .= "WHERE idtable = :IDTABLE ";
-		$db->setParam("IDTABLE", $table->getIdTable());
+		$sql .= "WHERE iduser = :IDUSER ";
+		$db->setParam("IDUSER", $user->getIdUser());
 		$db->query($sql);
 		return new Collection($db, Chat::get());
 	}
@@ -353,13 +353,13 @@ class ChatDAO
 	 * Methods return colection of  Chat
 	 * @return Collection &lt;Chat&gt; 
 	 */
-	public static function getAllByUser(UserDAO $user)
+	public static function getAllByTable(TableDAO $table)
 	{
 		$db = new DB();
 		$sql  = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".chat ";
-		$sql .= "WHERE iduser = :IDUSER ";
-		$db->setParam("IDUSER", $user->getIdUser());
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->query($sql);
 		return new Collection($db, Chat::get());
 	}

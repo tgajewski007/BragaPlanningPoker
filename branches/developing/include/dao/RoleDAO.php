@@ -1,6 +1,6 @@
 <?php
 /**
- * Created on 19-10-2014 21:35:18
+ * Created on 30-10-2014 20:42:41
  * @author Tomasz Gajewski
  * @package Poker
  * error prefix PP:108
@@ -193,7 +193,7 @@ class RoleDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10802 Dodanie rekordu do tablicy role nie powiodło się");
+			AddAlert("PP:10802 Insert record into table role fail");
 			return false;
 		}
 	}
@@ -220,7 +220,7 @@ class RoleDAO
 		else
 		{
 			$db->rollback();
-			AddAlert("PP:10803 Zmiana rekordu w tablicy role nie powiodło się");
+			AddAlert("PP:10803 Update record in table role fail");
 			return false;
 		}
 	}
