@@ -34,6 +34,7 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
+	 *
 	 * @return boolean
 	 */
 	protected function check()
@@ -60,6 +61,7 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method saves the object of the classTable
+	 *
 	 * @return boolean
 	 */
 	public function save()
@@ -86,6 +88,7 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method removes an object of class Table
+	 *
 	 * @return boolean
 	 */
 	public function kill()
@@ -96,6 +99,7 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * This method returns a collection of objects
+	 *
 	 * @return Collection &lt;Table&gt;
 	 */
 	public static function getAll()
@@ -110,16 +114,26 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods return colection of Table
+	 *
 	 * @return Collection &lt;Table&gt;
 	 */
-	public static function getAllByPrivacyStatus(PrivacyStatusDAO $privacyStatus)
+	public static function getAllForCurrentUser()
 	{
 		$db = new DB();
-		$sql = "SELECT * ";
-		$sql .= "FROM " . DB_SCHEMA . ".table ";
-		$sql .= "WHERE idprivacy_status = :IDPRIVACY_STATUS ";
+		$sql = "SELECT t.* ";
+		$sql .= "FROM " . DB_SCHEMA . ".table t ";
+		$sql .= "INNER JOIN " . DB_SCHEMA . ".player p ON p.idtable = t.idtable AND p.iduser = :IDUSER ";
+		$sql .= "WHERE ( ";
+		$sql .= "( idprivacy_status = :PUBLIC) ";
+		$sql .= "OR ( idprivacy_status = :PROTECTED AND p.idrole = :BANCO )";
+		$sql .= "OR ( idprivacy_status = :PRIVATE AND p.idrole = :BANCO )";
+		$sql .= ") ";
 		$sql .= "AND close_date IS NULL ";
-		$db->setParam("IDPRIVACY_STATUS", $privacyStatus->getIdPrivacyStatus());
+		$db->setParam("PUBLIC", PrivacyStatus::STATUS_PUBLIC);
+		$db->setParam("PROTECTED", PrivacyStatus::STATUS_PROTECTED);
+		$db->setParam("PRIVATE", PrivacyStatus::STATUS_PRIVATE);
+		$db->setParam("BANCO", Role::BANCO);
+		$db->setParam("IDUSER", User::getCurrent()->getIdUser());
 		$db->query($sql);
 		return new Collection($db, Table::get());
 	}

@@ -26,6 +26,8 @@ define("PHP_DATETIME_FORMAT", "Y-m-d H:i:s");
 define("PAGELIMIT", 40);
 define("STATIC_URL", "/");
 
+define("BASE_URL", "http://poker/");
+
 mb_internal_encoding("utf8");
 // ini_set("max_execution_time", "0");
 date_default_timezone_set("Europe/Warsaw");

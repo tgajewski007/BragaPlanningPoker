@@ -22,10 +22,10 @@ class WebControler extends Action
 				break;
 			// ----------------------------
 			case "MakeMePO":
-				$this->makeMyProductOwner();
+				$this->makeMeProductOwner();
 				break;
 			case "MakeMeBanco":
-				$this->makeMyBanco();
+				$this->makeMeBanco();
 				break;
 			// ----------------------------
 			case "GetUpFromTable":
@@ -68,6 +68,9 @@ class WebControler extends Action
 			case "GetTableContent":
 				$this->refreshTable();
 				break;
+			case "GetTableDirect":
+				$this->getTableDirect();
+				break;
 			case "GetTable":
 				$this->getTable();
 				break;
@@ -85,7 +88,7 @@ class WebControler extends Action
 			case "":
 				$this->makeWorArea();
 				break;
-			default :
+			default:
 				addAlert("PP:20201 " . PostChecker::get("action") . " not supported");
 				break;
 		}
@@ -115,7 +118,7 @@ class WebControler extends Action
 		$this->r->popUpWin("Profile", $retval);
 	}
 	// -------------------------------------------------------------------------
-	private function makeMyProductOwner()
+	private function makeMeProductOwner()
 	{
 		foreach(Player::getAllByTable(Table::getCurrent()) as $p)/* @var $p Player */
 		{
@@ -130,7 +133,7 @@ class WebControler extends Action
 		$this->refreshTable();
 	}
 	// -------------------------------------------------------------------------
-	private function makeMyBanco()
+	private function makeMeBanco()
 	{
 		foreach(Player::getAllByTable(Table::getCurrent()) as $p)/* @var $p Player */
 		{
@@ -493,6 +496,19 @@ class WebControler extends Action
 		}
 	}
 	// -------------------------------------------------------------------------
+	private function getTableDirect()
+	{
+		try
+		{
+			$t = Table::get(PostChecker::get("arg1"));
+			$this->makeTableArea();
+		}
+		catch(Exception $e)
+		{
+			addAlert($e->getMessage());
+		}
+	}
+	// -------------------------------------------------------------------------
 	private function getTable()
 	{
 		try
@@ -548,8 +564,20 @@ class WebControler extends Action
 			Player::getCurrent()->setIdRole(Role::BANCO);
 			Player::getCurrent()->sitDownToTable($t);
 			PostChecker::set("arg1", $t->getIdTable());
+			$this->sendEmailWithTableInfoToCreator($t);
 			$this->getTable();
 		}
+	}
+	// -------------------------------------------------------------------------
+	private function sendEmailWithTableInfoToCreator(Table $t)
+	{
+		$m = new Poczta();
+		$m->addTo(User::getCurrent()->getEmailAddress());
+		$message = "Hi " . User::getCurrent()->getName() . Tags::br();
+		$message .= "just created a new " . $t->getPrivacyStatus()->getName() . " table " . $t->getName() . Tags::br();
+		$message .= "for fast open table just click " . Tags::a("here", "href='" . BASE_URL . "?action=GetTableDirect&arg1=" . $t->getIdTable() . "'") . Tags::br();
+		$m->setMessage($message);
+		$m->sendMails();
 	}
 	// -------------------------------------------------------------------------
 	private function getNewTableForm()
@@ -562,12 +590,30 @@ class WebControler extends Action
 		$this->r->popUpWin("New table", $retval);
 	}
 	// -------------------------------------------------------------------------
+	private function getIconForTable(Table $t)
+	{
+		if($t->getIdPrivacyStatus() == PrivacyStatus::STATUS_PRIVATE)
+		{
+			$icon = icon("ui-icon-bullet");
+		}
+		elseif($t->getIdPrivacyStatus() == PrivacyStatus::STATUS_PROTECTED)
+		{
+			$icon = icon("ui-icon-radio-on");
+		}
+		else
+		{
+			$icon = icon("ui-icon-radio-off");
+		}
+		return $icon;
+	}
+	// -------------------------------------------------------------------------
 	private function getAviableTableList()
 	{
-		$retval = Tags::p(Tags::ajaxLink("?action=NewTable", icon("ui-icon-bullet") . "Create new table"), "class='Cinzel'");
-		foreach(Table::getAllByPrivacyStatus(PrivacyStatus::get(PrivacyStatus::STATUS_PUBLIC)) as $t) /* @var $t Table */
+		$retval = Tags::p(Tags::ajaxLink("?action=NewTable", icon("ui-icon-circle-plus") . "Create new table"), "class='Cinzel'");
+		foreach(Table::getAllForCurrentUser() as $t) /* @var $t Table */
 		{
-			$retval .= Tags::p(Tags::ajaxLink("?action=GetTable&amp;arg1=" . $t->getIdTable(), icon("ui-icon-bullet") . $t->getName()), "class='Cinzel'");
+			$icon = $this->getIconForTable($t);
+			$retval .= Tags::p(Tags::ajaxLink("?action=GetTable&amp;arg1=" . $t->getIdTable(), $icon . $t->getName()), "class='Cinzel'");
 		}
 		return $retval;
 	}
