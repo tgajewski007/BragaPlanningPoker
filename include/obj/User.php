@@ -12,6 +12,11 @@
 class User extends UserDAO implements DAO
 {
 	// -------------------------------------------------------------------------
+	public function getEmailAddress()
+	{
+		return new EmailAddress($this->getName(), $this->getEmail());
+	}
+	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
 	 * @return boolean

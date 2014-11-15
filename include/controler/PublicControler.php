@@ -22,11 +22,11 @@ class PublicControler extends Action
 				break;
 			// -------------------------------------
 			case "":
+			default :
 				$this->makeWorArea();
 				break;
-			default :
-				addAlert("PP:20101 " . PostChecker::get("action") . " not supported");
-				break;
+// 				addAlert("PP:20101 " . PostChecker::get("action") . " not supported");
+// 				break;
 		}
 		$this->setLayOut(new PublicLayout());
 		$this->page();
