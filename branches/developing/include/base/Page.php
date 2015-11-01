@@ -1,7 +1,6 @@
 <?php
 /**
  * Created on 17-10-2011 18:22:59
- *
  * @author Tomasz Gajewski
  * @package enmarket
  * error prefix
@@ -13,7 +12,7 @@ class Page
 	// -------------------------------------------------------------------------
 	protected static function getHead()
 	{
-		$title = "Planning Poker Online (v. ".VERSION.")";
+		$title = "Planning Poker Online (v. " . VERSION . ")";
 		$retval = Tags::meta("http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"");
 		$retval .= Tags::meta("http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"");
 		$retval .= Tags::title($title);
@@ -32,20 +31,17 @@ class Page
 	// -------------------------------------------------------------------------
 	protected static function getScripts()
 	{
-		$loadScript = "jsl.add('/scripts/ui/i18n/jquery.ui.datepicker-pl.min.js?" . self::VERSION . "');";
-		$loadScript .= "jsl.add('/scripts/system.js?" . self::VERSION . "');";
-		$loadScript .= "jsl.add('/scripts/utils.js?" . self::VERSION . "');";
-		$loadScript .= "jsl.add('/scripts/popUpWindow.js?" . self::VERSION . "');";
-		$loadScript .= "jsl.add('/scripts/widgets.js?" . self::VERSION . "');";
-		$loadScript .= "jsl.load();";
-
 		$retval = Tags::script("", "type='text/javascript' src='https://code.jquery.com/jquery-1.10.2.min.js'");
 		$retval .= Tags::script("", "type='text/javascript' src='https://code.jquery.com/ui/1.10.4/jquery-ui.min.js'");
 		$retval .= Tags::script("", "type='text/javascript' src='/scripts/ajax.js?" . self::VERSION . "'");
 		$retval .= Tags::script("", "type='text/javascript' src='/scripts/jquery.tablesorter.min.js?" . self::VERSION . "'");
 		$retval .= Tags::script("", "type='text/javascript' src='/scripts/jquery.watermark.min.js?" . self::VERSION . "'");
+		$retval .= Tags::script("", "type='text/javascript' src='/scripts/jjquery.ui.datepicker-pl.min.js?" . self::VERSION . "'");
 		$retval .= Tags::script("", "type='text/javascript' src='/scripts/jsl.min.js?" . self::VERSION . "'");
-		$retval .= Tags::script($loadScript);
+		$retval .= Tags::script("", "type='text/javascript' src='/scripts/system.js?" . self::VERSION . "'");
+		$retval .= Tags::script("", "type='text/javascript' src='/scripts/utils.js?" . self::VERSION . "'");
+		$retval .= Tags::script("", "type='text/javascript' src='/scripts/popUpWindow.js?" . self::VERSION . "'");
+		$retval .= Tags::script("", "type='text/javascript' src='/scripts/widgets.js?" . self::VERSION . "'");
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
@@ -67,10 +63,10 @@ class Page
 	// -------------------------------------------------------------------------
 	protected static function getGoogleAnalitics()
 	{
-		if(PRODUCTION)
-		{
-			return Tags::script("(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-4124265-4', 'enmarket.pl');ga('send', 'pageview');");
-		}
+		// if(PRODUCTION)
+		// {
+		// return Tags::script("(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-4124265-4', 'enmarket.pl');ga('send', 'pageview');");
+		// }
 	}
 	// -------------------------------------------------------------------------
 	static function make($bodyContent)

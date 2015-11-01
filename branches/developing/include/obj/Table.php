@@ -122,7 +122,7 @@ class Table extends TableDAO implements DAO
 		$db = new DB();
 		$sql = "SELECT t.* ";
 		$sql .= "FROM " . DB_SCHEMA . ".table t ";
-		$sql .= "INNER JOIN " . DB_SCHEMA . ".player p ON p.idtable = t.idtable AND p.iduser = :IDUSER ";
+		$sql .= "LEFT OUTER JOIN " . DB_SCHEMA . ".player p ON p.idtable = t.idtable AND p.iduser = :IDUSER ";
 		$sql .= "WHERE ( ";
 		$sql .= "( idprivacy_status = :PUBLIC) ";
 		$sql .= "OR ( idprivacy_status = :PROTECTED AND p.idrole = :BANCO )";

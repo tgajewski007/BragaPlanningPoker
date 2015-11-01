@@ -1,7 +1,6 @@
 <?php
 /**
  * Created on 4 lut 2014 09:23:53
- *
  * @author Tomasz Gajewski
  * @package frontoffice
  * error prefix PP:202
@@ -86,9 +85,9 @@ class WebControler extends Action
 				break;
 			// ----------------------------
 			case "":
-				$this->makeWorArea();
+				$this->makeWorkArea();
 				break;
-			default:
+			default :
 				addAlert("PP:20201 " . PostChecker::get("action") . " not supported");
 				break;
 		}
@@ -260,7 +259,7 @@ class WebControler extends Action
 				}
 			}
 		}
-
+		
 		$this->r->addChange($retval . $this->getChairMenu(), "#PlayingTable");
 	}
 	// -------------------------------------------------------------------------
@@ -295,7 +294,7 @@ class WebControler extends Action
 	private function getTableSummary()
 	{
 		$retval = Tags::p("Table summary", "class='c b Cinzel''");
-
+		
 		$cardBox = Task::getCurrent()->getMedianCard()->getTag();
 		$cardTaskBox = Task::getCurrent()->getCard()->getTag();
 		$actions = "";
@@ -318,7 +317,7 @@ class WebControler extends Action
 		$retval = Tags::p($p->getUser()->getName(), "class='b c PlayerPlaceName'");
 		$retval .= Tags::p($p->getUser()->getEmail(), "class='r i PlayerPlaceEmail'");
 		$retval .= Tags::span("", "style='background-image: url(\"" . $p->getUser()->getAvatarUrl() . "\");' class='r i PlayerPlaceAvatar zLewej'");
-
+		
 		if($enabled)
 		{
 			$retval .= Tags::span($c->getTag(), "class='PlayerPlaceCard'");
@@ -327,7 +326,7 @@ class WebControler extends Action
 		{
 			$retval .= Tags::span(Tags::span($c->getTag(), "class='ui-state-disabled'"), "class='PlayerPlaceCard'");
 		}
-
+		
 		$point = $this->getPointOfSuperEclipsa($angle);
 		$left = $point->x;
 		$top = $point->y;
@@ -356,18 +355,18 @@ class WebControler extends Action
 		$xAmplituda = 800 / 2;
 		$yAmplituda = 350 / 2;
 		$nMarker = 3;
-
+		
 		$degree = deg2rad($angle + 90);
-
+		
 		$cos = cos($degree);
 		$sin = sin($degree);
-
+		
 		$cosSign = $cos >= 0 ? 1 : -1;
 		$sinSign = $sin >= 0 ? 1 : -1;
-
+		
 		$retval->x = (0.9 * $xAmplituda * $cosSign * (pow(abs($cos), (2 / $nMarker)))) + $xAmplituda;
 		$retval->y = (0.9 * $yAmplituda * $sinSign * (pow(abs($sin), (2 / $nMarker)))) + $yAmplituda;
-
+		
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
@@ -501,7 +500,8 @@ class WebControler extends Action
 		try
 		{
 			$t = Table::get(PostChecker::get("arg1"));
-			$this->makeTableArea();
+			$this->makeWorkArea();
+			$this->r->addPage(Tags::script("\$(document).ready(function(){ajax.get(\"?action=GetTable&arg1=" . $t->getIdTable() . "\");});"));
 		}
 		catch(Exception $e)
 		{
@@ -623,7 +623,7 @@ class WebControler extends Action
 		$this->r->addChange($this->getAviableTableList());
 	}
 	// -------------------------------------------------------------------------
-	private function makeWorArea()
+	private function makeWorkArea()
 	{
 		$this->r->addPage($this->getAviableTableList());
 	}

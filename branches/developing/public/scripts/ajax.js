@@ -77,7 +77,7 @@ function Ajax()
 					showLoading(random);
 				}
 				var url = sender.getAttribute("action", 2);
-				post = $(sender).serialize();
+				var post = $(sender).serialize();
 				$.post(url, post, function(data, textStatus)
 				{
 					ajax.odbierzDane(data, textStatus, random);
