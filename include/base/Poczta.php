@@ -13,7 +13,7 @@
 class Poczta
 {
 	protected $from;
-	protected $subject = "EnMarket - powiadomienie";
+	protected $subject = "PHPPlanningPokerOnline - powiadomienie";
 	protected $message = null;
 	protected $adresaci = array(); // array EmailAddress
 	protected $priority = self::NORMAL;
@@ -25,7 +25,7 @@ class Poczta
 	// -------------------------------------------------------------------------
 	public function __construct()
 	{
-		$this->from = new EmailAddress("EnMarket", "noreply@enmarket.pl");
+		$this->from = new EmailAddress("PHPPlanningPokerOnline", "noreply@planningpokeronline.com");
 	}
 	// -------------------------------------------------------------------------
 	protected function realSendMail(EmailAddress $to)
@@ -40,7 +40,7 @@ class Poczta
 		$headers .= $this->priority;
 		$headers .= "Content-Type: text/html; charset=UTF-8; \r\n";
 		$headers .= "Content-Transfer-Encoding: 8bit; \r\n";
-
+		
 		$body = "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>\n";
 		$body .= "<html>";
 		$body .= "<head>";

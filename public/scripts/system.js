@@ -231,7 +231,7 @@ function getRandomString(dl)
 	var max = keychars.length - 1;
 	for (var i = 0; i < dl; i++)
 	{
-		los = Math.floor(Math.random() * max);
+		var los = Math.floor(Math.random() * max);
 		randkey += keychars.substring(los, los + 1);
 	}
 	return randkey;
