@@ -92,7 +92,7 @@ class Task extends TaskDAO implements DAO
 		}
 	}
 	// -------------------------------------------------------------------------
-	public function getAllForLogPaged(Table $table, $page)
+	public static function getAllForLogPaged(Table $table, $page)
 	{
 		$db = new DB();
 		$sql = "SELECT SQL_CALC_FOUND_ROWS * ";
