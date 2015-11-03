@@ -1,7 +1,6 @@
 <?php
 /**
  * Created on 04-02-2014 08:20:35
- *
  * @author Tomasz Gajewski
  * @package PlaningPoker
  * error prefix PP:105
@@ -37,9 +36,11 @@ class Player extends PlayerDAO implements DAO
 		$sql = "SELECT * ";
 		$sql .= "FROM " . DB_SCHEMA . ".player ";
 		$sql .= "WHERE idtable = :IDTABLE ";
+		$sql .= "AND idrole <> :OBSERVER ";
 		$sql .= "ORDER BY CASE  WHEN iduser = :IDUZYTKOWNIK THEN 0 ELSE idplayer END  ";
 		$db->setParam("IDTABLE", $table->getIdTable());
 		$db->setParam("IDUZYTKOWNIK", User::getCurrent()->getIdUser());
+		$db->setParam("OBSERVER", Role::OBSERVER);
 		$db->query($sql);
 		return new Collection($db, Player::get());
 	}
@@ -184,6 +185,7 @@ class Player extends PlayerDAO implements DAO
 	public function getUpFromTable()
 	{
 		$this->setIdRole(Role::OBSERVER);
+		$this->getCurrentGame()->kill();
 		return $this->save();
 	}
 	// -------------------------------------------------------------------------
