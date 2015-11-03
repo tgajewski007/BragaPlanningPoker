@@ -31,9 +31,12 @@ function getTableContenet()
 // -----------------------------------------------------------------------------
 function startRefreshTable()
 {
-	setInterval(function()
+	if (tableRefresfhIntervalHandle == null)
 	{
-		getTableContenet();
-	}, 3000);
+		tableRefresfhIntervalHandle = setInterval(function()
+		{
+			getTableContenet();
+		}, 3000);
+	}
 }
 // -----------------------------------------------------------------------------
