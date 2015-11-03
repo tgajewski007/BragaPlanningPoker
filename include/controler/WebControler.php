@@ -67,6 +67,11 @@ class WebControler extends Action
 				$this->setCard();
 				break;
 			// ----------------------------
+			case "SelectTable":
+				$this->getUpFromTable();
+				$this->refreshTableList();
+				break;
+			// ----------------------------
 			case "GetTableContent":
 				$this->refreshTable();
 				break;
@@ -84,6 +89,7 @@ class WebControler extends Action
 				break;
 			// ----------------------------
 			case "LogOut":
+				$this->getUpFromTable();
 				$this->logout();
 				break;
 			// ----------------------------
