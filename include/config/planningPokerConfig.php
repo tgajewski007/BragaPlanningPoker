@@ -22,7 +22,7 @@ define("FORMAT_XML", true);
 define("PHP_DATE_FORMAT", "Y-m-d");
 define("PHP_DATETIME_FORMAT", "Y-m-d H:i:s");
 
-define("PAGELIMIT", 25);
+define("PAGELIMIT", 15);
 define("STATIC_URL", "/");
 
 define("BASE_URL", "http://poker/");
