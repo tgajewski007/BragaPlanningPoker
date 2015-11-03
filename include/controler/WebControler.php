@@ -158,8 +158,11 @@ class WebControler extends Action
 	// -------------------------------------------------------------------------
 	private function getUpFromTable()
 	{
-		Player::getCurrent()->getUpFromTable();
-		$this->refreshTable();
+		if(!is_null(Table::getCurrent()->getIdTable()))
+		{
+			Player::getCurrent()->getUpFromTable();
+			$this->refreshTable();
+		}
 	}
 	// -------------------------------------------------------------------------
 	private function sitDownToTable()
