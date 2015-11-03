@@ -1,0 +1,64 @@
+@CHARSET "UTF-8";
+.sprite
+{
+	background-image: url("/img/sprite.png");
+	background-repeat: no-repeat;
+}
+.cardZero
+{
+	background-position: 0px 0px;
+}
+.cardHalf
+{
+	background-position: -65px 0px;
+}
+.cardOne
+{
+	background-position: -130px 0px;
+}
+.cardTwo
+{
+	background-position: -195px 0px;
+}
+.cardThree
+{
+	background-position: -260px 0px;
+}
+/* ======= second row ========== */
+.cardFive
+{
+	background-position: 0px -90px;
+}
+.cardEight
+{
+	background-position: -65px -90px;
+}
+.cardThirteen
+{
+	background-position: -130px -90px;
+}
+.cardTwenty
+{
+	background-position: -195px -90px;
+}
+.cardForty
+{
+	background-position: -260px -90px;
+}
+/* ======= third row ========== */
+.cardOneHudred
+{
+	background-position: 0px -180px;
+}
+.cardIDontKnow
+{
+	background-position: -65px -180px;
+}
+.cardCoffyBreak
+{
+	background-position: -130px -180px;
+}
+.cardBack
+{
+	background-position: -195px -180px;
+}

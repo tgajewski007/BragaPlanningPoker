@@ -1,0 +1,61 @@
+@CHARSET "UTF-8";
+
+body {
+	margin: 0px 0px 20px 0px;
+	padding: 0px;
+}
+
+td {
+	margin: 0px;
+	padding: 0px;
+	vertical-align: top;
+}
+
+tr {
+	margin: 0px;
+	padding: 0px;
+}
+
+p {
+	margin: 0px;
+	padding: 0px;
+}
+
+table {
+	margin: 0px;
+	padding: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	font-size: inherit;
+	color: black;
+	font-family: inherit;
+}
+
+img {
+	border-width: 0px;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+form {
+	margin: 0px;
+	padding: 0px;
+}
+
+textarea {
+	font-size: inherit;
+	resize: none;
+	font-family: inherit;
+}
+
+div {
+	padding: 0px;
+	margin: 0px;
+}

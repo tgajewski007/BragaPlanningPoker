@@ -1,0 +1,258 @@
+@CHARSET "UTF-8";
+
+body {
+	background-color: #671e0c;
+	background-image: url("/img/background.jpg");
+	background-position: top center;
+	background-repeat: no-repeat;
+	font-family: 'Alegreya Sans SC', cursive;
+	font-size: 14px;
+}
+
+.Cinzel {
+	font-family: 'Cinzel', cursive !important;
+	font-weight: 700 !important;
+	text-shadow: 3px 3px 3px #606060;
+	font-size: 15px !important;
+}
+
+#Header {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	background: rgba(255, 255, 255, .7);
+	width: 1000px;
+	height: 70px;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	margin-bottom: 0px;
+}
+
+#Header p {
+	color: black;
+	line-height: 70px;
+	padding-left: 40px;
+	text-align: left;
+	font-size: 50px;
+	font-weight: 900;
+}
+
+#Header p a:hover {
+	text-decoration: none !important;
+}
+
+#PublicMainBox {
+	margin-left: auto;
+	margin-right: auto;
+	background: rgba(255, 255, 255, .7);
+	width: 920px;
+	margin-top: 550px;
+	padding: 40px;
+}
+
+#DropDownMenu {
+	position: absolute;
+	font-size: 1em !important;
+	z-index: 10;
+}
+
+#Footer {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: rgba(255, 255, 255, .7);
+	height: 50px;
+	width: 1000px;
+	margin-bottom: 40px;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+}
+
+#Footer p {
+	line-height: 50px;
+	font-size: 15px;
+	text-align: center;
+	font-weight: 700;
+}
+
+#LoginBox {
+	width: 920px;
+	text-align: right;
+	padding: 5px;
+	background-color: white;
+}
+
+#LoginBox span {
+	display: inline-block;
+	padding-left: 5px;
+}
+
+#MsgBox {
+	top: 0px;
+	z-index: 2000;
+	min-width: 400px;
+	max-width: 1300px;
+	position: fixed;
+	right: 0px;
+}
+
+#MenuBox {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: rgba(255, 255, 255, .7);
+	width: 920px;
+	margin-bottom: 10px;
+	padding: 10px 40px;
+}
+
+#TaskBox {
+	display: inline-block;
+}
+
+#MainBox {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	background: rgba(255, 255, 255, .7);
+	width: 920px;
+	min-height: 600px;
+	padding: 10px 40px;
+}
+
+.snow {
+	background-color: gray;
+	background-image: url("/img/ajax-loader.gif");
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+span.FormCellDesc {
+	text-align: left;
+	font-size: 85%;
+	color: #606060;
+	display: block;
+	font-weight: 700;
+}
+
+span.FormCellReal {
+	text-align: left;
+	padding-left: 20px;
+	min-height: 10px;
+	display: block;
+}
+
+span.card {
+	width: 63px;
+	height: 89px;
+	display: inline-block;
+	box-shadow: 2px 2px 4px 1px #000000;
+	border-radius: 4px;
+	margin: 3px;
+}
+
+#PlayingTable {
+	height: 500px;
+	width: 950px;
+	background-color: #194D1E;
+	border-radius: 240px;
+	position: relative;
+	left: -20px;
+	border: 7px brown solid;
+}
+
+#PlayerCards {
+	text-align: center;
+	overflow: hidden;
+	height: 95px;
+}
+
+a.cardInHand {
+	display: inline-block;
+	position: relative;
+	top: 75px;
+	cursor: pointer;
+}
+
+div.PlayerPlace {
+	width: 138px;
+	height: 138px;
+	border: 2px #fef4c0 solid;
+	border-radius: 4px;
+	position: absolute;
+	padding: 4px;
+	overflow: hidden;
+	display: inline-block;
+}
+
+div.BankoPlace {
+	border-color: #57a5fb !important;
+}
+
+div.ProductOwnerPlace {
+	border-color: gold !important;
+}
+
+p.PlayerPlaceEmail {
+	display: inline-block;
+	line-height: 15px;
+	overflow: hidden;
+	height: 15px;
+	width: 142px;
+}
+
+p.PlayerPlaceName {
+	display: inline-block;
+	line-height: 15px;
+	overflow: hidden;
+	height: 15px;
+	width: 142px;
+}
+
+span.PlayerPlaceAvatar {
+	background-position: center top;
+	background-repeat: no-repeat;
+	background-size: cover;
+	border-radius: 4px;
+	width: 80px;
+	height: 80px;
+	display: inline-block;
+}
+
+span.PlayerPlaceCard {
+	float: right;
+	position: relative;
+	top: -73px;
+}
+
+#TableSummary {
+	border: 2px solid #fef4c0;
+	border-radius: 4px;
+	display: inline-block;
+	height: 124px;
+	left: 250px;
+	overflow: hidden;
+	position: relative;
+	top: 183px;
+	width: 420px;
+	padding: 4px 10px;
+	background: rgba(255, 255, 200, 0.56);
+}
+
+#TableSummary .CardBox {
+	float: left;
+	height: 100px;
+	width: 80px;
+}
+
+#TableSummary .ActionBox {
+	float: right;
+	height: 100px;
+	width: 250px;
+}
+
+#TableSummary .TaskBox {
+	float: right;
+	height: 100px;
+	width: 80px;
+}
