@@ -28,6 +28,7 @@ class StartLayout extends PublicLayout
 	{
 		$retval = Tags::li(Tags::ajaxLink("?action=GetProfile", "profile"));
 		$retval .= Tags::li("Task " . $this->getTaskMenu());
+		$retval .= Tags::li(Tags::ajaxLink("?action=SelectTable", "change&nbsp;table"));
 		$retval .= Tags::li(Tags::a("logout", "href='?action=LogOut'"));
 		$retval = Tags::ul($retval, "id='DropDownMenu' class='h'");
 		$retval .= Tags::script("\$(\"#DropDownMenu\").menu()");
