@@ -17,7 +17,7 @@ class StartLayout extends PublicLayout
 	// -------------------------------------------------------------------------
 	protected function getMenu()
 	{
-		$retval = Tags::div("menu" . $this->getMenuDropDown(), "onclick='\$(\"#DropDownMenu\").toggle()' class='hand inlineBlock zPrawe'");
+		$retval = Tags::div("menu" . $this->getMenuDropDown(), "onclick='event.stopPropagation();\$(\"#DropDownMenu\").toggle();' class='hand inlineBlock zPrawe'");
 		$retval .= Tags::span(" | ");
 		$retval .= Tags::div("", "id='TaskBox'");
 		$retval .= Tags::div("welcome: " . User::getCurrent()->getName(), "class='zPrawej'");
@@ -31,7 +31,7 @@ class StartLayout extends PublicLayout
 		$retval .= Tags::li(Tags::ajaxLink("?action=SelectTable", "change&nbsp;table"));
 		$retval .= Tags::li(Tags::a("logout", "href='?action=LogOut'"));
 		$retval = Tags::ul($retval, "id='DropDownMenu' class='h'");
-		$retval .= Tags::script("\$(\"#DropDownMenu\").menu()");
+		$retval .= Tags::script("\$(\"#DropDownMenu\").menu(); \$(document).click(function(){\$(\"#DropDownMenu\").hide()});");
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
