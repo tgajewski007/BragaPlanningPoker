@@ -1,7 +1,6 @@
 <?php
 /**
  * created on 15-10-2011 13:50:55
- *
  * @author tomasz gajewski
  * @package common
  */
@@ -70,10 +69,11 @@ require "base/tools.php";
 require "base/Perms.php";
 require "base/Page.php";
 require "base/Tags.php";
+require "base/PageNavi.php";
 // -----------------------------------------------------------------------------
-require "controler/PublicControler.php";							// PP:201
-require "controler/WebControler.php";								// PP:202
-// -----------------------------------------------------------------------------
+require "controler/PublicControler.php"; // PP:201
+require "controler/WebControler.php"; // PP:202
+                                      // -----------------------------------------------------------------------------
 require "layout/PublicLayout.php";
 require "layout/StartLayout.php";
 // -----------------------------------------------------------------------------
@@ -81,6 +81,7 @@ require "form/LoginForm.php";
 require "form/TableForm.php";
 require "form/TaskForm.php";
 require "form/UserForm.php";
+require "form/TaskLogForm.php";
 // -----------------------------------------------------------------------------
 require "widget/PrivacyStatusSelect.php";
 require "widget/SelectCard.php";

@@ -47,6 +47,9 @@ class WebControler extends Action
 				$this->getPlayAgainForm();
 				break;
 			// ----------------------------
+			case "GetTaskLog":
+				$this->getTaskLogForm();
+				break;
 			case "GetCurrentTask":
 				$this->getCurrentTaskForm();
 				break;
@@ -387,6 +390,14 @@ class WebControler extends Action
 			$retval .= Tags::a("Task: " . Task::getCurrent()->getSubject(), $href . "class='s'");
 		}
 		$this->r->addChange($retval, "#TaskBox");
+	}
+	// -------------------------------------------------------------------------
+	private function getTaskLogForm()
+	{
+		$table = Player::getCurrent()->getTable();
+		$taskLogForm = new TaskLogForm($table);
+		$retval = $taskLogForm->out();
+		$this->r->popUpWin("Task log", $retval);
 	}
 	// -------------------------------------------------------------------------
 	private function getCurrentTaskForm()

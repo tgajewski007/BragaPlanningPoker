@@ -1,7 +1,6 @@
 <?php
 /**
  * Created on 04-02-2014 08:20:35
- *
  * @author Tomasz Gajewski
  * @package PlaningPoker
  * error prefix PP:108
@@ -20,6 +19,11 @@ class Table extends TableDAO implements DAO
 		return true;
 	}
 	// -------------------------------------------------------------------------
+	public function getTasksForLog($page)
+	{
+		return Task::getAllForLogPaged($this, $page);
+	}
+	// -------------------------------------------------------------------------
 	public function setPasswordNonHashed($pass)
 	{
 		if($pass == "")
@@ -34,7 +38,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
-	 *
 	 * @return boolean
 	 */
 	protected function check()
@@ -61,7 +64,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method saves the object of the classTable
-	 *
 	 * @return boolean
 	 */
 	public function save()
@@ -88,7 +90,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method removes an object of class Table
-	 *
 	 * @return boolean
 	 */
 	public function kill()
@@ -99,7 +100,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * This method returns a collection of objects
-	 *
 	 * @return Collection &lt;Table&gt;
 	 */
 	public static function getAll()
@@ -114,7 +114,6 @@ class Table extends TableDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods return colection of Table
-	 *
 	 * @return Collection &lt;Table&gt;
 	 */
 	public static function getAllForCurrentUser()

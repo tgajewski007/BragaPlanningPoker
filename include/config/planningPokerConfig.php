@@ -1,7 +1,6 @@
 <?php
 /**
  * Created on 15-10-2011 13:54:44
- *
  * @author Tomasz Gajewski
  * @package common
  * error prefix
@@ -23,7 +22,7 @@ define("FORMAT_XML", true);
 define("PHP_DATE_FORMAT", "Y-m-d");
 define("PHP_DATETIME_FORMAT", "Y-m-d H:i:s");
 
-define("PAGELIMIT", 40);
+define("PAGELIMIT", 25);
 define("STATIC_URL", "/");
 
 define("BASE_URL", "http://poker/");
@@ -85,7 +84,7 @@ function errorHandler($errno, $errstr, $errfile, $errline)
 		case E_ALL:
 			$file = "all_error_" . date("Ymd") . ".log";
 			break;
-		default:
+		default :
 			$file = "unknow_" . date("Ymd") . ".log";
 			break;
 	}
@@ -95,8 +94,8 @@ function errorHandler($errno, $errstr, $errfile, $errline)
 	$retval .= ";" . $errfile;
 	$retval .= ";" . $errline;
 	$retval .= "\n";
-
-	$file = LOG_DIRECTORY. $file;
+	
+	$file = LOG_DIRECTORY . $file;
 	$h = fopen($file, "a");
 	fwrite($h, $retval, mb_strlen($retval));
 	fclose($h);
@@ -112,7 +111,7 @@ function exceptionHandler(Exception $exception)
 	$retval .= ";" . $exception->getFile();
 	$retval .= ";" . $exception->getLine();
 	$retval .= "\n";
-	$file = LOG_DIRECTORY. $file;
+	$file = LOG_DIRECTORY . $file;
 	$h = fopen($file, "a");
 	fwrite($h, $retval, strlen($retval));
 	fclose($h);

@@ -1,7 +1,6 @@
 <?php
 /**
  * Created on 04-02-2014 08:20:35
- *
  * @author Tomasz Gajewski
  * @package PlaningPoker
  * error prefix PP:109
@@ -14,7 +13,6 @@ class Task extends TaskDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Methods validate data before save
-	 *
 	 * @return boolean
 	 */
 	protected function check()
@@ -25,7 +23,6 @@ class Task extends TaskDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method saves the object of the classTask
-	 *
 	 * @return boolean
 	 */
 	public function save()
@@ -51,7 +48,6 @@ class Task extends TaskDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * Method removes an object of class Task
-	 *
 	 * @return boolean
 	 */
 	public function kill()
@@ -63,7 +59,6 @@ class Task extends TaskDAO implements DAO
 	// -------------------------------------------------------------------------
 	/**
 	 * This method returns a collection of objects
-	 *
 	 * @return Collection &lt;Task&gt;
 	 */
 	public static function getAll()
@@ -89,7 +84,7 @@ class Task extends TaskDAO implements DAO
 		$db->query($sql);
 		if($db->nextRecord())
 		{
-			return round($db->f(0),1);
+			return round($db->f(0), 1);
 		}
 		else
 		{
@@ -97,7 +92,21 @@ class Task extends TaskDAO implements DAO
 		}
 	}
 	// -------------------------------------------------------------------------
-	public  function getMedianCard()
+	public function getAllForLogPaged(Table $table, $page)
+	{
+		$db = new DB();
+		$sql = "SELECT SQL_CALC_FOUND_ROWS * ";
+		$sql .= "FROM " . DB_SCHEMA . ".task ";
+		$sql .= "WHERE idtable = :IDTABLE ";
+		$sql .= "ORDER BY idtask DESC ";
+		$db->setParam("IDTABLE", $table->getIdTable());
+		$db->setLimit(($page - 1) * PAGELIMIT);
+		
+		$db->query($sql);
+		return new Collection($db, self::get());
+	}
+	// -------------------------------------------------------------------------
+	public function getMedianCard()
 	{
 		return Card::getMedianCardForTask($this);
 	}
