@@ -2,7 +2,6 @@
 /**
  * Created on 22 lut 2014 17:08:18
  * error prefix
- *
  * @author Tomasz Gajewski
  * @package frontoffice
  */
@@ -39,6 +38,7 @@ class StartLayout extends PublicLayout
 	{
 		$retval = Tags::li(Tags::ajaxLink("?action=NewTask", "new"));
 		$retval .= Tags::li(Tags::ajaxLink("?action=GetCurrentTask", "change"));
+		$retval .= Tags::li(Tags::ajaxLink("?action=GetTaskLog", "task&nbsp;log"));
 		$retval = Tags::ul($retval);
 		return $retval;
 	}

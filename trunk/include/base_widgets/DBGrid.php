@@ -1,7 +1,6 @@
 <?php
 /**
  * create 18-05-2012 19:47:30
- *
  * @author Tomasz Gajewski
  * @package common
  */
@@ -35,6 +34,11 @@ class DBGrid
 	protected $lpCounter = 1;
 	// -------------------------------------------------------------------------
 	protected $sortable = false;
+	// -------------------------------------------------------------------------
+	public function setLpCounter($lpCounter)
+	{
+		$this->lpCounter = $lpCounter;
+	}
 	// -------------------------------------------------------------------------
 	public function setHrefActionString($href)
 	{
@@ -115,7 +119,7 @@ class DBGrid
 	protected function getHeader()
 	{
 		$tmp = Tags::th("L.p.", "class='" . $this->headerCellClass . "' style='width:10px;'");
-
+		
 		foreach($this->db->getMetaData() as $key => $meta)/* @var $meta DataSourceColumnMetaData */
 		{
 			if($key < $this->columnCount)
@@ -128,7 +132,7 @@ class DBGrid
 		{
 			$tmp .= Tags::th($columna->columnName, "class='" . $this->headerCellClass . "'");
 		}
-
+		
 		$this->content .= Tags::thead(Tags::tr($tmp, "class='" . $this->headerRowClass . "'"));
 	}
 	// -------------------------------------------------------------------------
@@ -140,7 +144,7 @@ class DBGrid
 		{
 			$counter = $this->lpCounter + $a;
 			$content = Tags::td($counter, "class='" . $this->contentNumericCellClass . "' style='padding-right:4px;'");
-			for($i = 0;$i < $this->columnCount;$i++)
+			for($i = 0; $i < $this->columnCount; $i++)
 			{
 				if(is_null($this->hrefCell))
 				{
@@ -152,7 +156,7 @@ class DBGrid
 						case "date":
 							$content .= Tags::td(Tags::div($this->db->f($i)), "class='" . $this->contentDateCellClass . "'");
 							break;
-						default:
+						default :
 							$content .= Tags::td(Tags::div($this->db->f($i)), "class='" . $this->contentStringCellClass . "'");
 							break;
 					}
@@ -176,7 +180,7 @@ class DBGrid
 						case "date":
 							$content .= Tags::td(Tags::div($tmp), "class='" . $this->contentDateCellClass . "'");
 							break;
-						default:
+						default :
 							$content .= Tags::td(Tags::div($tmp), "class='" . $this->contentStringCellClass . "'");
 							break;
 					}
