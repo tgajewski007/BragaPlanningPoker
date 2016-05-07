@@ -2,7 +2,6 @@
 /**
  * Created on 22 lut 2014 12:54:40
  * error prefix PP:201
- *
  * @author Tomasz Gajewski
  * @package frontoffice
  */
@@ -21,15 +20,26 @@ class PublicControler extends Action
 				$this->getRegisterForm();
 				break;
 			// -------------------------------------
+			case "GetTableContent":
+				$this->cleanTable();
+				break;
+			// -------------------------------------
 			case "":
-			default :
 				$this->makeWorArea();
 				break;
-// 				addAlert("PP:20101 " . PostChecker::get("action") . " not supported");
-// 				break;
+			// -------------------------------------
+			default :
+				addAlert("PP:20101 " . PostChecker::get("action") . " not supported");
+				break;
 		}
 		$this->setLayOut(new PublicLayout());
 		$this->page();
+	}
+	// -------------------------------------------------------------------------
+	private function cleanTable()
+	{
+		$retval = Tags::script("location.href='/';");
+		$this->r->appendChange($retval);
 	}
 	// -------------------------------------------------------------------------
 	private function createAccout()
@@ -67,7 +77,7 @@ class PublicControler extends Action
 			addAlert("PP:20101 Passwords are too short (min: " . Perms::PASSWORD_MINIMAL_LENGTH . " character)");
 			$retval = false;
 		}
-
+		
 		return $retval;
 	}
 	// -------------------------------------------------------------------------
@@ -79,7 +89,7 @@ class PublicControler extends Action
 		$retval .= getFormRow("Avatar url", textField("avatar_url"));
 		$retval .= getFormRow("Password", passwordField("pass1", "", true));
 		$retval .= getFormRow("Retype password", passwordField("pass2", "", true));
-
+		
 		$retval .= getFormSubmitRow(submitButton("Register") . hiddenField("action", "CreateAccout"));
 		$retval = Tags::formularzNonAjax($retval);
 		$this->r->popUpWin("create accout", $retval);
@@ -88,7 +98,6 @@ class PublicControler extends Action
 	private function makeWorArea()
 	{
 		$f = new LoginForm();
-
 		$this->r->addPage($f->out());
 	}
 	// -------------------------------------------------------------------------
