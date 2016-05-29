@@ -272,7 +272,8 @@ class WebControler extends Action
 			}
 		}
 		
-		$this->r->addChange($retval . $this->getChairMenu(), "#PlayingTable");
+		$this->r->addChange($retval, "#PlayingTable");
+		$this->r->addChange($this->getChairMenu(), "#CommandMenuBox");
 	}
 	// -------------------------------------------------------------------------
 	private function getChairMenu()
@@ -287,18 +288,18 @@ class WebControler extends Action
 			$href = "?action=GetUpFromTable";
 			$content = "Get up from table";
 		}
-		$retval = Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:0px; left:0px '");
+		$retval = Tags::p(Tags::ajaxLink($href, $content), "class='b Cinzel'");
 		if(Player::getCurrent()->getIdRole() != Role::BANCO)
 		{
 			$href = "?action=MakeMeBanco";
 			$content = "Make me Banco";
-			$retval .= Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:16px; left:0px '");
+			$retval .= Tags::p(Tags::ajaxLink($href, $content), "class='b Cinzel'");
 		}
 		if(Player::getCurrent()->getIdRole() != Role::PRODUCT_OWNER)
 		{
 			$href = "?action=MakeMePO";
 			$content = "Make me Product Owner";
-			$retval .= Tags::span(Tags::ajaxLink($href, $content), "class='b Cinzel' style='position:absolute;top:32px; left:0px '");
+			$retval .= Tags::p(Tags::ajaxLink($href, $content), "class='b Cinzel'");
 		}
 		return $retval;
 	}
@@ -568,7 +569,7 @@ class WebControler extends Action
 	// -------------------------------------------------------------------------
 	private function prepareTable()
 	{
-		$this->r->addChange(Tags::div("", "id='PlayingTable'") . Tags::div("", "id='PlayerCards'") . Tags::script("startRefreshTable();"));
+		$this->r->addChange(Tags::div("", "id='PlayingTable'") . Tags::div("", "id='PlayerCards'") . Tags::div("", "id='CommandMenuBox'") . Tags::script("startRefreshTable();"));
 	}
 	// -------------------------------------------------------------------------
 	private function insertTable()

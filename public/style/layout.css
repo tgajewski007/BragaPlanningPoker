@@ -256,3 +256,15 @@ span.PlayerPlaceCard {
 	height: 100px;
 	width: 80px;
 }
+
+#CommandMenuBox {
+	background: rgba(255, 255, 255, 0.7) none repeat scroll 0 0;
+	border-radius: 0 20px 20px 0;
+	height: 588px;
+	left: 4px;
+	overflow: hidden;
+	padding: 20px;
+	position: absolute;
+	top: 151px;
+	width: 75px;
+}
